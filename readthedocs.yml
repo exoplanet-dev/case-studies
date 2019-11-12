@@ -1,3 +1,6 @@
+submodules:
+  include: all
+  recursive: true
 python:
   version: 3.7
   install:
