@@ -14,7 +14,6 @@ git submodule update
 rm -rf env
 conda env update --prefix ./env -f exoplanet/environment.yml --prune
 conda activate ./env
-python -m pip install requirements.txt
 python -m pip install requirements-notebooks.txt
 
 CACHEDIR=`pwd`/theano_cache
@@ -34,10 +33,11 @@ git add _static/notebooks/notebook_setup.py
 git add _static/notebooks/*.ipynb
 
 git -c user.name='exoplanetbot' -c user.email='exoplanetbot' commit -am "updating notebooks [ci skip]"
-git push -q -f https://dfm:`cat .github_api_key`@github.com/dfm/exoplanet.git auto_notebooks
+git push -q -f https://dfm:`cat .github_api_key`@github.com/dfm/exoplanet-docs.git auto_notebooks
 
 cd ..
 git checkout master
+conda deactivate
 
 mail -s "autoexoplanet finished" "foreman.mackey@gmail.com" <<EOF
 run_notebooks finished running
