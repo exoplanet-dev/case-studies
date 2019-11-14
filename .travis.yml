@@ -6,6 +6,6 @@ install:
   - travis_retry python -m pip install -U pip setuptools
   - travis_retry python -m pip install -U isort black black_nbconvert
 script:
-  - isort -c -rc .
-  - black --check .
-  - black_nbconvert --check .
+  - isort -c -rc docs
+  - black --check docs
+  - black_nbconvert --check docs
