@@ -4,6 +4,8 @@ language: python
 python: "3.7"
 install:
   - travis_retry python -m pip install -U pip setuptools
-  - travis_retry python -m pip install -U black_nbconvert
+  - travis_retry python -m pip install -U isort black black_nbconvert
 script:
+  - isort -c -rc src
+  - black --check src
   - black_nbconvert --check .
