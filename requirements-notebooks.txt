@@ -1,0 +1,4 @@
+nbformat
+nbconvert
+corner
+lightkurve

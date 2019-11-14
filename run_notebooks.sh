@@ -1,19 +1,25 @@
 #!/bin/bash
 
+set -e
+
 __conda_setup="$('conda' 'shell.bash' 'hook' 2> /dev/null)"
 eval "$__conda_setup"
 unset __conda_setup
-
-cd /mnt/home/dforeman/research/projects/dfm/exoplanet_auto
-conda activate autoexoplanet
-
-CACHEDIR=/mnt/home/dforeman/research/projects/dfm/exoplanet_auto/theano_cache
-rm -rf $CACHEDIR
-export THEANO_FLAGS=base_compiledir=$CACHEDIR
+conda activate base
 
 git checkout master
 git pull origin master
-python setup.py develop
+git submodule update
+
+rm -rf env
+conda env update --prefix ./env -f exoplanet/environment.yml --prune
+conda activate ./env
+python -m pip install requirements.txt
+python -m pip install requirements-notebooks.txt
+
+CACHEDIR=`pwd`/theano_cache
+rm -rf $CACHEDIR
+export THEANO_FLAGS=base_compiledir=$CACHEDIR
 
 git branch -D auto_notebooks
 git checkout -b auto_notebooks master
