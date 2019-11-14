@@ -19,7 +19,7 @@ CACHEDIR=`pwd`/theano_cache
 rm -rf $CACHEDIR
 export THEANO_FLAGS=base_compiledir=$CACHEDIR
 
-git branch -D auto_notebooks
+git branch -D auto_notebooks || true
 git checkout -b auto_notebooks master
 
 cd docs
