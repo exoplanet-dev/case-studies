@@ -11,6 +11,7 @@ git checkout master
 git pull origin master
 git submodule update
 
+rm -rf env
 conda env update --prefix ./env -f exoplanet/environment.yml --prune
 conda activate ./env
 python -m pip install -U -r requirements-notebooks.txt
