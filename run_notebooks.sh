@@ -13,7 +13,7 @@ git submodule update
 
 conda env update --prefix ./env -f exoplanet/environment.yml --prune
 conda activate ./env
-python -m pip install requirements-notebooks.txt
+python -m pip install -U -r requirements-notebooks.txt
 
 CACHEDIR=`pwd`/theano_cache
 rm -rf $CACHEDIR
