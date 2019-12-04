@@ -14,14 +14,15 @@ steps:
 - script: |
     sudo chown -R $USER $CONDA
     . $CONDA/etc/profile.d/conda.sh
-    conda env update --prefix ./env -f exoplanet/environment.yml --prune
+    conda env update --prefix ./env -f exoplanet/environment.yml -q --prune
     conda activate ./env
     python -m pip install -U -r requirements-notebooks.txt
     python -m pip install -e ./exoplanet
-    CACHEDIR=`pwd`/theano_cache
-    export THEANO_FLAGS=base_compiledir=$CACHEDIR
   displayName: 'Setup conda'
 
 - script: |
+    . $CONDA/etc/profile.d/conda.sh
+    CACHEDIR=`pwd`/theano_cache
+    export THEANO_FLAGS=base_compiledir=$CACHEDIR
     echo $THEANO_FLAGS
     which python
