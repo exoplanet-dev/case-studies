@@ -30,9 +30,9 @@ steps:
   displayName: 'Run notebooks'
 
 - script: |
-    cp _static/notebooks/*.ipynb $(Build.ArtifactStagingDirectory)
-    cp notebooks/notebook_setup.py $(Build.ArtifactStagingDirectory)
-    cp notebook_errors.log $(Build.ArtifactStagingDirectory)
+    cp docs/_static/notebooks/*.ipynb $(Build.ArtifactStagingDirectory)
+    cp docs/notebooks/notebook_setup.py $(Build.ArtifactStagingDirectory)
+    cp docs/notebook_errors.log $(Build.ArtifactStagingDirectory)
   displayName: 'Save generated notebooks'
 
 - task: PublishBuildArtifacts@1
