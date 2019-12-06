@@ -22,7 +22,7 @@ steps:
 
 - script: |
     . $CONDA/etc/profile.d/conda.sh
-    CACHEDIR=`pwd`/theano_cache
-    export THEANO_FLAGS=base_compiledir=$CACHEDIR
-    echo $THEANO_FLAGS
-    which python
+    conda activate ./env
+    export THEANO_FLAGS=base_compiledir=`pwd`/theano_cache
+    cd docs
+    python run_notebooks.py notebooks/rv.ipynb
