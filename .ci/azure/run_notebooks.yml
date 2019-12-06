@@ -18,6 +18,7 @@ steps:
     conda activate ./env
     python -m pip install -U -r requirements-notebooks.txt
     python -m pip install -e ./exoplanet
+    conda env export > $(Build.ArtifactStagingDirectory)/environment.yml
   displayName: 'Setup conda'
 
 - script: |
@@ -26,3 +27,15 @@ steps:
     export THEANO_FLAGS=base_compiledir=`pwd`/theano_cache
     cd docs
     python run_notebooks.py notebooks/rv.ipynb
+  displayName: 'Run notebooks'
+
+- script: |
+    cp _static/notebooks/*.ipynb $(Build.ArtifactStagingDirectory)
+    cp notebooks/notebook_setup.py $(Build.ArtifactStagingDirectory)
+    cp notebook_errors.log $(Build.ArtifactStagingDirectory)
+  displayName: 'Save generated notebooks'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: $(Build.ArtifactStagingDirectory)
+    artifactName: Notebooks
