@@ -6,7 +6,9 @@ pool:
   vmImage: Ubuntu-16.04
 
 variables:
-  conda_path: $(Pipeline.Workspace)/conda
+  cache_path: $(Pipeline.Workspace)/cache
+  conda_path: $(cache_path)/conda
+  theano_path: $(cache_path)/theano
   output_path: $(Build.ArtifactStagingDirectory)
 
 steps:
@@ -18,8 +20,8 @@ steps:
 
 - task: Cache@2
   inputs:
-    key: conda | $(Agent.OS) | exoplanet/environment.yml | requirements-notebooks.txt
-    path: $(conda_path)
+    key: conda | theano | $(Agent.OS) | exoplanet/environment.yml | requirements-notebooks.txt
+    path: $(cache_path)
     cacheHitVar: CACHE_RESTORED
 
 - script: .ci/azure/install_deps.sh

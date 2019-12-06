@@ -3,12 +3,13 @@
 set -e
 
 echo $CONDA_PATH
+echo $THEANO_PATH
 echo $OUTPUT_PATH
 
 . $CONDA/etc/profile.d/conda.sh
 conda activate $CONDA_PATH
 conda env export > $OUTPUT_PATH/environment.yml
-export THEANO_FLAGS=base_compiledir=`pwd`/theano_cache
+export THEANO_FLAGS=base_compiledir=$THEANO_PATH
 cd docs
 python run_notebooks.py notebooks/rv.ipynb
 
