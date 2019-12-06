@@ -11,19 +11,26 @@ steps:
     git submodule update --init
   displayName: 'Fetch submodules'
 
+- task: Cache@2
+  inputs:
+    key: conda | $(Agent.OS) | exoplanet/environment.yml
+    path: $(Pipeline.Workspace)/conda
+    cacheHitVar: CACHE_RESTORED
+
 - script: |
     sudo chown -R $USER $CONDA
     . $CONDA/etc/profile.d/conda.sh
-    conda env update --prefix ./env -f exoplanet/environment.yml -q --prune
-    conda activate ./env
+    conda env update --prefix $(Pipeline.Workspace)/conda -f exoplanet/environment.yml -q --prune
+    conda activate $(Pipeline.Workspace)/conda
     python -m pip install -U -r requirements-notebooks.txt
     python -m pip install -e ./exoplanet
     conda env export > $(Build.ArtifactStagingDirectory)/environment.yml
   displayName: 'Setup conda'
+  condition: ne(variables.CACHE_RESTORED, 'true')
 
 - script: |
     . $CONDA/etc/profile.d/conda.sh
-    conda activate ./env
+    conda activate $(Pipeline.Workspace)/conda
     export THEANO_FLAGS=base_compiledir=`pwd`/theano_cache
     cd docs
     python run_notebooks.py notebooks/rv.ipynb
