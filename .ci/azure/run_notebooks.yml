@@ -5,44 +5,31 @@ trigger:
 pool:
   vmImage: Ubuntu-16.04
 
+variables:
+  conda_path: $(Pipeline.Workspace)/conda
+  output_path: $(Build.ArtifactStagingDirectory)
+
 steps:
 
 - script: |
     git submodule update --init
-  displayName: 'Fetch submodules'
+    sudo chown -R $USER $CONDA
+  displayName: 'Setup'
 
 - task: Cache@2
   inputs:
-    key: conda | $(Agent.OS) | exoplanet/environment.yml
-    path: $(Pipeline.Workspace)/conda
+    key: conda | $(Agent.OS) | exoplanet/environment.yml | requirements-notebooks.txt
+    path: $(conda_path)
     cacheHitVar: CACHE_RESTORED
 
-- script: |
-    sudo chown -R $USER $CONDA
-    . $CONDA/etc/profile.d/conda.sh
-    conda env update --prefix $(Pipeline.Workspace)/conda -f exoplanet/environment.yml -q --prune
-    conda activate $(Pipeline.Workspace)/conda
-    python -m pip install -U -r requirements-notebooks.txt
-    python -m pip install -e ./exoplanet
-    conda env export > $(Build.ArtifactStagingDirectory)/environment.yml
-  displayName: 'Setup conda'
+- script: .ci/azure/install_deps.sh
+  displayName: 'Install dependencies'
   condition: ne(variables.CACHE_RESTORED, 'true')
 
-- script: |
-    . $CONDA/etc/profile.d/conda.sh
-    conda activate $(Pipeline.Workspace)/conda
-    export THEANO_FLAGS=base_compiledir=`pwd`/theano_cache
-    cd docs
-    python run_notebooks.py notebooks/rv.ipynb
+- script: .ci/azure/run_notebooks.sh
   displayName: 'Run notebooks'
-
-- script: |
-    cp docs/_static/notebooks/*.ipynb $(Build.ArtifactStagingDirectory)
-    cp docs/notebooks/notebook_setup.py $(Build.ArtifactStagingDirectory)
-    cp docs/notebook_errors.log $(Build.ArtifactStagingDirectory)
-  displayName: 'Save generated notebooks'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathToPublish: $(Build.ArtifactStagingDirectory)
+    pathToPublish: $(output_path)
     artifactName: Notebooks
