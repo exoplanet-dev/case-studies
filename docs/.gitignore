@@ -1,2 +1,4 @@
 _build
 xml
+tutorials/*.rst
+tutorials/*_files

@@ -64,9 +64,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "exoplanet"
+project = "case studies"
 author = "Dan Foreman-Mackey"
-copyright = "2018, 2019, " + author
+copyright = "2018, 2019, 2020, " + author
 
 version = __version__
 release = __version__
