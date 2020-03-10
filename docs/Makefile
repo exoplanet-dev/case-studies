@@ -16,28 +16,34 @@ I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
 default: dirhtml
 
+vpath %.ipynb _static/notebooks
+ALL_TUTORIALS = $(patsubst _static/notebooks/%.ipynb,tutorials/%.rst,$(wildcard _static/notebooks/*.ipynb))
+TUTORIAL_FILES = $(patsubst _static/notebooks/%.ipynb,tutorials/%_files,$(wildcard _static/notebooks/*.ipynb))
+
+tutorials/%.rst: %.ipynb tutorials/tutorial_rst.tpl
+	jupyter nbconvert --TemplateExporter.filters={\"fix_links\"\:\ \"link_fixer.fix_links\"} --template tutorials/tutorial_rst --to rst $< --output-dir tutorials
+
+.PHONY: tutorials
+tutorials: $(ALL_TUTORIALS)
+
 .PHONY: clean
 clean:
-	rm -rf $(BUILDDIR)/* $(TUTORIALS)
+	rm -rf $(BUILDDIR)/* $(ALL_TUTORIALS) $(TUTORIAL_FILES)
 
 .PHONY: html
-html:
+html: tutorials
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 .PHONY: dirhtml
-dirhtml:
+dirhtml: tutorials
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/dirhtml."
 
 .PHONY: singlehtml
-singlehtml:
+singlehtml: tutorials
 	$(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
 	@echo
 	@echo "Build finished. The HTML page is in $(BUILDDIR)/singlehtml."
-
-.PHONY: runallnotebooks
-runallnotebooks:
-	ls _static/notebooks/*.ipynb | xargs -I '{}' jupyter nbconvert --to=notebook --inplace --ExecutePreprocessor.enabled=True --ExecutePreprocessor.timeout=-1 {}
