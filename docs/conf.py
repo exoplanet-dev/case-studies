@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import glob
 import os
 import subprocess
-from itertools import chain
 
 import sphinx_typlog_theme
 from pkg_resources import DistributionNotFound, get_distribution
@@ -37,26 +35,30 @@ autodoc_mock_imports = [
 ]
 
 # Convert the tutorials
-for fn in chain(
-    glob.glob("_static/notebooks/*.ipynb"),
-    glob.glob("_static/notebooks/gallery/*.ipynb"),
-):
-    name = os.path.splitext(os.path.split(fn)[1])[0]
-    outfn = os.path.join("tutorials", name + ".rst")
-    print("Building {0}...".format(name))
-    subprocess.check_call(
-        "jupyter nbconvert --template tutorials/tutorial_rst --to rst "
-        + fn
-        + " --output-dir tutorials",
-        shell=True,
-    )
-    subprocess.check_call("python fix_internal_links.py " + outfn, shell=True)
+if os.environ.get("READTHEDOCS", "False") == "True":
+    subprocess.check_call("make tutorials", shell=True)
+
+# for fn in chain(
+#     glob.glob("_static/notebooks/*.ipynb"),
+#     glob.glob("_static/notebooks/gallery/*.ipynb"),
+# ):
+#     name = os.path.splitext(os.path.split(fn)[1])[0]
+#     outfn = os.path.join("tutorials", name + ".rst")
+#     print("Building {0}...".format(name))
+#     subprocess.check_call(
+#         "jupyter nbconvert --template tutorials/tutorial_rst --to rst "
+#         + fn
+#         + " --output-dir tutorials",
+#         shell=True,
+#     )
+#     subprocess.check_call("python fix_internal_links.py " + outfn, shell=True)
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "numpy": ("https://docs.scipy.org/doc/numpy/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
-    "astropy": ("http://docs.astropy.org/en/stable/", None),
+    "astropy": ("https://docs.astropy.org/en/stable/", None),
+    "exoplanet": ("https://docs.exoplanet.codes/en/latest/", None),
 }
 
 templates_path = ["_templates"]
@@ -83,6 +85,7 @@ html_sidebars = {
     "**": ["logo.html", "globaltoc.html", "relations.html", "searchbox.html"]
 }
 html_static_path = ["_static"]
+html_additional_pages = {"index": "index.html"}
 
 # Get the git branch name
 html_context = dict(

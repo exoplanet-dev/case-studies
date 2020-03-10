@@ -1,8 +1,6 @@
 {%- extends 'display_priority.tpl' -%}
 
 {% block header %}
-.. module:: exoplanet
-
 .. note:: This tutorial was generated from an IPython notebook that can be
           downloaded `here <../../_static/notebooks/{{ resources.metadata.name }}.ipynb>`_.
 
@@ -76,7 +74,7 @@
 {% endblock data_html %}
 
 {% block markdowncell scoped %}
-{{ cell.source | markdown2rst }}
+{{ cell.source | markdown2rst | fix_links }}
 {% endblock markdowncell %}
 
 {%- block rawcell scoped -%}
@@ -86,7 +84,7 @@
 {%- endblock rawcell -%}
 
 {% block headingcell scoped %}
-{{ ("#" * cell.level + cell.source) | replace('\n', ' ') | markdown2rst }}
+{{ ("#" * cell.level + cell.source) | replace('\n', ' ') | markdown2rst | fix_links }}
 {% endblock headingcell %}
 
 {% block unknowncell scoped %}

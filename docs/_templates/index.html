@@ -1,0 +1,128 @@
+{%- set url_root = pathto('', 1) %}
+{%- if url_root == '#' %}{% set url_root = '' %}{% endif %}
+{%- if not embedded and docstitle %}
+{%- set titlesuffix = " &mdash; "|safe + docstitle|e %}
+{%- else %}
+{%- set titlesuffix = "" %}
+{%- endif %}
+{%- set lang_attr = 'en' if language == None else (language | replace('_', '-')) -%}
+
+<!DOCTYPE html>
+<html lang="{{lang_attr}}">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{ metatags }}
+  {%- block htmltitle -%}
+  <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+  {% endblock %}
+  {%- if favicon -%}
+  <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1) }}" />
+  {%- endif %}
+  {%- if theme_canonical_url -%}
+  <link rel="canonical" href="{{ theme_canonical_url }}{{ pagename }}.html" />
+  {%- endif -%}
+
+  {%- if not embedded and use_opensearch -%}
+  <link rel="search" type="application/opensearchdescription+xml"
+    title="{% trans docstitle=docstitle|e %}Search within {{ docstitle }}{% endtrans %}"
+    href="{{ pathto('_static/opensearch.xml', 1) }}" />
+  {%- endif %}
+  {%- include "style.html" -%}
+  <link rel="stylesheet" href="{{ pathto('_static/' + style, 1) }}?v={{ theme_version }}" type="text/css" />
+  <link rel="stylesheet" href="{{ pathto('_static/theme.css', 1) }}?v={{ theme_version }}" type="text/css" />
+  {%- for cssfile in css_files -%}
+  <link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css" />
+  {%- endfor %}
+
+  {%- for cssfile in extra_css_files -%}
+  <link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css" />
+  {%- endfor %}
+
+  {%- block linktags %}
+  {%- if hasdoc('about') %}
+  <link rel="author" title="{{ _('About these documents') }}" href="{{ pathto('about') }}" />
+  {%- endif %}
+  {%- if hasdoc('genindex') %}
+  <link rel="index" title="{{ _('Index') }}" href="{{ pathto('genindex') }}" />
+  {%- endif %}
+  {%- if hasdoc('search') %}
+  <link rel="search" title="{{ _('Search') }}" href="{{ pathto('search') }}" />
+  {%- endif %}
+  {%- if hasdoc('copyright') %}
+  <link rel="copyright" title="{{ _('Copyright') }}" href="{{ pathto('copyright') }}" />
+  {%- endif %}
+  <link rel="top" title="{{ docstitle|e }}" href="{{ pathto('index') }}" />
+  {%- if parents %}
+  <link rel="up" title="{{ parents[-1].title|striptags|e }}" href="{{ parents[-1].link|e }}" />
+  {%- endif %}
+  {%- if next %}
+  <link rel="next" title="{{ next.title|striptags|e }}" href="{{ next.link|e }}" />
+  {%- endif %}
+  {%- if prev %}
+  <link rel="prev" title="{{ prev.title|striptags|e }}" href="{{ prev.link|e }}" />
+  {%- endif %}
+  {%- endblock %}
+  <script>{% include "js/ga.js" %}</script>
+  {%- block scripts %}
+  {%- include "scripts.html" %}
+  {%- endblock %}
+  {%- if theme_meta_html %}{{ theme_meta_html }}{% endif %}
+  {%- block extrahead %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ project }}">
+  <meta property="og:title" content="{{ title|striptags|e }}">
+  <meta property="og:description" content="{{ theme_description }}">
+  <meta name="twitter:card" content="summary">
+  {%- if theme_twitter %}
+  <meta name="twitter:creator" content="@{{ theme_twitter }}">
+  {%- endif -%}
+  {% endblock %}
+</head>
+
+<body role="document" data-page="{{ pagename }}">
+  <header class="t-head">
+    <div class="t-head_menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path d="M64 384h384v-42.666H64V384zm0-106.666h384v-42.667H64v42.667zM64 128v42.665h384V128H64z" />
+      </svg></div>
+    <a class="t-head_logo" href="{{ pathto(master_doc) }}">
+      {%- if theme_logo -%}
+      <img src="{{ pathto('_static/' ~ theme_logo, 1) }}" alt="Logo" />
+      {%- endif -%}
+      {{ project }}
+    </a>
+  </header>
+  <div class="t-content">
+    <div class="t-body yue">
+      {%- if theme_warning %}
+      <div class="versionchanged">
+        <p>{{ theme_warning }}</p>
+      </div>
+      {%- endif %}
+      {% block body %}
+      hi
+      {{ body }}
+      <div class="t-pagination clearfix">
+        {%- if prev %}
+        <span>
+          ← <a href="{{ prev.link|e }}" title="{{ prev.title }}">{{ prev.title|truncate(30) }}</a>
+        </span>
+        {%- endif %}
+        {%- if next %}
+        <span style="float:right">
+          <a href="{{ next.link|e }}" title="{{ next.title }}">{{ next.title|truncate(30) }}</a> →
+        </span>
+        {%- endif %}
+      </div>
+      {% endblock %}
+    </div>
+    <div id="ethical-ad-placement"></div>
+    {%- block footer %}
+    {%- include "footer.html" %}
+    {%- endblock %}
+  </div>
+  <script>{% include "js/app.js" %}</script>
+</body>
+
+</html>
