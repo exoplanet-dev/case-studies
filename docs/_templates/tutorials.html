@@ -1,0 +1,12 @@
+<div class="case-studies">
+    {% for study in case_studies %}
+    <div class="case-study">
+        <a href="{{ pathto('tutorials/' ~ study.slug) }}">
+            <div class="fig-wrap">
+                <img src="{{ pathto('_images/' ~ study.figure, 1) }}" alt="Figure from {{ study.title }}" />
+            </div>
+            {{ study.title }}
+        </a>
+    </div>
+    {% endfor %}
+</div>
