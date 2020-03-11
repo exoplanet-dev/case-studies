@@ -1,3 +1,2 @@
 docs/notebooks/*.ipynb filter=nbstripout
-paper/figures/*.ipynb filter=nbstripout
 *.ipynb diff=ipynb
