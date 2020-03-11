@@ -1,9 +1,9 @@
-submodules:
-  include: all
-  recursive: true
+# submodules:
+#   include: all
+#   recursive: true
 python:
   version: 3.7
   install:
     - requirements: docs/requirements.txt
-    - method: pip
-      path: exoplanet
+    # - method: pip
+    #   path: exoplanet
