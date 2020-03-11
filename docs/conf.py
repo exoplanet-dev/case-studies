@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import glob
 import subprocess
 
 import sphinx_typlog_theme
@@ -38,21 +39,6 @@ autodoc_mock_imports = [
 if os.environ.get("READTHEDOCS", "False") == "True":
     subprocess.check_call("make tutorials", shell=True)
 
-# for fn in chain(
-#     glob.glob("_static/notebooks/*.ipynb"),
-#     glob.glob("_static/notebooks/gallery/*.ipynb"),
-# ):
-#     name = os.path.splitext(os.path.split(fn)[1])[0]
-#     outfn = os.path.join("tutorials", name + ".rst")
-#     print("Building {0}...".format(name))
-#     subprocess.check_call(
-#         "jupyter nbconvert --template tutorials/tutorial_rst --to rst "
-#         + fn
-#         + " --output-dir tutorials",
-#         shell=True,
-#     )
-#     subprocess.check_call("python fix_internal_links.py " + outfn, shell=True)
-
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "numpy": ("https://docs.scipy.org/doc/numpy/", None),
@@ -76,6 +62,22 @@ release = __version__
 exclude_patterns = ["_build"]
 pygments_style = "sphinx"
 
+# List of case studies
+case_studies = [
+    dict(
+        slug="stellar-variability",
+        title="Gaussian process models for stellar variability",
+        figure="stellar-variability_10_0.png",
+    ),
+    dict(
+        slug="together",
+        title="Putting it all together",
+        figure="together_35_0.png",
+    ),
+    dict(slug="tess", title="Fitting TESS data", figure="tess_29_0.png",),
+    dict(slug="ttv", title="Fitting transit times", figure="ttv_19_0.png",),
+]
+
 # HTML theme
 html_favicon = "_static/logo.png"
 html_theme = "exoplanet"
@@ -91,4 +93,5 @@ html_additional_pages = {"index": "index.html"}
 html_context = dict(
     this_branch="master",
     this_version=os.environ.get("READTHEDOCS_VERSION", "latest"),
+    case_studies=case_studies,
 )
