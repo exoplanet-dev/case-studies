@@ -4,8 +4,9 @@ language: python
 python: "3.7"
 install:
   - travis_retry python -m pip install -U pip setuptools
-  - travis_retry python -m pip install -U isort black black_nbconvert
+  - travis_retry python -m pip install -U isort black black_nbconvert nbstripout
 script:
   - isort -c -rc docs
   - black --check docs
   - black_nbconvert --check docs
+  - .ci/nbcheckout.sh
