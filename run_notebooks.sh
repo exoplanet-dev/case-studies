@@ -9,6 +9,7 @@ conda activate base
 
 git checkout master
 git pull origin master
+rm -rf exoplanet
 git clone https://github.com/exoplanet-dev/exoplanet.git exoplanet
 
 rm -rf env
