@@ -9,7 +9,8 @@ conda activate base
 
 git checkout master
 git pull origin master
-git submodule update
+rm -rf exoplanet
+git clone https://github.com/exoplanet-dev/exoplanet.git exoplanet
 
 rm -rf env
 conda env update --prefix ./env -f exoplanet/environment.yml --prune
@@ -34,7 +35,7 @@ git add _static/notebooks/notebook_setup.py
 git add _static/notebooks/*.ipynb
 
 git -c user.name='exoplanetbot' -c user.email='exoplanetbot' commit -am "updating notebooks [ci skip]"
-git push -q -f https://dfm:`cat .github_api_key`@github.com/dfm/exoplanet-docs.git auto_notebooks
+git push -q -f https://dfm:`cat .github_api_key`@github.com/exoplanet-dev/case-studies.git auto_notebooks
 
 cd ..
 git checkout master
