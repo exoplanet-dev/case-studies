@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import glob
 import subprocess
 
 import sphinx_typlog_theme
