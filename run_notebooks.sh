@@ -28,7 +28,7 @@ git checkout -b auto_notebooks master
 cd docs
 conda env export > auto_environment.yml
 
-python run_notebooks.py $*
+DISPLAY=:99.0 python run_notebooks.py $*
 
 cp notebooks/notebook_setup.py _static/notebooks/notebook_setup.py
 git add _static/notebooks/notebook_setup.py
