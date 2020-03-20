@@ -2,6 +2,11 @@
 
 get_ipython().magic('config InlineBackend.figure_format = "retina"')
 
+# TEMPORARY WORKAROUND
+import multiprocessing as mp
+
+mp.set_start_method("fork")
+
 import logging
 import warnings
 
