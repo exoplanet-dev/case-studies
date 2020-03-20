@@ -8,4 +8,5 @@ Table of Contents
    tutorials/stellar-variability
    tutorials/together
    tutorials/tess
+   tutorials/quick-tess
    tutorials/ttv
