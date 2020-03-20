@@ -73,8 +73,13 @@ case_studies = [
         title="Putting it all together",
         figure="together_35_0.png",
     ),
-    dict(slug="tess", title="Fitting TESS data", figure="tess_29_0.png",),
-    dict(slug="ttv", title="Fitting transit times", figure="ttv_19_0.png",),
+    dict(slug="tess", title="Fitting TESS data", figure="tess_29_0.png"),
+    dict(
+        slug="quick-tess",
+        title="Quick fits for TESS light curves",
+        figure="quick-tess_15_0.png",
+    ),
+    dict(slug="ttv", title="Fitting transit times", figure="ttv_19_0.png"),
 ]
 
 # HTML theme
