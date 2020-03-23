@@ -77,7 +77,7 @@ case_studies = [
     dict(
         slug="quick-tess",
         title="Quick fits for TESS light curves",
-        figure="quick-tess_15_0.png",
+        figure="quick-tess_14_0.png",
     ),
     dict(slug="ttv", title="Fitting transit times", figure="ttv_19_0.png"),
 ]
