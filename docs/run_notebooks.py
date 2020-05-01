@@ -6,6 +6,7 @@ import multiprocessing
 import os
 import re
 import sys
+import time
 
 import nbformat
 from nbconvert.preprocessors import CellExecutionError, ExecutePreprocessor
@@ -41,6 +42,7 @@ def process_notebook(filename):
     ep = ExecutePreprocessor(timeout=-1)
 
     print("running: {0}".format(filename))
+    start = time.time()
     try:
         ep.preprocess(notebook, {"metadata": {"path": "notebooks/"}})
     except CellExecutionError as e:
@@ -51,6 +53,7 @@ def process_notebook(filename):
     finally:
         with open(os.path.join("_static", filename), mode="wt") as f:
             nbformat.write(notebook, f)
+    print("{0} took {1} seconds".format(filename, time.time() - start))
 
     return "\n\n".join(errors)
 
