@@ -7,10 +7,14 @@ import multiprocessing as mp
 
 mp.set_start_method("fork")
 
+import os
 import logging
 import warnings
 
 import matplotlib.pyplot as plt
+
+# Don't use the schmantzy progress bar
+os.environ["EXOPLANET_NO_AUTO_PBAR"] = "true"
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
