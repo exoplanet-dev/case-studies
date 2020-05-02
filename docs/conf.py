@@ -80,6 +80,11 @@ case_studies = [
         figure="quick-tess_14_0.png",
     ),
     dict(slug="ttv", title="Fitting transit times", figure="ttv_19_0.png"),
+    dict(
+        slug="eb",
+        title="Fitting a detached eclipsing binary",
+        figure="eb_13_0.png",
+    ),
 ]
 
 # HTML theme
