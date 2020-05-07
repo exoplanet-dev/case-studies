@@ -85,6 +85,11 @@ case_studies = [
         title="Fitting a detached eclipsing binary",
         figure="eb_13_0.png",
     ),
+    dict(
+        slug="rv-multi",
+        title="RVs with multiple instruments",
+        figure="rv-multi_13_0.png",
+    ),
 ]
 
 # HTML theme
