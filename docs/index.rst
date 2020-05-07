@@ -11,3 +11,4 @@ Table of Contents
    tutorials/quick-tess
    tutorials/ttv
    tutorials/eb
+   tutorials/rv-multi
