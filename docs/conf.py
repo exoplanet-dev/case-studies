@@ -90,6 +90,11 @@ case_studies = [
         title="RVs with multiple instruments",
         figure="rv-multi_13_0.png",
     ),
+    dict(
+        slug="lc-multi",
+        title="Fitting light curves from multiple instruments",
+        figure="lc-multi_7_0.png",
+    ),
 ]
 
 # HTML theme

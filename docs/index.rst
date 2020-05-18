@@ -12,3 +12,4 @@ Table of Contents
    tutorials/ttv
    tutorials/eb
    tutorials/rv-multi
+   tutorials/lc-multi
