@@ -48,7 +48,7 @@ y = np.ascontiguousarray(1e3 * (flux[m] - 1.0), dtype=np.float64)
 plt.plot(x, y, ".k")
 plt.xlabel("time [days]")
 plt.ylabel("relative flux [ppt]")
-plt.xlim(x.min(), x.max());
+plt.xlim(x.min(), x.max())
 # -
 
 # ## Transit search
@@ -107,7 +107,7 @@ ax.plot(0.5 * (bins[1:] + bins[:-1]), num / denom, color="C1")
 
 ax.set_xlim(-0.3, 0.3)
 ax.set_ylabel("de-trended flux [ppt]")
-ax.set_xlabel("time since transit");
+ax.set_xlabel("time since transit")
 # -
 
 # ## The transit model in PyMC3
@@ -136,8 +136,12 @@ def build_model(mask=None, start=None):
         M_star_huang = 1.094, 0.039
         R_star_huang = 1.10, 0.023
         BoundedNormal = pm.Bound(pm.Normal, lower=0, upper=3)
-        m_star = BoundedNormal("m_star", mu=M_star_huang[0], sd=M_star_huang[1])
-        r_star = BoundedNormal("r_star", mu=R_star_huang[0], sd=R_star_huang[1])
+        m_star = BoundedNormal(
+            "m_star", mu=M_star_huang[0], sd=M_star_huang[1]
+        )
+        r_star = BoundedNormal(
+            "r_star", mu=R_star_huang[0], sd=R_star_huang[1]
+        )
 
         # Orbital parameters for the planets
         period = pm.Lognormal("period", mu=np.log(bls_period), sd=1)
@@ -145,7 +149,8 @@ def build_model(mask=None, start=None):
         r_pl = pm.Lognormal(
             "r_pl",
             sd=1.0,
-            mu=0.5 * np.log(1e-3 * np.array(bls_depth)) + np.log(R_star_huang[0]),
+            mu=0.5 * np.log(1e-3 * np.array(bls_depth))
+            + np.log(R_star_huang[0]),
         )
         ror = pm.Deterministic("ror", r_pl / r_star)
         b = xo.distributions.ImpactParameter("b", ror=ror)
@@ -201,7 +206,9 @@ def build_model(mask=None, start=None):
         map_soln = pmx.optimize(start=map_soln, vars=[b])
         map_soln = pmx.optimize(start=map_soln, vars=[ecs])
         map_soln = pmx.optimize(start=map_soln, vars=[mean])
-        map_soln = pmx.optimize(start=map_soln, vars=[sigma_lc, sigma_gp, rho_gp])
+        map_soln = pmx.optimize(
+            start=map_soln, vars=[sigma_lc, sigma_gp, rho_gp]
+        )
         map_soln = pmx.optimize(start=map_soln)
 
     return model, map_soln
@@ -247,7 +254,7 @@ def plot_light_curve(soln, mask=None):
     return fig
 
 
-plot_light_curve(map_soln0);
+plot_light_curve(map_soln0)
 # -
 
 # As in the :ref:`together` tutorial, we can do some sigma clipping to remove significant outliers.
@@ -269,13 +276,13 @@ plt.axhline(0, color="#aaaaaa", lw=1)
 plt.ylabel("residuals [ppt]")
 plt.xlabel("time [days]")
 plt.legend(fontsize=12, loc=3)
-plt.xlim(x.min(), x.max());
+plt.xlim(x.min(), x.max())
 # -
 
 # And then we re-build the model using the data without outliers.
 
 model, map_soln = build_model(mask, map_soln0)
-plot_light_curve(map_soln, mask);
+plot_light_curve(map_soln, mask)
 
 # Now that we have the model, we can sample:
 
@@ -329,7 +336,9 @@ bins = np.linspace(-0.41, 0.41, 50)
 denom, _ = np.histogram(x_fold, bins)
 num, _ = np.histogram(x_fold, bins, weights=y[mask])
 denom[num == 0] = 1.0
-plt.plot(0.5 * (bins[1:] + bins[:-1]), num / denom, "o", color="C2", label="binned")
+plt.plot(
+    0.5 * (bins[1:] + bins[:-1]), num / denom, "o", color="C2", label="binned"
+)
 
 # Plot the folded model
 inds = np.argsort(x_fold)
@@ -361,7 +370,7 @@ plt.legend(fontsize=10, loc=4)
 plt.xlim(-0.5 * p, 0.5 * p)
 plt.xlabel("time since transit [days]")
 plt.ylabel("de-trended flux")
-plt.xlim(-0.15, 0.15);
+plt.xlim(-0.15, 0.15)
 # -
 
 # And a corner plot of some of the key parameters:
@@ -378,8 +387,13 @@ samples["r_pl"] = (np.array(samples["r_pl"]) * u.R_sun).to(u.R_earth).value
 
 corner.corner(
     samples[["period", "r_pl", "b", "ecc"]],
-    labels=["period [days]", "radius [Earth radii]", "impact param", "eccentricity"],
-);
+    labels=[
+        "period [days]",
+        "radius [Earth radii]",
+        "impact param",
+        "eccentricity",
+    ],
+)
 # -
 
 # These all seem consistent with the previously published values.

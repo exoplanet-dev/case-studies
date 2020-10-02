@@ -43,7 +43,9 @@ import numpy as np
 import lightkurve as lk
 from collections import OrderedDict
 
-kepler_lcfs = lk.search_lightcurvefile("HAT-P-11", mission="Kepler").download_all()
+kepler_lcfs = lk.search_lightcurvefile(
+    "HAT-P-11", mission="Kepler"
+).download_all()
 kepler_lc = kepler_lcfs.PDCSAP_FLUX.stitch().remove_nans()
 kepler_t = np.ascontiguousarray(kepler_lc.time, dtype=np.float64)
 kepler_y = np.ascontiguousarray(1e3 * (kepler_lc.flux - 1), dtype=np.float64)
@@ -55,7 +57,9 @@ kepler_texp /= 60.0 * 60.0 * 24.0
 
 tess_lcfs = lk.search_lightcurvefile("HAT-P-11", mission="TESS").download_all()
 tess_lc = tess_lcfs.PDCSAP_FLUX.stitch().remove_nans()
-tess_t = np.ascontiguousarray(tess_lc.time + 2457000 - 2454833, dtype=np.float64)
+tess_t = np.ascontiguousarray(
+    tess_lc.time + 2457000 - 2454833, dtype=np.float64
+)
 tess_y = np.ascontiguousarray(1e3 * (tess_lc.flux - 1), dtype=np.float64)
 tess_yerr = np.ascontiguousarray(1e3 * tess_lc.flux_err, dtype=np.float64)
 
@@ -95,9 +99,11 @@ _ = axes[0].set_ylabel("relative flux [ppt]")
 
 # +
 import pymc3 as pm
+import pymc3_ext as pmx
 import exoplanet as xo
 import theano.tensor as tt
 from functools import partial
+from celerite2.theano import terms, GaussianProcess
 
 # Period and reference transit time from the literature for initialization
 lit_period = 4.887803076
@@ -118,13 +124,17 @@ for i in range(10):
         period = pm.Lognormal("period", mu=np.log(lit_period), sigma=1.0)
         t0 = pm.Normal("t0", mu=t0_ref, sigma=1.0)
         dur = pm.Lognormal("dur", mu=np.log(0.1), sigma=10.0)
-        b = xo.UnitUniform("b")
+        b = pmx.UnitUniform("b")
         ld_arg = 1 - tt.sqrt(1 - b ** 2)
-        orbit = xo.orbits.KeplerianOrbit(period=period, duration=dur, t0=t0, b=b)
+        orbit = xo.orbits.KeplerianOrbit(
+            period=period, duration=dur, t0=t0, b=b
+        )
 
         # We'll also say that the timescale of the GP will be shared
-        ell = pm.InverseGamma(
-            "ell", testval=2.0, **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
+        rho_gp = pm.InverseGamma(
+            "rho_gp",
+            testval=2.0,
+            **pmx.estimate_inverse_gamma_parameters(1.0, 5.0),
         )
 
         # Loop over the instruments
@@ -141,11 +151,13 @@ for i in range(10):
                 mean = pm.Normal("mean", mu=0.0, sigma=10.0)
 
                 # The limb darkening
-                u = xo.distributions.QuadLimbDark("u")
+                u = xo.QuadLimbDark("u")
                 star = xo.LimbDarkLightCurve(u)
 
                 # The radius ratio
-                approx_depth = pm.Lognormal("approx_depth", mu=np.log(4e-3), sigma=10)
+                approx_depth = pm.Lognormal(
+                    "approx_depth", mu=np.log(4e-3), sigma=10
+                )
                 ld = 1 - u[0] * ld_arg - u[1] * ld_arg ** 2
                 ror = pm.Deterministic("ror", tt.sqrt(approx_depth / ld))
 
@@ -155,44 +167,49 @@ for i in range(10):
                 sigma = pm.InverseGamma(
                     "sigma",
                     testval=med_yerr,
-                    **xo.estimate_inverse_gamma_parameters(med_yerr, 0.5 * std),
+                    **pmx.estimate_inverse_gamma_parameters(
+                        med_yerr, 0.5 * std
+                    ),
                 )
-                S_tot = pm.InverseGamma(
-                    "S_tot",
-                    testval=med_yerr,
-                    **xo.estimate_inverse_gamma_parameters(
-                        med_yerr ** 2, 0.25 * std ** 2
+                sigma_gp = pm.InverseGamma(
+                    "sigma_gp",
+                    testval=0.5 * std,
+                    **pmx.estimate_inverse_gamma_parameters(
+                        med_yerr, 0.5 * std
                     ),
                 )
 
                 # Keep track of the parameters for optimization
                 parameters[name] = [mean, u, approx_depth]
-                parameters[f"{name}_noise"] = [sigma, S_tot]
+                parameters[f"{name}_noise"] = [sigma, sigma_gp]
 
             # The light curve model
             def lc_model(mean, star, ror, texp, t):
                 return mean + 1e3 * tt.sum(
-                    star.get_light_curve(orbit=orbit, r=ror, t=t, texp=texp), axis=-1
+                    star.get_light_curve(orbit=orbit, r=ror, t=t, texp=texp),
+                    axis=-1,
                 )
 
             lc_model = partial(lc_model, mean, star, ror, texp)
             lc_models[name] = lc_model
 
             # The Gaussian Process noise model
-            kernel = xo.gp.terms.SHOTerm(S_tot=S_tot, w0=2 * np.pi / ell, Q=1.0 / 3)
-            gp = xo.gp.GP(kernel, x, yerr ** 2 + sigma ** 2, mean=lc_model)
+            kernel = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3)
+            gp = GaussianProcess(
+                kernel, t=x, diag=yerr ** 2 + sigma ** 2, mean=lc_model
+            )
             gp.marginal(f"{name}_obs", observed=y)
-            gp_preds[name] = gp.predict()
-            gp_preds_with_mean[name] = gp.predict(predict_mean=True)
+            gp_preds[name] = gp.predict(y, include_mean=False)
+            gp_preds_with_mean[name] = gp_preds[name] + gp.mean_value
 
         # Optimize the model
         map_soln = model.test_point
         for name in datasets:
-            map_soln = xo.optimize(map_soln, parameters[name])
+            map_soln = pmx.optimize(map_soln, parameters[name])
         for name in datasets:
-            map_soln = xo.optimize(map_soln, parameters[name] + [dur, b])
-            map_soln = xo.optimize(map_soln, parameters[f"{name}_noise"])
-        map_soln = xo.optimize(map_soln)
+            map_soln = pmx.optimize(map_soln, parameters[f"{name}_noise"])
+            map_soln = pmx.optimize(map_soln, parameters[name] + [dur, b])
+        map_soln = pmx.optimize(map_soln)
 
         # Do some sigma clipping
         num = dict((name, len(datasets[name][0])) for name in datasets)
@@ -205,6 +222,7 @@ for i in range(10):
             masks[name] = np.abs(resid - np.median(resid)) < 7 * sigma
             clipped[name] = num[name] - masks[name].sum()
             print(f"Sigma clipped {clipped[name]} {name} light curve points")
+
         if all(c < 10 for c in clipped.values()):
             break
 
@@ -223,7 +241,9 @@ dt = np.linspace(-0.2, 0.2, 500)
 
 with model:
     trends = xo.eval_in_model([gp_preds[k] for k in datasets], map_soln)
-    phase_curves = xo.eval_in_model([lc_models[k](t0 + dt) for k in datasets], map_soln)
+    phase_curves = xo.eval_in_model(
+        [lc_models[k](t0 + dt) for k in datasets], map_soln
+    )
 
 fig, axes = plt.subplots(2, sharex=True, sharey=True, figsize=(8, 6))
 
@@ -242,7 +262,9 @@ for n, name in enumerate(datasets):
         alpha=0.3,
         mec="none",
     )
-    ax.plot(dt, phase_curves[n] - map_soln[f"{name}_mean"], f"C{n}", label=name)
+    ax.plot(
+        dt, phase_curves[n] - map_soln[f"{name}_mean"], f"C{n}", label=name
+    )
     ax.annotate(
         name,
         xy=(1, 0),
@@ -264,18 +286,27 @@ for ax in axes:
 
 np.random.seed(11)
 with model:
-    trace = xo.sample(
-        tune=3500, draws=3000, start=map_soln, chains=4, initial_accept=0.5
+    trace = pmx.sample(
+        tune=3500,
+        draws=3000,
+        start=map_soln,
+        cores=2,
+        chains=2,
+        initial_accept=0.5,
     )
 
 # And check the convergence diagnostics:
 
-pm.summary(trace)
+with model:
+    summary = pm.summary(trace)
+summary
 
 # Since we fit for a radius ratio in each band, we can see if the transit depth is different in Kepler compared to TESS.
 # The plot below demonstrates that there is no statistically significant difference between the radii measured in these two bands:
 
-plt.hist(trace["Kepler_ror"], 30, density=True, histtype="step", label="Kepler")
+plt.hist(
+    trace["Kepler_ror"], 30, density=True, histtype="step", label="Kepler"
+)
 plt.hist(trace["TESS_ror"], 30, density=True, histtype="step", label="TESS")
 plt.yticks([])
 plt.xlabel("effective radius ratio")
@@ -299,7 +330,9 @@ corner.corner(
 )
 fig.axes[0].axvline(-1.0, color="C0", label="Kepler")
 fig.axes[0].axvline(-1.0, color="C1", label="TESS")
-_ = fig.axes[0].legend(fontsize=12, loc="center left", bbox_to_anchor=(1.1, 0.5))
+_ = fig.axes[0].legend(
+    fontsize=12, loc="center left", bbox_to_anchor=(1.1, 0.5)
+)
 # -
 
 # ## Citations

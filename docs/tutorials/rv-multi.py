@@ -64,7 +64,9 @@ num_inst = len(inst_names)
 
 for i, name in enumerate(inst_names):
     m = inst_id == i
-    plt.errorbar(t[m], rv[m] - np.min(rv[m]), yerr=rv_err[m], fmt=".", label=name)
+    plt.errorbar(
+        t[m], rv[m] - np.min(rv[m]), yerr=rv_err[m], fmt=".", label=name
+    )
 
 plt.legend(fontsize=10)
 plt.xlabel("BJD")
@@ -82,23 +84,28 @@ import pymc3 as pm
 import exoplanet as xo
 import theano.tensor as tt
 
+import pymc3_ext as pmx
+from celerite2.theano import terms, GaussianProcess
+
 with pm.Model() as model:
 
     # Parameters describing the orbit
     K = pm.Lognormal("K", mu=np.log(300), sigma=10)
     P = pm.Lognormal("P", mu=np.log(2093.07), sigma=10)
 
-    ecs = xo.UnitDisk("ecs", testval=np.array([0.7, -0.3]))
+    ecs = pmx.UnitDisk("ecs", testval=np.array([0.7, -0.3]))
     ecc = pm.Deterministic("ecc", tt.sum(ecs ** 2))
     omega = pm.Deterministic("omega", tt.arctan2(ecs[1], ecs[0]))
-    phase = xo.UnitUniform("phase")
+    phase = pmx.UnitUniform("phase")
     tp = pm.Deterministic("tp", 0.5 * (t.min() + t.max()) + phase * P)
 
-    orbit = xo.orbits.KeplerianOrbit(period=P, t_periastron=tp, ecc=ecc, omega=omega)
+    orbit = xo.orbits.KeplerianOrbit(
+        period=P, t_periastron=tp, ecc=ecc, omega=omega
+    )
 
     # Noise model parameters
-    S_tot = pm.Lognormal("S_tot", mu=np.log(10), sigma=50)
-    ell = pm.Lognormal("ell", mu=np.log(50), sigma=50)
+    sigma_gp = pm.Lognormal("sigma_gp", mu=np.log(10), sigma=50)
+    rho_gp = pm.Lognormal("rho_gp", mu=np.log(50), sigma=50)
 
     # Per instrument parameters
     means = pm.Normal(
@@ -117,22 +124,23 @@ with pm.Model() as model:
         diag += (rv_err ** 2 + sigmas[i] ** 2) * (inst_id == i)
     pm.Deterministic("mean", mean)
     pm.Deterministic("diag", diag)
+    resid = rv - mean
 
     def rv_model(x):
         return orbit.get_radial_velocity(x, K=K)
 
-    kernel = xo.gp.terms.SHOTerm(S_tot=S_tot, w0=2 * np.pi / ell, Q=1.0 / 3)
-    gp = xo.gp.GP(kernel, t, diag, mean=rv_model)
-    gp.marginal("obs", observed=rv - mean)
-    pm.Deterministic("gp_pred", gp.predict())
+    kernel = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3)
+    gp = GaussianProcess(kernel, t=t, diag=diag, mean=rv_model)
+    gp.marginal("obs", observed=resid)
+    pm.Deterministic("gp_pred", gp.predict(resid, include_mean=False))
 
     map_soln = model.test_point
-    map_soln = xo.optimize(map_soln, [means])
-    map_soln = xo.optimize(map_soln, [means, phase])
-    map_soln = xo.optimize(map_soln, [means, phase, K])
-    map_soln = xo.optimize(map_soln, [means, tp, K, P, ecs])
-    map_soln = xo.optimize(map_soln, [sigmas, S_tot, ell])
-    map_soln = xo.optimize(map_soln)
+    map_soln = pmx.optimize(map_soln, [means])
+    map_soln = pmx.optimize(map_soln, [means, phase])
+    map_soln = pmx.optimize(map_soln, [means, phase, K])
+    map_soln = pmx.optimize(map_soln, [means, tp, K, P, ecs])
+    map_soln = pmx.optimize(map_soln, [sigmas, sigma_gp, rho_gp])
+    map_soln = pmx.optimize(map_soln)
 # -
 
 # After fitting for the parameters that maximize the posterior probability, we can plot this model to make sure that things are looking reasonable:
@@ -144,7 +152,9 @@ with model:
 
 detrended = rv - map_soln["mean"] - map_soln["gp_pred"]
 plt.errorbar(t, detrended, yerr=rv_err, fmt=",k")
-plt.scatter(t, detrended, c=inst_id, s=8, zorder=100, cmap="tab10", vmin=0, vmax=10)
+plt.scatter(
+    t, detrended, c=inst_id, s=8, zorder=100, cmap="tab10", vmin=0, vmax=10
+)
 plt.xlim(t_pred.min(), t_pred.max())
 plt.xlabel("BJD")
 plt.ylabel("radial velocity [m/s]")
@@ -155,16 +165,24 @@ _ = plt.title("map model", fontsize=14)
 
 np.random.seed(39091)
 with model:
-    trace = xo.sample(tune=3500, draws=3000, start=map_soln, chains=4)
+    trace = pmx.sample(
+        tune=3500, draws=3000, start=map_soln, chains=2, cores=2
+    )
 
 # Then we can look at some summaries of the trace and the constraints on some of the key parameters:
 
 # +
 import corner
 
-corner.corner(pm.trace_to_dataframe(trace, varnames=["P", "K", "tp", "ecc", "omega"]))
+corner.corner(
+    pm.trace_to_dataframe(trace, varnames=["P", "K", "tp", "ecc", "omega"])
+)
 
-pm.summary(trace, var_names=["P", "K", "tp", "ecc", "omega", "means", "sigmas"])
+with model:
+    summary = pm.summary(
+        trace, var_names=["P", "K", "tp", "ecc", "omega", "means", "sigmas"]
+    )
+summary
 # -
 
 # And finally we can plot the phased RV curve and overplot our posterior inference:
@@ -180,16 +198,34 @@ detrended = rv - mu
 folded = ((t - tp + 0.5 * period) % period) / period
 plt.errorbar(folded, detrended, yerr=np.sqrt(mu_var + jitter_var), fmt=",k")
 plt.scatter(
-    folded, detrended, c=inst_id, s=8, zorder=100, cmap="tab10", vmin=0, vmax=10
+    folded,
+    detrended,
+    c=inst_id,
+    s=8,
+    zorder=100,
+    cmap="tab10",
+    vmin=0,
+    vmax=10,
 )
-plt.errorbar(folded + 1, detrended, yerr=np.sqrt(mu_var + jitter_var), fmt=",k")
+plt.errorbar(
+    folded + 1, detrended, yerr=np.sqrt(mu_var + jitter_var), fmt=",k"
+)
 plt.scatter(
-    folded + 1, detrended, c=inst_id, s=8, zorder=100, cmap="tab10", vmin=0, vmax=10
+    folded + 1,
+    detrended,
+    c=inst_id,
+    s=8,
+    zorder=100,
+    cmap="tab10",
+    vmin=0,
+    vmax=10,
 )
 
 t_phase = np.linspace(-0.5, 0.5, 5000)
 with model:
-    func = xo.get_theano_function_for_var(rv_model(model.P * t_phase + model.tp))
+    func = xo.get_theano_function_for_var(
+        rv_model(model.P * t_phase + model.tp)
+    )
     for point in xo.get_samples_from_trace(trace, 100):
         args = xo.get_args_for_theano_function(point)
         x, y = t_phase + 0.5, func(*args)

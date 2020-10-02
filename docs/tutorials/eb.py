@@ -69,7 +69,9 @@ y = np.ascontiguousarray(lc.flux, dtype=np.float64)
 mu = np.median(y)
 y = (y / mu - 1) * 1e3
 
-plt.plot((x - lit_t0 + 0.5 * lit_period) % lit_period - 0.5 * lit_period, y, ".k")
+plt.plot(
+    (x - lit_t0 + 0.5 * lit_period) % lit_period - 0.5 * lit_period, y, ".k"
+)
 plt.xlim(-0.5 * lit_period, 0.5 * lit_period)
 plt.xlabel("time since primary eclipse [days]")
 _ = plt.ylabel("relative flux [ppt]")
@@ -153,7 +155,9 @@ def build_model(mask):
         # Secondary ratios
         k = pm.Lognormal("k", mu=0.0, sigma=10.0)  # radius ratio
         q = pm.Lognormal("q", mu=0.0, sigma=10.0)  # mass ratio
-        s = pm.Lognormal("s", mu=np.log(0.5), sigma=10.0)  # surface brightness ratio
+        s = pm.Lognormal(
+            "s", mu=np.log(0.5), sigma=10.0
+        )  # surface brightness ratio
 
         # Prior on flux ratio
         pm.Normal(
@@ -193,34 +197,44 @@ def build_model(mask):
 
         # Noise model for the light curve
         sigma_lc = pm.InverseGamma(
-            "sigma_lc", testval=1.0, **xo.estimate_inverse_gamma_parameters(0.1, 2.0)
+            "sigma_lc",
+            testval=1.0,
+            **xo.estimate_inverse_gamma_parameters(0.1, 2.0)
         )
         sigma_gp = pm.InverseGamma(
-            "sigma_gp", testval=0.5, **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
+            "sigma_gp",
+            testval=0.5,
+            **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
         )
         rho_gp = pm.InverseGamma(
-            "rho_gp", testval=5.0, **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
+            "rho_gp",
+            testval=5.0,
+            **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
         )
-        kernel_lc = terms.SHOTerm(
-            sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3
-        )
+        kernel_lc = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3)
 
         # Noise model for the radial velocities
         sigma_rv1 = pm.InverseGamma(
-            "sigma_rv1", testval=1.0, **xo.estimate_inverse_gamma_parameters(0.5, 5.0)
+            "sigma_rv1",
+            testval=1.0,
+            **xo.estimate_inverse_gamma_parameters(0.5, 5.0)
         )
         sigma_rv2 = pm.InverseGamma(
-            "sigma_rv2", testval=1.0, **xo.estimate_inverse_gamma_parameters(0.5, 5.0)
+            "sigma_rv2",
+            testval=1.0,
+            **xo.estimate_inverse_gamma_parameters(0.5, 5.0)
         )
         sigma_rv_gp = pm.InverseGamma(
-            "sigma_rv_gp", testval=1.5, **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
+            "sigma_rv_gp",
+            testval=1.5,
+            **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
         )
         rho_rv_gp = pm.InverseGamma(
-            "rho_rv_gp", testval=2.0, **xo.estimate_inverse_gamma_parameters(1.0, 25.0)
+            "rho_rv_gp",
+            testval=2.0,
+            **xo.estimate_inverse_gamma_parameters(1.0, 25.0)
         )
-        kernel_rv = terms.SHOTerm(
-            sigma=sigma_rv_gp, w0=rho_rv_gp, Q=1.0 / 3
-        )
+        kernel_rv = terms.SHOTerm(sigma=sigma_rv_gp, w0=rho_rv_gp, Q=1.0 / 3)
 
         # Set up the light curve model
         lc = xo.SecondaryEclipseLightCurve(u1, u2, s)
@@ -228,7 +242,8 @@ def build_model(mask):
         def model_lc(t):
             return (
                 mean_lc
-                + 1e3 * lc.get_light_curve(orbit=orbit, r=R2, t=t, texp=texp)[:, 0]
+                + 1e3
+                * lc.get_light_curve(orbit=orbit, r=R2, t=t, texp=texp)[:, 0]
             )
 
         # Condition the light curve model on the data
@@ -266,7 +281,9 @@ def build_model(mask):
         # Then the LC parameters
         map_soln = pmx.optimize(map_soln, [mean_lc, R1, k, s, b])
         map_soln = pmx.optimize(map_soln, [mean_lc, R1, k, s, b, u1, u2])
-        map_soln = pmx.optimize(map_soln, [mean_lc, sigma_lc, sigma_gp, rho_gp])
+        map_soln = pmx.optimize(
+            map_soln, [mean_lc, sigma_lc, sigma_gp, rho_gp]
+        )
         map_soln = pmx.optimize(map_soln, [t0, period])
 
         # Then all the parameters together
@@ -328,7 +345,8 @@ plt.plot(fold, y2_rv - mean, ".", label="secondary")
 x_phase = np.linspace(-0.5 * period, 0.5 * period, 500)
 with model:
     y1_mod, y2_mod = xo.eval_in_model(
-        [model.model_rv1(x_phase + t0), model.model_rv2(x_phase + t0)], map_soln
+        [model.model_rv1(x_phase + t0), model.model_rv2(x_phase + t0)],
+        map_soln,
     )
 plt.plot(x_phase, y1_mod - mean, "C0")
 plt.plot(x_phase, y2_mod - mean, "C1")
@@ -347,8 +365,13 @@ _ = plt.title("HD 23642; map model", fontsize=14)
 
 # +
 with model:
-    gp_pred = xo.eval_in_model(model.gp_lc_pred, map_soln) + map_soln["mean_lc"]
-    lc = xo.eval_in_model(model.model_lc(model.x), map_soln) - map_soln["mean_lc"]
+    gp_pred = (
+        xo.eval_in_model(model.gp_lc_pred, map_soln) + map_soln["mean_lc"]
+    )
+    lc = (
+        xo.eval_in_model(model.model_lc(model.x), map_soln)
+        - map_soln["mean_lc"]
+    )
 
 fig, (ax1, ax2) = plt.subplots(2, sharex=True, figsize=(12, 7))
 
@@ -373,7 +396,9 @@ inds = np.argsort(x_fold)
 
 ax1.plot(x_fold[inds], model.y[inds] - gp_pred[inds], "k.", alpha=0.2)
 ax1.plot(x_fold[inds] - 1, model.y[inds] - gp_pred[inds], "k.", alpha=0.2)
-ax2.plot(x_fold[inds], model.y[inds] - gp_pred[inds], "k.", alpha=0.2, label="data!")
+ax2.plot(
+    x_fold[inds], model.y[inds] - gp_pred[inds], "k.", alpha=0.2, label="data!"
+)
 ax2.plot(x_fold[inds] - 1, model.y[inds] - gp_pred, "k.", alpha=0.2)
 
 yval = model.y[inds] - gp_pred
@@ -424,7 +449,12 @@ import corner
 samples = pm.trace_to_dataframe(trace, varnames=["k", "q", "ecs"])
 _ = corner.corner(
     samples,
-    labels=["$k = R_2 / R_1$", "$q = M_2 / M_1$", "$e\,\cos\omega$", "$e\,\sin\omega$"],
+    labels=[
+        "$k = R_2 / R_1$",
+        "$q = M_2 / M_1$",
+        "$e\,\cos\omega$",
+        "$e\,\sin\omega$",
+    ],
 )
 # -
 
@@ -436,7 +466,9 @@ _ = corner.corner(
 samples = pm.trace_to_dataframe(trace, varnames=["R1", "R2", "M1", "M2"])
 weights = 1.0 / trace["ecc"]
 weights *= len(weights) / np.sum(weights)
-fig = corner.corner(samples, weights=weights, plot_datapoints=False, color="C1")
+fig = corner.corner(
+    samples, weights=weights, plot_datapoints=False, color="C1"
+)
 _ = corner.corner(samples, truths=[1.727, 1.503, 2.203, 1.5488], fig=fig)
 
 # ## A note about eccentricities
@@ -471,7 +503,9 @@ plt.yticks([])
 plt.legend(fontsize=12)
 
 plt.figure()
-plt.hist(trace["ecc"], 50, density=True, histtype="step", label="$p(e) = 2\,e$")
+plt.hist(
+    trace["ecc"], 50, density=True, histtype="step", label="$p(e) = 2\,e$"
+)
 plt.hist(
     trace["ecc"],
     50,
@@ -508,7 +542,9 @@ print(
 samples = trace["R1"]
 
 print(
-    "for p(e) = 2*e: R1 = {0:.3f} ± {1:.3f}".format(np.mean(samples), np.std(samples))
+    "for p(e) = 2*e: R1 = {0:.3f} ± {1:.3f}".format(
+        np.mean(samples), np.std(samples)
+    )
 )
 
 mean = np.sum(weights * samples) / np.sum(weights)

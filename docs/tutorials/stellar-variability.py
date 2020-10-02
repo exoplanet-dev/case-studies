@@ -29,7 +29,9 @@ import numpy as np
 import lightkurve as lk
 import matplotlib.pyplot as plt
 
-lcf = lk.search_lightcurvefile("TIC 10863087").download_all(quality_bitmask="hardest")
+lcf = lk.search_lightcurvefile("TIC 10863087").download_all(
+    quality_bitmask="hardest"
+)
 lc = lcf.PDCSAP_FLUX.stitch().remove_nans().remove_outliers()
 lc = lc[:5000]
 _, mask = lc.flatten().remove_outliers(sigma=3.0, return_mask=True)
@@ -46,7 +48,7 @@ plt.plot(x, y, "k")
 plt.xlim(x.min(), x.max())
 plt.xlabel("time [days]")
 plt.ylabel("relative flux [ppt]")
-plt.title("TIC 10863087");
+plt.title("TIC 10863087")
 # -
 
 # ## A Gaussian process model for stellar variability
@@ -68,7 +70,7 @@ plt.axvline(peak["period"], color="k", lw=4, alpha=0.3)
 plt.xlim((1 / freq).min(), (1 / freq).max())
 plt.yticks([])
 plt.xlabel("period [days]")
-plt.ylabel("power");
+plt.ylabel("power")
 # -
 
 # Now, using this initialization, we can set up the GP model in *exoplanet*.
@@ -91,8 +93,12 @@ with pm.Model() as model:
     jitter = pm.Lognormal("jitter", mu=np.log(np.mean(yerr)), sd=2.0)
 
     # A term to describe the non-periodic variability
-    sigma = pm.InverseGamma("sigma", **pmx.estimate_inverse_gamma_parameters(1.0, 5.0))
-    rho = pm.InverseGamma("rho", **pmx.estimate_inverse_gamma_parameters(0.5, 2.0))
+    sigma = pm.InverseGamma(
+        "sigma", **pmx.estimate_inverse_gamma_parameters(1.0, 5.0)
+    )
+    rho = pm.InverseGamma(
+        "rho", **pmx.estimate_inverse_gamma_parameters(0.5, 2.0)
+    )
 
     # The parameters of the RotationTerm kernel
     sigma_rot = pm.InverseGamma(
@@ -105,7 +111,9 @@ with pm.Model() as model:
 
     # Set up the Gaussian Process model
     kernel = terms.SHOTerm(sigma=sigma, rho=rho, Q=1 / 3.0)
-    kernel += terms.RotationTerm(sigma=sigma_rot, period=period, Q0=Q0, dQ=dQ, f=f)
+    kernel += terms.RotationTerm(
+        sigma=sigma_rot, period=period, Q0=Q0, dQ=dQ, f=f
+    )
     gp = GaussianProcess(
         kernel, t=x, diag=yerr ** 2 + jitter ** 2, mean=mean, quiet=True
     )
@@ -129,7 +137,7 @@ plt.xlim(x.min(), x.max())
 plt.legend(fontsize=10)
 plt.xlabel("time [days]")
 plt.ylabel("relative flux [ppt]")
-plt.title("TIC 10863087; map model");
+plt.title("TIC 10863087; map model")
 
 # That looks pretty good!
 # Now let's sample from the posterior using :func:`exoplanet.get_dense_nuts_step`.
@@ -137,7 +145,12 @@ plt.title("TIC 10863087; map model");
 np.random.seed(10863087)
 with model:
     trace = pmx.sample(
-        tune=2500, draws=2000, start=map_soln, cores=2, chains=2, target_accept=0.95
+        tune=2500,
+        draws=2000,
+        start=map_soln,
+        cores=2,
+        chains=2,
+        target_accept=0.95,
     )
 
 # Now we can do the usual convergence checks:
@@ -165,18 +178,22 @@ period_samples = trace["period"]
 plt.hist(period_samples, 25, histtype="step", color="k", density=True)
 plt.yticks([])
 plt.xlabel("rotation period [days]")
-plt.ylabel("posterior density");
+plt.ylabel("posterior density")
 
 # +
 np.random.seed(10863087)
 with model:
     approx = pm.fit(
-        n=20000, method="fullrank_advi", obj_optimizer=pm.adagrad(learning_rate=1e-1)
+        n=20000,
+        method="fullrank_advi",
+        obj_optimizer=pm.adagrad(learning_rate=1e-1),
     )
     approx_trace = approx.sample(3000)
 
 approx_period_samples = approx_trace["period"]
-plt.hist(period_samples, 25, histtype="step", color="k", density=True, label="MCMC")
+plt.hist(
+    period_samples, 25, histtype="step", color="k", density=True, label="MCMC"
+)
 plt.hist(
     approx_period_samples,
     25,
@@ -189,7 +206,7 @@ plt.hist(
 plt.legend()
 plt.yticks([])
 plt.xlabel("rotation period [days]")
-plt.ylabel("posterior density");
+plt.ylabel("posterior density")
 # -
 
 # ## Citations

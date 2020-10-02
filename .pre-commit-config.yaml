@@ -1,11 +1,16 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
+  rev: v3.2.0
   hooks:
   - id: trailing-whitespace
   - id: end-of-file-fixer
     exclude_types: [json]
   - id: debug-statements
+
+- repo: https://github.com/psf/black
+  rev: 20.8b1
+  hooks:
+  - id: black
 
 - repo: https://github.com/dfm/black_nbconvert
   rev: stable

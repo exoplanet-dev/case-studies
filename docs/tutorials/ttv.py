@@ -77,13 +77,14 @@ ax2.set_ylim(np.max(np.abs(ax2.get_ylim())) * np.array([-1, 1]))
 ax2.set_ylabel("$O-C$ [days]")
 
 ax2.set_xlabel("transit time [days]")
-ax1.set_title("true TTVs");
+ax1.set_title("true TTVs")
 # -
 
 # Now, like in the :ref:`transit` tutorial, we'll set up the the model using `PyMC3` and `exoplanet`, and then simulate a data set from that model.
 
 # +
 import pymc3 as pm
+import pymc3_ext as pmx
 import theano.tensor as tt
 
 np.random.seed(9485023)
@@ -92,7 +93,7 @@ with pm.Model() as model:
 
     # This part of the model is similar to the model in the `transit` tutorial
     mean = pm.Normal("mean", mu=0.0, sd=1.0)
-    u = xo.distributions.QuadLimbDark("u", testval=np.array([0.3, 0.2]))
+    u = xo.QuadLimbDark("u", testval=np.array([0.3, 0.2]))
     logr = pm.Uniform(
         "logr",
         lower=np.log(0.01),
@@ -101,7 +102,7 @@ with pm.Model() as model:
         testval=np.log([0.04, 0.06]),
     )
     r = pm.Deterministic("r", tt.exp(logr))
-    b = xo.distributions.ImpactParameter(
+    b = xo.ImpactParameter(
         "b", ror=r, shape=2, testval=0.5 * np.random.rand(2)
     )
 
@@ -137,22 +138,24 @@ with pm.Model() as model:
     pm.Normal("obs", mu=light_curve, sd=yerr, observed=y)
 
     map_soln = model.test_point
-    map_soln = xo.optimize(start=map_soln, vars=transit_times)
-    map_soln = xo.optimize(start=map_soln, vars=[r, b])
-    map_soln = xo.optimize(start=map_soln, vars=transit_times)
-    map_soln = xo.optimize(start=map_soln)
+    map_soln = pmx.optimize(start=map_soln, vars=transit_times)
+    map_soln = pmx.optimize(start=map_soln, vars=[r, b])
+    map_soln = pmx.optimize(start=map_soln, vars=transit_times)
+    map_soln = pmx.optimize(start=map_soln)
 # -
 
 # Here's our simulated light curve and the initial model:
 
 plt.plot(t, y, ".k", ms=4, label="data")
 for i, l in enumerate("bc"):
-    plt.plot(t, map_soln["light_curves"][:, i], lw=1, label="planet {0}".format(l))
+    plt.plot(
+        t, map_soln["light_curves"][:, i], lw=1, label="planet {0}".format(l)
+    )
 plt.xlim(t.min(), t.max())
 plt.ylabel("relative flux")
 plt.xlabel("time [days]")
 plt.legend(fontsize=10)
-plt.title("map model");
+plt.title("map model")
 
 # This looks similar to the light curve from the :ref:`transit` tutorial, but if we try plotting the folded transits, we can see that something isn't right: these transits look pretty smeared out!
 
@@ -170,7 +173,9 @@ for n, letter in enumerate("bc"):
 
     # Plot the folded data
     x_fold = (t - t0 + 0.5 * p) % p - 0.5 * p
-    plt.errorbar(x_fold, y - other, yerr=yerr, fmt=".k", label="data", zorder=-1000)
+    plt.errorbar(
+        x_fold, y - other, yerr=yerr, fmt=".k", label="data", zorder=-1000
+    )
 
     plt.legend(fontsize=10, loc=4)
     plt.xlim(-0.5 * p, 0.5 * p)
@@ -193,7 +198,9 @@ for n, letter in enumerate("bc"):
 
     # NOTE: 't0' has already been subtracted!
     x_fold = (t_warp[:, n] + 0.5 * p) % p - 0.5 * p
-    plt.errorbar(x_fold, y - other, yerr=yerr, fmt=".k", label="data", zorder=-1000)
+    plt.errorbar(
+        x_fold, y - other, yerr=yerr, fmt=".k", label="data", zorder=-1000
+    )
 
     plt.legend(fontsize=10, loc=4)
     plt.xlim(-0.5 * p, 0.5 * p)
@@ -211,11 +218,17 @@ for n, letter in enumerate("bc"):
 
 np.random.seed(230948)
 with model:
-    trace = xo.sample(tune=1000, draws=1000, start=map_soln)
+    trace = pmx.sample(
+        tune=1000, draws=1000, start=map_soln, cores=2, chains=2
+    )
 
 # Then check the convergence diagnostics:
 
-pm.summary(trace, var_names=["mean", "u", "logr", "b", "tts_0", "tts_1"])
+with model:
+    summary = pm.summary(
+        trace, var_names=["mean", "u", "logr", "b", "tts_0", "tts_1"]
+    )
+summary
 
 # And plot the corner plot of the physical parameters:
 
@@ -227,11 +240,18 @@ with model:
         list(map(np.atleast_1d, xo.eval_in_model([orbit.period, r, b])))
     )
 samples = pm.trace_to_dataframe(trace, varnames=["period", "r", "b"])
-corner.corner(
+_ = corner.corner(
     samples,
     truths=truths,
-    labels=["period 1", "period 2", "radius 1", "radius 2", "impact 1", "impact 2"],
-);
+    labels=[
+        "period 1",
+        "period 2",
+        "radius 1",
+        "radius 2",
+        "impact 1",
+        "impact 2",
+    ],
+)
 # -
 
 # We could also plot corner plots of the transit times, but they're not terribly enlightening in this case so let's skip it.
@@ -243,7 +263,12 @@ fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
 
 q = np.percentile(trace["ttvs_0"], [16, 50, 84], axis=0)
 ax1.fill_between(
-    np.mean(trace["tts_0"], axis=0), q[0], q[2], color="C0", alpha=0.4, edgecolor="none"
+    np.mean(trace["tts_0"], axis=0),
+    q[0],
+    q[2],
+    color="C0",
+    alpha=0.4,
+    edgecolor="none",
 )
 ref = np.polyval(
     np.polyfit(true_transit_times[0], true_ttvs[0], 1), true_transit_times[0]
@@ -256,7 +281,12 @@ ax1.set_ylabel("$O-C$ [days]")
 
 q = np.percentile(trace["ttvs_1"], [16, 50, 84], axis=0)
 ax2.fill_between(
-    np.mean(trace["tts_1"], axis=0), q[0], q[2], color="C1", alpha=0.4, edgecolor="none"
+    np.mean(trace["tts_1"], axis=0),
+    q[0],
+    q[2],
+    color="C1",
+    alpha=0.4,
+    edgecolor="none",
 )
 ref = np.polyval(
     np.polyfit(true_transit_times[1], true_ttvs[1], 1), true_transit_times[1]
@@ -268,7 +298,7 @@ ax2.set_ylim(np.max(np.abs(ax2.get_ylim())) * np.array([-1, 1]))
 ax2.legend(fontsize=10)
 ax2.set_ylabel("$O-C$ [days]")
 ax2.set_xlabel("transit time [days]")
-ax1.set_title("posterior inference");
+_ = ax1.set_title("posterior inference")
 # -
 
 # ## Citations

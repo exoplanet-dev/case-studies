@@ -44,7 +44,11 @@ texp = lc_hdr["FRAMETIM"] * lc_hdr["NUM_FRM"]
 texp /= 60.0 * 60.0 * 24.0
 
 # Mask bad data
-m = (np.arange(len(lc)) > 100) & np.isfinite(lc["FLUX"]) & np.isfinite(lc["TIME"])
+m = (
+    (np.arange(len(lc)) > 100)
+    & np.isfinite(lc["FLUX"])
+    & np.isfinite(lc["TIME"])
+)
 bad_bits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17]
 qual = lc["QUALITY"]
 for b in bad_bits:
@@ -107,7 +111,7 @@ yerr_rv = np.array(data.errvel)
 
 plt.errorbar(x_rv, y_rv, yerr=yerr_rv, fmt=".k")
 plt.xlabel("time [days]")
-plt.ylabel("radial velocity [m/s]");
+plt.ylabel("radial velocity [m/s]")
 # -
 
 # We can initialize the transit parameters using [the box least squares periodogram from AstroPy](http://docs.astropy.org/en/latest/timeseries/bls.html).
@@ -237,8 +241,12 @@ def build_model(mask=None, start=None):
         mean = pm.Normal("mean", mu=0.0, sd=10.0)
         u_star = xo.QuadLimbDark("u_star")
         BoundedNormal = pm.Bound(pm.Normal, lower=0, upper=3)
-        m_star = BoundedNormal("m_star", mu=M_star_petigura[0], sd=M_star_petigura[1])
-        r_star = BoundedNormal("r_star", mu=R_star_petigura[0], sd=R_star_petigura[1])
+        m_star = BoundedNormal(
+            "m_star", mu=M_star_petigura[0], sd=M_star_petigura[1]
+        )
+        r_star = BoundedNormal(
+            "r_star", mu=R_star_petigura[0], sd=R_star_petigura[1]
+        )
 
         # Orbital parameters for the planets
         m_pl = pm.Lognormal("m_pl", mu=np.log(msini.value), sd=1, shape=2)
@@ -246,7 +254,8 @@ def build_model(mask=None, start=None):
         t0 = pm.Normal("t0", mu=np.array(t0s), sd=1, shape=2)
         r_pl = pm.Lognormal(
             "r_pl",
-            mu=0.5 * np.log(1e-3 * np.array(depths)) + np.log(R_star_petigura[0]),
+            mu=0.5 * np.log(1e-3 * np.array(depths))
+            + np.log(R_star_petigura[0]),
             sd=1.0,
             shape=2,
         )
@@ -261,8 +270,12 @@ def build_model(mask=None, start=None):
         )
 
         # RV jitter & a quadratic RV trend
-        sigma_rv = pm.Lognormal("sigma_rv", mu=np.log(np.median(yerr_rv)), sd=5)
-        trend = pm.Normal("trend", mu=0, sd=10.0 ** -np.arange(3)[::-1], shape=3)
+        sigma_rv = pm.Lognormal(
+            "sigma_rv", mu=np.log(np.median(yerr_rv)), sd=5
+        )
+        trend = pm.Normal(
+            "trend", mu=0, sd=10.0 ** -np.arange(3)[::-1], shape=3
+        )
 
         # Transit jitter & GP parameters
         sigma_lc = pm.Lognormal("sigma_lc", mu=np.log(np.std(y[mask])), sd=10)
@@ -311,7 +324,9 @@ def build_model(mask=None, start=None):
             bkg = pm.Deterministic("bkg" + name, tt.dot(A, trend))
 
             # Sum over planets and add the background to get the full model
-            return pm.Deterministic("rv_model" + name, tt.sum(vrad, axis=-1) + bkg)
+            return pm.Deterministic(
+                "rv_model" + name, tt.sum(vrad, axis=-1) + bkg
+            )
 
         # Define the model
         rv_model = get_rv_model(x_rv)
@@ -405,7 +420,7 @@ def plot_light_curve(soln, mask=None):
     return fig
 
 
-plot_light_curve(map_soln0);
+plot_light_curve(map_soln0)
 # -
 
 # There are still a few outliers in the light curve and it can be useful to remove those before doing the full fit because both the GP and transit parameters can be sensitive to this.
@@ -430,13 +445,13 @@ plt.axhline(0, color="#aaaaaa", lw=1)
 plt.ylabel("residuals [ppt]")
 plt.xlabel("time [days]")
 plt.legend(fontsize=12, loc=4)
-plt.xlim(x.min(), x.max());
+plt.xlim(x.min(), x.max())
 # -
 
 # That looks better. Let's re-build our model with this sigma-clipped dataset.
 
 model, map_soln = build_model(mask, map_soln0)
-plot_light_curve(map_soln, mask);
+plot_light_curve(map_soln, mask)
 
 # Great! Now we're ready to sample.
 #
@@ -463,7 +478,16 @@ with model:
 
 pm.summary(
     trace,
-    var_names=["period", "r_pl", "m_pl", "ecc", "omega", "b", "sigma_gp", "rho_gp"],
+    var_names=[
+        "period",
+        "r_pl",
+        "m_pl",
+        "ecc",
+        "omega",
+        "b",
+        "sigma_gp",
+        "rho_gp",
+    ],
 )
 
 # As you see, the effective number of samples for the impact parameters and eccentricites are lower than for the other parameters.
@@ -474,7 +498,7 @@ import corner
 
 varnames = ["b", "ecc", "r_pl"]
 samples = pm.trace_to_dataframe(trace, varnames=varnames)
-fig = corner.corner(samples);
+fig = corner.corner(samples)
 # -
 
 # ## Phase plots
@@ -498,7 +522,9 @@ for n, letter in enumerate("bc"):
 
     # Plot the folded data
     x_fold = (x[mask] - t0 + 0.5 * p) % p - 0.5 * p
-    plt.plot(x_fold, y[mask] - gp_mod - other, ".k", label="data", zorder=-1000)
+    plt.plot(
+        x_fold, y[mask] - gp_mod - other, ".k", label="data", zorder=-1000
+    )
 
     # Plot the folded model
     inds = np.argsort(x_fold)
@@ -556,14 +582,16 @@ for n, letter in enumerate("bc"):
     inds = np.argsort(t_fold)
     pred = np.percentile(trace["vrad_pred"][:, inds, n], [16, 50, 84], axis=0)
     plt.plot(t_fold[inds], pred[1], color="C1", label="model")
-    art = plt.fill_between(t_fold[inds], pred[0], pred[2], color="C1", alpha=0.3)
+    art = plt.fill_between(
+        t_fold[inds], pred[0], pred[2], color="C1", alpha=0.3
+    )
     art.set_edgecolor("none")
 
     plt.legend(fontsize=10)
     plt.xlim(-0.5 * p, 0.5 * p)
     plt.xlabel("phase [days]")
     plt.ylabel("radial velocity [m/s]")
-    plt.title("K2-24{0}".format(letter));
+    plt.title("K2-24{0}".format(letter))
 
 # We can also compute the posterior constraints on the planet densities.
 
@@ -586,7 +614,7 @@ plt.yticks([])
 plt.legend(fontsize=12)
 plt.xlim(bins[0], bins[-1])
 plt.xlabel("density [g/cc]")
-plt.ylabel("posterior density");
+plt.ylabel("posterior density")
 # -
 
 # ## Citations

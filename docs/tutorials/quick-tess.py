@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 
 lcfs = lk.search_lightcurvefile("TIC 286923464", mission="TESS").download_all()
 lc = lcfs.PDCSAP_FLUX.stitch()
-lc = lc.remove_nans().remove_outliers()
+lc = lc.remove_nans().remove_outliers(sigma=7)
 
 x = np.ascontiguousarray(lc.time, dtype=np.float64)
 y = np.ascontiguousarray(1e3 * (lc.flux - 1), dtype=np.float64)
@@ -52,7 +52,7 @@ texp = np.min(np.diff(x))
 
 plt.plot(x, y, "k", linewidth=0.5)
 plt.xlabel("time [days]")
-plt.ylabel("relative flux [ppt]");
+plt.ylabel("relative flux [ppt]")
 # -
 
 # Then, find the period, phase and depth of the transit using box least squares:
@@ -72,14 +72,16 @@ plt.axvline(period_guess, alpha=0.3, linewidth=5)
 plt.xlabel("period [days]")
 plt.ylabel("bls power")
 plt.yticks([])
-plt.xlim(pg["bls"].period.min(), pg["bls"].period.max());
+_ = plt.xlim(pg["bls"].period.min(), pg["bls"].period.max())
 # -
 
 # Then, for efficiency purposes, let's extract just the data within 0.25 days of the transits:
 
 # +
 transit_mask = (
-    np.abs((x - t0_guess + 0.5 * period_guess) % period_guess - 0.5 * period_guess)
+    np.abs(
+        (x - t0_guess + 0.5 * period_guess) % period_guess - 0.5 * period_guess
+    )
     < 0.25
 )
 x = np.ascontiguousarray(x[transit_mask])
@@ -87,12 +89,14 @@ y = np.ascontiguousarray(y[transit_mask])
 yerr = np.ascontiguousarray(yerr[transit_mask])
 
 plt.figure(figsize=(8, 4))
-x_fold = (x - t0_guess + 0.5 * period_guess) % period_guess - 0.5 * period_guess
+x_fold = (
+    x - t0_guess + 0.5 * period_guess
+) % period_guess - 0.5 * period_guess
 plt.scatter(x_fold, y, c=x, s=3)
 plt.xlabel("time since transit [days]")
 plt.ylabel("relative flux [ppt]")
 plt.colorbar(label="time [days]")
-plt.xlim(-0.25, 0.25);
+plt.xlim(-0.25, 0.25)
 # -
 
 # That looks a little janky, but it's good enough for now.
@@ -105,32 +109,32 @@ plt.xlim(-0.25, 0.25);
 import pymc3 as pm
 import theano.tensor as tt
 
+import pymc3_ext as pmx
+from celerite2.theano import terms, GaussianProcess
+
+
 with pm.Model() as model:
 
     # Stellar parameters
     mean = pm.Normal("mean", mu=0.0, sigma=10.0)
-    u = xo.distributions.QuadLimbDark("u")
+    u = xo.QuadLimbDark("u")
     star_params = [mean, u]
 
     # Gaussian process noise model
     sigma = pm.InverseGamma("sigma", alpha=3.0, beta=2 * np.median(yerr))
-    log_Sw4 = pm.Normal("log_Sw4", mu=0.0, sigma=10.0)
-    log_w0 = pm.Normal("log_w0", mu=np.log(2 * np.pi / 10.0), sigma=10.0)
-    kernel = xo.gp.terms.SHOTerm(log_Sw4=log_Sw4, log_w0=log_w0, Q=1.0 / 3)
-    noise_params = [sigma, log_Sw4, log_w0]
+    sigma_gp = pm.Lognormal("sigma_gp", mu=0.0, sigma=10.0)
+    rho_gp = pm.Lognormal("rho_gp", mu=np.log(10.0), sigma=10.0)
+    kernel = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3)
+    noise_params = [sigma, sigma_gp, rho_gp]
 
     # Planet parameters
-    log_ror = pm.Normal("log_ror", mu=0.5 * np.log(depth_guess * 1e-3), sigma=10.0)
-    ror = pm.Deterministic("ror", tt.exp(log_ror))
+    ror = pm.Lognormal("ror", mu=0.5 * np.log(depth_guess * 1e-3), sigma=10.0)
 
     # Orbital parameters
-    log_period = pm.Normal("log_period", mu=np.log(period_guess), sigma=1.0)
+    period = pm.Lognormal("period", mu=np.log(period_guess), sigma=1.0)
     t0 = pm.Normal("t0", mu=t0_guess, sigma=1.0)
-    log_dur = pm.Normal("log_dur", mu=np.log(0.1), sigma=10.0)
+    dur = pm.Lognormal("dur", mu=np.log(0.1), sigma=10.0)
     b = xo.distributions.ImpactParameter("b", ror=ror)
-
-    period = pm.Deterministic("period", tt.exp(log_period))
-    dur = pm.Deterministic("dur", tt.exp(log_dur))
 
     # Set up the orbit
     orbit = xo.orbits.KeplerianOrbit(period=period, duration=dur, t0=t0, b=b)
@@ -147,7 +151,9 @@ with pm.Model() as model:
         )
 
     # Finally the GP observation model
-    gp = xo.gp.GP(kernel, x, yerr ** 2 + sigma ** 2, mean=lc_model)
+    gp = GaussianProcess(
+        kernel, t=x, diag=yerr ** 2 + sigma ** 2, mean=lc_model
+    )
     gp.marginal("obs", observed=y)
 
     # Double check that everything looks good - we shouldn't see any NaNs!
@@ -155,18 +161,20 @@ with pm.Model() as model:
 
     # Optimize the model
     map_soln = model.test_point
-    map_soln = xo.optimize(map_soln, [sigma])
-    map_soln = xo.optimize(map_soln, [log_ror, b, log_dur])
-    map_soln = xo.optimize(map_soln, noise_params)
-    map_soln = xo.optimize(map_soln, star_params)
-    map_soln = xo.optimize(map_soln)
+    map_soln = pmx.optimize(map_soln, [sigma])
+    map_soln = pmx.optimize(map_soln, [ror, b, dur])
+    map_soln = pmx.optimize(map_soln, noise_params)
+    map_soln = pmx.optimize(map_soln, star_params)
+    map_soln = pmx.optimize(map_soln)
 # -
 
 # Now we can plot our initial model:
 
 # +
 with model:
-    gp_pred, lc_pred = xo.eval_in_model([gp.predict(), lc_model(x)], map_soln)
+    gp_pred, lc_pred = xo.eval_in_model(
+        [gp.predict(y, include_mean=False), lc_model(x)], map_soln
+    )
 
 plt.figure(figsize=(8, 4))
 x_fold = (x - map_soln["t0"] + 0.5 * map_soln["period"]) % map_soln[
@@ -178,7 +186,7 @@ plt.plot(x_fold[inds], lc_pred[inds] - map_soln["mean"], "k")
 plt.xlabel("time since transit [days]")
 plt.ylabel("relative flux [ppt]")
 plt.colorbar(label="time [days]")
-plt.xlim(-0.25, 0.25);
+_ = plt.xlim(-0.25, 0.25)
 # -
 
 # That looks better!
@@ -187,11 +195,15 @@ plt.xlim(-0.25, 0.25);
 
 np.random.seed(286923464)
 with model:
-    trace = xo.sample(tune=2000, draws=2000, start=map_soln, chains=4)
+    trace = pmx.sample(
+        tune=2000, draws=2000, start=map_soln, chains=2, cores=2
+    )
 
 # Then we can take a look at the summary statistics:
 
-pm.summary(trace)
+with model:
+    summary = pm.summary(trace)
+summary
 
 # And plot the posterior covariances compared to the values from [Pepper et al. (2019)](https://arxiv.org/abs/1911.05150):
 
@@ -200,7 +212,7 @@ import corner
 import astropy.units as u
 
 samples = pm.trace_to_dataframe(trace, varnames=["period", "ror", "b"])
-corner.corner(samples, truths=[6.134980, 0.05538, 0.125]);
+_ = corner.corner(samples, truths=[6.134980, 0.05538, 0.125])
 # -
 
 # ## Bonus: eccentricity
@@ -244,7 +256,9 @@ weights = np.exp(log_weights - np.max(log_weights))
 
 # Estimate the expected posterior quantiles
 q = corner.quantile(ecc, [0.16, 0.5, 0.84], weights=weights)
-print("eccentricity = {0:.2f} +{1[1]:.2f} -{1[0]:.2f}".format(q[1], np.diff(q)))
+print(
+    "eccentricity = {0:.2f} +{1[1]:.2f} -{1[0]:.2f}".format(q[1], np.diff(q))
+)
 
 corner.corner(
     np.vstack((ecc, omega)).T,
@@ -252,7 +266,7 @@ corner.corner(
     truths=[0.316, None],
     plot_datapoints=False,
     labels=["eccentricity", "omega"],
-);
+)
 # -
 
 # As you can see, this eccentricity estimate is consistent (albeit with large uncertainties) with the value that [Pepper et al. (2019)](https://arxiv.org/abs/1911.05150) measure using radial velocities and it is definitely clear that this planet is not on a circular orbit.
