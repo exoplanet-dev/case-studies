@@ -287,8 +287,8 @@ for ax in axes:
 np.random.seed(11)
 with model:
     trace = pmx.sample(
-        tune=3500,
-        draws=3000,
+        tune=2500,
+        draws=2000,
         start=map_soln,
         cores=2,
         chains=2,

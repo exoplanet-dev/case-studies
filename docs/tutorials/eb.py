@@ -425,8 +425,8 @@ _ = ax1.set_title("HD 23642; map model", fontsize=14)
 np.random.seed(23642)
 with model:
     trace = pmx.sample(
-        tune=3500,
-        draws=3000,
+        tune=2500,
+        draws=2000,
         start=map_soln,
         cores=2,
         chains=2,

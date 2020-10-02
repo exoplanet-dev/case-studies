@@ -133,8 +133,19 @@ with pm.Model() as model:
     )
     light_curve = pm.math.sum(light_curves, axis=-1) + mean
     pm.Deterministic("light_curves", light_curves)
+
+    # ******************************************************************* #
+    # On the folowing lines, we simulate the dataset that we will fit     #
+    #                                                                     #
+    # NOTE: if you are fitting real data, you shouldn't include this line #
+    #       because you already have data!                                #
+    # ******************************************************************* #
     y = xo.eval_in_model(light_curve)
     y += yerr * np.random.randn(len(y))
+    # ******************************************************************* #
+    # End of fake data creation; you want to include the following lines  #
+    # ******************************************************************* #
+
     pm.Normal("obs", mu=light_curve, sd=yerr, observed=y)
 
     map_soln = model.test_point

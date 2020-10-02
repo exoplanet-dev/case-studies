@@ -420,7 +420,7 @@ def plot_light_curve(soln, mask=None):
     return fig
 
 
-plot_light_curve(map_soln0)
+_ = plot_light_curve(map_soln0)
 # -
 
 # There are still a few outliers in the light curve and it can be useful to remove those before doing the full fit because both the GP and transit parameters can be sensitive to this.
@@ -445,13 +445,13 @@ plt.axhline(0, color="#aaaaaa", lw=1)
 plt.ylabel("residuals [ppt]")
 plt.xlabel("time [days]")
 plt.legend(fontsize=12, loc=4)
-plt.xlim(x.min(), x.max())
+_ = plt.xlim(x.min(), x.max())
 # -
 
 # That looks better. Let's re-build our model with this sigma-clipped dataset.
 
 model, map_soln = build_model(mask, map_soln0)
-plot_light_curve(map_soln, mask)
+_ = plot_light_curve(map_soln, mask)
 
 # Great! Now we're ready to sample.
 #
@@ -460,18 +460,18 @@ plot_light_curve(map_soln, mask)
 # The sampling for this model is the same as for all the previous tutorials, but it takes a bit longer.
 # This is partly because the model is more expensive to compute than the previous ones and partly because there are some non-affine degeneracies in the problem (for example between impact parameter, eccentricity, and radius/radius ratio).
 # It might be worth thinking about reparameterizations (in terms of duration instead of eccentricity), but that's beyond the scope of this tutorial.
-# Besides, using more traditional MCMC methods, this would have taken a lot longer to get >1000 effective samples!
+# Besides, using more traditional MCMC methods, this would have taken a lot longer to get thousands of effective samples!
 
 np.random.seed(203771098)
 with model:
     trace = pmx.sample(
-        tune=3500,
-        draws=3000,
+        tune=2500,
+        draws=2000,
         start=map_soln,
         cores=2,
         chains=2,
         initial_accept=0.8,
-        target_accept=0.95,
+        target_accept=0.99,
     )
 
 # Let's look at the convergence diagnostics for some of the key parameters:

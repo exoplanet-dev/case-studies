@@ -254,7 +254,7 @@ def plot_light_curve(soln, mask=None):
     return fig
 
 
-plot_light_curve(map_soln0)
+_ = plot_light_curve(map_soln0)
 # -
 
 # As in the :ref:`together` tutorial, we can do some sigma clipping to remove significant outliers.
@@ -276,21 +276,21 @@ plt.axhline(0, color="#aaaaaa", lw=1)
 plt.ylabel("residuals [ppt]")
 plt.xlabel("time [days]")
 plt.legend(fontsize=12, loc=3)
-plt.xlim(x.min(), x.max())
+_ = plt.xlim(x.min(), x.max())
 # -
 
 # And then we re-build the model using the data without outliers.
 
 model, map_soln = build_model(mask, map_soln0)
-plot_light_curve(map_soln, mask)
+_ = plot_light_curve(map_soln, mask)
 
 # Now that we have the model, we can sample:
 
 np.random.seed(261136679)
 with model:
     trace = pmx.sample(
-        tune=3500,
-        draws=3000,
+        tune=2500,
+        draws=2000,
         start=map_soln,
         cores=2,
         chains=2,
