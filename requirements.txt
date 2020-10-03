@@ -1,0 +1,10 @@
+-e git+https://github.com/exoplanet-dev/exoplanet.git#egg=exoplanet
+-e git+https://github.com/exoplanet-dev/celerite2.git#egg=celerite2
+-e git+https://github.com/exoplanet-dev/pymc3-ext.git#egg=pymc3_ext
+nbformat
+nbconvert
+corner
+lightkurve
+ipykernel
+jupyter
+jupytext
