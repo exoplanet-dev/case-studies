@@ -13,11 +13,15 @@
 #     name: python3
 # ---
 
+# + nbsphinx="hidden"
 import lightkurve as lk
 
 # %matplotlib inline
+# -
 
+# + nbsphinx="hidden"
 # %run notebook_setup
+# -
 
 # # Quick fits for TESS light curves
 

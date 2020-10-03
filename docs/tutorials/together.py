@@ -12,11 +12,15 @@
 #     name: python3
 # ---
 
+# + nbsphinx="hidden"
 import lightkurve as lk
 
 # %matplotlib inline
+# -
 
+# + nbsphinx="hidden"
 # %run notebook_setup
+# -
 
 # # Case study: K2-24, putting it all together
 
