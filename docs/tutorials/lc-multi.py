@@ -12,6 +12,8 @@
 #     name: python3
 # ---
 
+import lightkurve as lk
+
 # %matplotlib inline
 
 # %run notebook_setup
