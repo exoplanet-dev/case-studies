@@ -45,15 +45,9 @@ jobs:
           name: ${{ matrix.notebook-name }}
           path: docs/tutorials/*.ipynb
 
-      # - name: Trigger RTDs build
-      #   uses: dfm/rtds-action@v1.0.0
-      #   with:
-      #     webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
-      #     webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
-      #     commit_ref: ${{ github.ref }}
-
   combine:
     name: Combine results
+    needs: notebooks
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -62,3 +56,9 @@ jobs:
         with:
           name: notebooks-for-${{ github.sha }}
           path: docs/tutorials
+      # - name: Trigger RTDs build
+      #   uses: dfm/rtds-action@v1.0.0
+      #   with:
+      #     webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
+      #     webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
+      #     commit_ref: ${{ github.ref }}
