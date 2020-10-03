@@ -59,6 +59,12 @@ jobs:
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v2
+      - name: Move the files
+        run: |
+          mkdir -p docs/tutorials
+          find . -name \*.ipynb -exec cp {} docs/tutorials \;
+          ls .
+          ls docs/tutorials
       - uses: actions/upload-artifact@v2
         with:
           name: notebooks-for-${{ github.sha }}
