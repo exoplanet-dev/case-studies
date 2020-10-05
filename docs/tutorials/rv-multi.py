@@ -47,7 +47,7 @@ aat = ascii.read(
     "https://exoplanetarchive.ipac.caltech.edu/data/ExoData/0026/0026394/data/UID_0026394_RVC_001.tbl"
 )
 harps = pd.read_csv(
-    "https://raw.githubusercontent.com/exoplanet-dev/case-studies/master/data/pi_men_harps_rvs.csv",
+    "https://raw.githubusercontent.com/exoplanet-dev/case-studies/main/data/pi_men_harps_rvs.csv",
     skiprows=1,
 )
 harps = harps.rename(lambda x: x.strip().strip("#"), axis=1)
