@@ -24,7 +24,7 @@ import lightkurve as lk
 # # Fitting TESS data
 
 # In this tutorial, we will reproduce the fits to the transiting planet in the Pi Mensae system discovered by [Huang et al. (2018)](https://arxiv.org/abs/1809.05967).
-# The data processing and model are similar to the :ref:`together` tutorial, but with a few extra bits like aperture selection and de-trending.
+# The data processing and model are similar to the [Putting it all together](./together.ipynb) case study, but with a few extra bits like aperture selection and de-trending.
 #
 # To start, we need to download the target pixel file:
 
@@ -117,7 +117,7 @@ _ = ax.set_xlabel("time since transit")
 
 # ## The transit model in PyMC3
 #
-# The transit model, initialization, and sampling are all nearly the same as the one in :ref:`together`.
+# The transit model, initialization, and sampling are all nearly the same as the one in [Putting it all together](./together.ipynb).
 
 # +
 import exoplanet as xo
@@ -262,7 +262,7 @@ def plot_light_curve(soln, mask=None):
 _ = plot_light_curve(map_soln0)
 # -
 
-# As in the :ref:`together` tutorial, we can do some sigma clipping to remove significant outliers.
+# As in [Putting it all together](./together.ipynb), we can do some sigma clipping to remove significant outliers.
 
 # +
 mod = (
@@ -407,7 +407,7 @@ _ = corner.corner(
 
 # ## Citations
 #
-# As described in the :ref:`citation` tutorial, we can use :func:`exoplanet.citations.get_citations_for_model` to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

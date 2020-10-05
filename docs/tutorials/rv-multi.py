@@ -79,7 +79,7 @@ _ = plt.ylabel("radial velocity [m/s]")
 # -
 
 # Then set up the probabilistic model.
-# Most of this is similar to the model in the :ref:`rv` tutorial, but there are a few changes to highlight:
+# Most of this is similar to the model in the [Radial velocity fitting](https://docs.exoplanet.codes/en/stable/tutorials/rv/) tutorial, but there are a few changes to highlight:
 #
 # 1. Instead of a polynomial model for trends, stellar varaiability, and inner planets, we're using a Gaussian process here. This won't have a big effect here, but more careful consideration should be performed when studying lower signal-to-noise systems.
 # 2. There are three radial velocity offests and three jitter parameters (one for each instrument) that will be treated independently. This is the key addition made by this case study.
@@ -245,7 +245,7 @@ _ = plt.title("posterior inference", fontsize=14)
 
 # ## Citations
 #
-# As described in the :ref:`citation` tutorial, we can use :func:`exoplanet.citations.get_citations_for_model` to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

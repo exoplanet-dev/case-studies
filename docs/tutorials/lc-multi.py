@@ -23,7 +23,7 @@ import lightkurve as lk
 
 # # Fitting light curves from multiple instruments
 #
-# In the :ref:`rv-multi` case study, we discussed fitting the radial velocity curve for a planetary system observed using multiple instruments.
+# In the [RVs with multiple instruments](./rv-multi.ipynb) case study, we discussed fitting the radial velocity curve for a planetary system observed using multiple instruments.
 # You might also want to fit data from multiple instruments when fitting the light curve of a transiting planet and that's what we work through in this example.
 # This is a somewhat more complicated example than the radial velocity case because some of the physical properties of the system can vary as as function of the instrument.
 # Specifically, the transit depth (or the effective raduis of the planet) will be a function of the filter or effective wavelength of the observations.
@@ -96,7 +96,7 @@ _ = axes[0].set_ylabel("relative flux [ppt]")
 
 # ## The probabilistic model
 #
-# This model is mostly the same as the one used in :ref:`quick-tess`, but we're allowing for different noise variances (both the white noise component and the GP amplitude), effective planet radii, and limb-darkening coeeficients for each dataset.
+# This model is mostly the same as the one used in [Quick fits for TESS light curves](./quick-tess.ipynb), but we're allowing for different noise variances (both the white noise component and the GP amplitude), effective planet radii, and limb-darkening coeeficients for each dataset.
 # For the purposes of demonstration, we're sharing the length scale of the GP between the two datasets, but this could just have well been a different parameter for each dataset without changing the results.
 # The final change that we're using is to use the approximate transit depth `approx_depth` (the depth of the transit at minimum assuming the limb-darkening profile is constant under the disk of the planet) as a parameter instead of the radius ratio.
 # This does not have a large effect on the performance or the results, but it can sometimes be a useful parameterization when dealing with high signal-to-noise transits because it reduces the covariance between the radius parameter and the limb darkening coefficients.
@@ -342,7 +342,7 @@ _ = fig.axes[0].legend(
 
 # ## Citations
 #
-# As described in the :ref:`citation` tutorial, we can use :func:`exoplanet.citations.get_citations_for_model` to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

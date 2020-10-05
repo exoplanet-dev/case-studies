@@ -21,10 +21,10 @@ import lightkurve as lk
 # %run notebook_setup
 # -
 
-# # Case study: K2-24, putting it all together
+# # Putting it all together
 
 # In this tutorial, we will combine many of the previous tutorials to perform a fit of the K2-24 system using the K2 transit data and the RVs from [Petigura et al. (2016)](https://arxiv.org/abs/1511.04497).
-# This is the same system that we fit in the :ref:`rv` tutorial and we'll combine that model with the transit model from the :ref:`transit` tutorial and the Gaussian Process noise model from the :ref:`stellar-variability` tutorial.
+# This is the same system that we fit in the :ref:`rv` tutorial and we'll combine that model with the transit model from the [Transit fitting](https://docs.exoplanet.codes/en/stable/tutorials/transit/) tutorial and the Gaussian Process noise model from the [Gaussian process models for stellar variability](./stellar-variability.ipynb) case study.
 #
 # ## Datasets and initializations
 #
@@ -224,7 +224,7 @@ print(msini)
 # ## A joint transit and radial velocity model in PyMC3
 #
 # Now, let's define our full model in *PyMC3*.
-# There's a lot going on here, but I've tried to comment it and most of it should be familiar from the previous tutorials (:ref:`rv`, :ref:`transit`, :ref:`gp`, and :ref:`stellar-variability`).
+# There's a lot going on here, but I've tried to comment it and most of it should be familiar from the other tutorials and case studies.
 # In this case, I've put the model inside a model "factory" function because we'll do some sigma clipping below.
 
 # +
@@ -389,7 +389,7 @@ _ = plot_rv_curve(map_soln0)
 
 # -
 
-# That looks pretty similar to what we got in :ref:`rv`.
+# That looks pretty similar to what we got in the [Radial velocity fitting](https://docs.exoplanet.codes/en/stable/tutorials/rv/) tutorial.
 # Now let's also plot the transit model.
 
 # +
@@ -482,7 +482,7 @@ with model:
 # Let's look at the convergence diagnostics for some of the key parameters:
 
 with model:
-    pm.summary(
+    summary = pm.summary(
         trace,
         var_names=[
             "period",
@@ -510,7 +510,7 @@ _ = corner.corner(samples)
 
 # ## Phase plots
 #
-# Finally, as in the :ref:`rv` and :ref:`transit` tutorials, we can make folded plots of the transits and the radial velocities and compare to the posterior model predictions. (Note: planets b and c in this tutorial are swapped compared to the labels from [Petigura et al. (2016)](https://arxiv.org/abs/1511.04497))
+# Finally, we can make folded plots of the transits and the radial velocities and compare to the posterior model predictions. (Note: planets b and c in this tutorial are swapped compared to the labels from [Petigura et al. (2016)](https://arxiv.org/abs/1511.04497))
 
 for n, letter in enumerate("bc"):
     plt.figure()
@@ -626,7 +626,7 @@ _ = plt.ylabel("posterior density")
 
 # ## Citations
 #
-# As described in the :ref:`citation` tutorial, we can use :func:`exoplanet.citations.get_citations_for_model` to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

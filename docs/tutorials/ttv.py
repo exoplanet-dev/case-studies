@@ -27,10 +27,10 @@ import lightkurve as lk
 # The performance of the NUTS sampler used by `exoplanet` scales well with the number of parameters, so a TTV model should be substantially faster to run to convergence with `exoplanet` than with other tools.
 # There are a few definitions and subtleties that should be considered before jumping in.
 #
-# In this tutorial, we will be using a "descriptive" model :class:`orbits.TTVOrbit` to fit the light curve where the underlying motion is still Keplerian, but the time coordinate is warped to make `t0` a function of time.
+# In this tutorial, we will be using a "descriptive" model [orbits.TTVOrbit](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.orbits.TTVOrbit) to fit the light curve where the underlying motion is still Keplerian, but the time coordinate is warped to make `t0` a function of time.
 # All of the other orbital elements besides `t0` are shared across all orbits, but the `t0` for each transit will be a parameter.
 # This means that other variations (like transit duration variations) are not currently supported, but it would be possible to include more general effects.
-# `exoplanet` also supports photodynamics modeling using the :class:`orbits.ReboundOrbit` for more detailed analysis, but that is a topic for a future tutorial.
+# `exoplanet` also supports photodynamics modeling using the [orbits.ReboundOrbit](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.orbits.ReboundOrbit) for more detailed analysis, but that is a topic for a future tutorial.
 #
 # It is also important to note that "transit time" within `exoplanet` (and most other transit fitting software) is defined as the time of conjunction (called `t0` in the code): the time when the true anomaly is $\pi/2 - \omega$.
 # Section 18 of [the EXOFASTv2 paper](https://arxiv.org/abs/1907.09480) includes an excellent discussion of some of the commonly used definitions of "transit time" in the literature.
@@ -42,7 +42,7 @@ import lightkurve as lk
 # That being said, if you fit for both periods, make sure that you constrain `ttv_period` and `period` to be similar or things can get a bit ugly.
 #
 # To get started, let's generate some simulated transit times.
-# We'll use the :func:`orbits.ttv.compute_expected_transit_times` function to get the expected transit times for a linear ephemeris within some observation baseline:
+# We'll use the [`orbits.ttv.compute_expected_transit_times`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.orbits.ttv.compute_expected_transit_times) function to get the expected transit times for a linear ephemeris within some observation baseline:
 
 # +
 import numpy as np
@@ -85,7 +85,7 @@ ax2.set_xlabel("transit time [days]")
 _ = ax1.set_title("true TTVs")
 # -
 
-# Now, like in the :ref:`transit` tutorial, we'll set up the the model using `PyMC3` and `exoplanet`, and then simulate a data set from that model.
+# Now, like in the [Transit fitting](https://docs.exoplanet.codes/en/stable/tutorials/transit/) tutorial, we'll set up the the model using `PyMC3` and `exoplanet`, and then simulate a data set from that model.
 
 # +
 import pymc3 as pm
@@ -173,7 +173,7 @@ plt.xlabel("time [days]")
 plt.legend(fontsize=10)
 _ = plt.title("map model")
 
-# This looks similar to the light curve from the :ref:`transit` tutorial, but if we try plotting the folded transits, we can see that something isn't right: these transits look pretty smeared out!
+# This looks similar to the light curve from the [Transit fitting](https://docs.exoplanet.codes/en/stable/tutorials/transit/) tutorial, but if we try plotting the folded transits, we can see that something isn't right: these transits look pretty smeared out!
 
 for n, letter in enumerate("bc"):
     plt.figure()
@@ -319,7 +319,7 @@ _ = ax1.set_title("posterior inference")
 
 # ## Citations
 #
-# As described in the :ref:`citation` tutorial, we can use :func:`exoplanet.citations.get_citations_for_model` to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

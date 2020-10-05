@@ -24,8 +24,8 @@ import lightkurve as lk
 # # Gaussian process models for stellar variability
 
 # When fitting exoplanets, we also need to fit for the stellar variability and Gaussian Processes (GPs) are often a good descriptive model for this variation.
-# [PyMC3 has support for all sorts of general GP models](https://docs.pymc.io/gp.html), but *exoplanet* includes support for scalable 1D GPs (see :ref:`gp` for more info) that can work with large datasets.
-# In this tutorial, we go through the process of modeling the light curve of a rotating star observed by Kepler using *exoplanet*.
+# [PyMC3 has support for all sorts of general GP models](https://docs.pymc.io/gp.html), but *exoplanet* interfaces with the [celerite2](https://celerite2.readthedocs.io/) library to provide support for scalable 1D GPs (take a look at the [Getting started](https://celerite2.readthedocs.io/en/latest/tutorials/first/) tutorial on the *celerite2* docs for a crash course) that can work with large datasets.
+# In this tutorial, we go through the process of modeling the light curve of a rotating star observed by Kepler using *exoplanet* and *celerite2*.
 #
 # First, let's download and plot the data:
 
@@ -78,15 +78,14 @@ plt.xlabel("period [days]")
 _ = plt.ylabel("power")
 # -
 
-# Now, using this initialization, we can set up the GP model in *exoplanet*.
-# We'll use the :class:`exoplanet.gp.terms.RotationTerm` kernel that is a mixture of two simple harmonic oscillators with periods separated by a factor of two.
+# Now, using this initialization, we can set up the GP model in *exoplanet* and *celerite2*.
+# We'll use the [RotationTerm](https://celerite2.readthedocs.io/en/latest/api/python/#celerite2.terms.RotationTerm) kernel that is a mixture of two simple harmonic oscillators with periods separated by a factor of two.
 # As you can see from the periodogram above, this might be a good model for this light curve and I've found that it works well in many cases.
 
 # +
 import pymc3 as pm
-import theano.tensor as tt
-
 import pymc3_ext as pmx
+import theano.tensor as tt
 from celerite2.theano import terms, GaussianProcess
 
 with pm.Model() as model:
@@ -145,7 +144,7 @@ plt.ylabel("relative flux [ppt]")
 _ = plt.title("TIC 10863087; map model")
 
 # That looks pretty good!
-# Now let's sample from the posterior using :func:`exoplanet.get_dense_nuts_step`.
+# Now let's sample from the posterior using [the PyMC3 Extras (`pymc3-ext`) library](https://github.com/exoplanet-dev/pymc3-ext):
 
 np.random.seed(10863087)
 with model:
@@ -185,6 +184,11 @@ plt.yticks([])
 plt.xlabel("rotation period [days]")
 _ = plt.ylabel("posterior density")
 
+# ## Variational inference
+#
+# One benefit of building our model within PyMC3 is that we can take advantage of the other inference methods provided by PyMC3, like [Autodiff Variational Inference](https://docs.pymc.io/notebooks/variational_api_quickstart.html).
+# Here we're finding the Gaussian approximation to the posterior that minimizes the [KL divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence):
+
 # +
 np.random.seed(10863087)
 with model:
@@ -214,9 +218,11 @@ plt.xlabel("rotation period [days]")
 _ = plt.ylabel("posterior density")
 # -
 
+# In this case, the periods inferred with both methods are consistent and variational inference was significantly faster.
+
 # ## Citations
 #
-# As described in the :ref:`citation` tutorial, we can use :func:`exoplanet.citations.get_citations_for_model` to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()
