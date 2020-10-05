@@ -16,7 +16,6 @@
 import lightkurve as lk
 
 # %matplotlib inline
-# -
 
 # + nbsphinx="hidden"
 # %run notebook_setup
@@ -54,7 +53,7 @@ plt.plot(x, y, "k")
 plt.xlim(x.min(), x.max())
 plt.xlabel("time [days]")
 plt.ylabel("relative flux [ppt]")
-plt.title("TIC 10863087")
+_ = plt.title("TIC 10863087")
 # -
 
 # ## A Gaussian process model for stellar variability
@@ -76,7 +75,7 @@ plt.axvline(peak["period"], color="k", lw=4, alpha=0.3)
 plt.xlim((1 / freq).min(), (1 / freq).max())
 plt.yticks([])
 plt.xlabel("period [days]")
-plt.ylabel("power")
+_ = plt.ylabel("power")
 # -
 
 # Now, using this initialization, we can set up the GP model in *exoplanet*.
@@ -143,7 +142,7 @@ plt.xlim(x.min(), x.max())
 plt.legend(fontsize=10)
 plt.xlabel("time [days]")
 plt.ylabel("relative flux [ppt]")
-plt.title("TIC 10863087; map model")
+_ = plt.title("TIC 10863087; map model")
 
 # That looks pretty good!
 # Now let's sample from the posterior using :func:`exoplanet.get_dense_nuts_step`.
@@ -184,7 +183,7 @@ period_samples = trace["period"]
 plt.hist(period_samples, 25, histtype="step", color="k", density=True)
 plt.yticks([])
 plt.xlabel("rotation period [days]")
-plt.ylabel("posterior density")
+_ = plt.ylabel("posterior density")
 
 # +
 np.random.seed(10863087)
@@ -212,7 +211,7 @@ plt.hist(
 plt.legend()
 plt.yticks([])
 plt.xlabel("rotation period [days]")
-plt.ylabel("posterior density")
+_ = plt.ylabel("posterior density")
 # -
 
 # ## Citations

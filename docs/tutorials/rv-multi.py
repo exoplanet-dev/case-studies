@@ -16,7 +16,6 @@
 import lightkurve as lk
 
 # %matplotlib inline
-# -
 
 # + nbsphinx="hidden"
 # %run notebook_setup

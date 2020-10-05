@@ -16,7 +16,6 @@
 import lightkurve as lk
 
 # %matplotlib inline
-# -
 
 # + nbsphinx="hidden"
 # %run notebook_setup
@@ -83,7 +82,7 @@ ax2.set_ylim(np.max(np.abs(ax2.get_ylim())) * np.array([-1, 1]))
 ax2.set_ylabel("$O-C$ [days]")
 
 ax2.set_xlabel("transit time [days]")
-ax1.set_title("true TTVs")
+_ = ax1.set_title("true TTVs")
 # -
 
 # Now, like in the :ref:`transit` tutorial, we'll set up the the model using `PyMC3` and `exoplanet`, and then simulate a data set from that model.
@@ -172,7 +171,7 @@ plt.xlim(t.min(), t.max())
 plt.ylabel("relative flux")
 plt.xlabel("time [days]")
 plt.legend(fontsize=10)
-plt.title("map model")
+_ = plt.title("map model")
 
 # This looks similar to the light curve from the :ref:`transit` tutorial, but if we try plotting the folded transits, we can see that something isn't right: these transits look pretty smeared out!
 

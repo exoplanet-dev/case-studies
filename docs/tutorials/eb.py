@@ -17,7 +17,6 @@
 import lightkurve as lk
 
 # %matplotlib inline
-# -
 
 # + nbsphinx="hidden"
 # %run notebook_setup
@@ -442,7 +441,9 @@ with model:
 
 # As usual, we can check the convergence diagnostics for some of the key parameters.
 
-pm.summary(trace, var_names=["M1", "M2", "R1", "R2", "ecs", "incl", "s"])
+with model:
+    summary = pm.summary(trace, var_names=["M1", "M2", "R1", "R2", "ecs", "incl", "s"])
+summary
 
 # ## Results
 #

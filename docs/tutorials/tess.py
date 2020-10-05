@@ -16,7 +16,6 @@
 import lightkurve as lk
 
 # %matplotlib inline
-# -
 
 # + nbsphinx="hidden"
 # %run notebook_setup
@@ -54,7 +53,7 @@ y = np.ascontiguousarray(1e3 * (flux[m] - 1.0), dtype=np.float64)
 plt.plot(x, y, ".k")
 plt.xlabel("time [days]")
 plt.ylabel("relative flux [ppt]")
-plt.xlim(x.min(), x.max())
+_ = plt.xlim(x.min(), x.max())
 # -
 
 # ## Transit search
@@ -113,7 +112,7 @@ ax.plot(0.5 * (bins[1:] + bins[:-1]), num / denom, color="C1")
 
 ax.set_xlim(-0.3, 0.3)
 ax.set_ylabel("de-trended flux [ppt]")
-ax.set_xlabel("time since transit")
+_ = ax.set_xlabel("time since transit")
 # -
 
 # ## The transit model in PyMC3
@@ -304,21 +303,23 @@ with model:
         target_accept=0.95,
     )
 
-pm.summary(
-    trace,
-    var_names=[
-        "omega",
-        "ecc",
-        "r_pl",
-        "b",
-        "t0",
-        "period",
-        "r_star",
-        "m_star",
-        "u_star",
-        "mean",
-    ],
-)
+with model:
+    summary = pm.summary(
+        trace,
+        var_names=[
+            "omega",
+            "ecc",
+            "r_pl",
+            "b",
+            "t0",
+            "period",
+            "r_star",
+            "m_star",
+            "u_star",
+            "mean",
+        ],
+    )
+summary
 
 # ## Results
 #
@@ -376,7 +377,7 @@ plt.legend(fontsize=10, loc=4)
 plt.xlim(-0.5 * p, 0.5 * p)
 plt.xlabel("time since transit [days]")
 plt.ylabel("de-trended flux")
-plt.xlim(-0.15, 0.15)
+_ = plt.xlim(-0.15, 0.15)
 # -
 
 # And a corner plot of some of the key parameters:
@@ -391,7 +392,7 @@ samples = pm.trace_to_dataframe(trace, varnames=varnames)
 # Convert the radius to Earth radii
 samples["r_pl"] = (np.array(samples["r_pl"]) * u.R_sun).to(u.R_earth).value
 
-corner.corner(
+_ = corner.corner(
     samples[["period", "r_pl", "b", "ecc"]],
     labels=[
         "period [days]",

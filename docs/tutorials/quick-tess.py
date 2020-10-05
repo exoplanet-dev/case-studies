@@ -17,7 +17,6 @@
 import lightkurve as lk
 
 # %matplotlib inline
-# -
 
 # + nbsphinx="hidden"
 # %run notebook_setup
@@ -58,7 +57,7 @@ texp = np.min(np.diff(x))
 
 plt.plot(x, y, "k", linewidth=0.5)
 plt.xlabel("time [days]")
-plt.ylabel("relative flux [ppt]")
+_ = plt.ylabel("relative flux [ppt]")
 # -
 
 # Then, find the period, phase and depth of the transit using box least squares:
@@ -102,7 +101,7 @@ plt.scatter(x_fold, y, c=x, s=3)
 plt.xlabel("time since transit [days]")
 plt.ylabel("relative flux [ppt]")
 plt.colorbar(label="time [days]")
-plt.xlim(-0.25, 0.25)
+_ = plt.xlim(-0.25, 0.25)
 # -
 
 # That looks a little janky, but it's good enough for now.
@@ -266,7 +265,7 @@ print(
     "eccentricity = {0:.2f} +{1[1]:.2f} -{1[0]:.2f}".format(q[1], np.diff(q))
 )
 
-corner.corner(
+_ = corner.corner(
     np.vstack((ecc, omega)).T,
     weights=weights,
     truths=[0.316, None],

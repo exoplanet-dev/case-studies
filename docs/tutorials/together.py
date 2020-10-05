@@ -16,7 +16,6 @@
 import lightkurve as lk
 
 # %matplotlib inline
-# -
 
 # + nbsphinx="hidden"
 # %run notebook_setup
@@ -117,7 +116,7 @@ yerr_rv = np.array(data.errvel)
 
 plt.errorbar(x_rv, y_rv, yerr=yerr_rv, fmt=".k")
 plt.xlabel("time [days]")
-plt.ylabel("radial velocity [m/s]")
+_ = plt.ylabel("radial velocity [m/s]")
 # -
 
 # We can initialize the transit parameters using [the box least squares periodogram from AstroPy](http://docs.astropy.org/en/latest/timeseries/bls.html).
@@ -201,7 +200,7 @@ for i in range(len(bls_results)):
     else:
         ax.set_xlabel("time since transit")
 
-fig.subplots_adjust(hspace=0.02)
+_ = fig.subplots_adjust(hspace=0.02)
 # -
 
 # The discovery paper for K2-24 ([Petigura et al. (2016)](https://arxiv.org/abs/1511.04497)) includes the following estimates of the stellar mass and radius in Solar units:
@@ -385,7 +384,7 @@ def plot_rv_curve(soln):
     ax.set_xlabel("time [days]")
 
 
-plot_rv_curve(map_soln0)
+_ = plot_rv_curve(map_soln0)
 
 
 # -
@@ -482,19 +481,21 @@ with model:
 
 # Let's look at the convergence diagnostics for some of the key parameters:
 
-pm.summary(
-    trace,
-    var_names=[
-        "period",
-        "r_pl",
-        "m_pl",
-        "ecc",
-        "omega",
-        "b",
-        "sigma_gp",
-        "rho_gp",
-    ],
-)
+with model:
+    pm.summary(
+        trace,
+        var_names=[
+            "period",
+            "r_pl",
+            "m_pl",
+            "ecc",
+            "omega",
+            "b",
+            "sigma_gp",
+            "rho_gp",
+        ],
+    )
+summary
 
 # As you see, the effective number of samples for the impact parameters and eccentricites are lower than for the other parameters.
 # This is because of the correlations that I mentioned above:
@@ -504,7 +505,7 @@ import corner
 
 varnames = ["b", "ecc", "r_pl"]
 samples = pm.trace_to_dataframe(trace, varnames=varnames)
-fig = corner.corner(samples)
+_ = corner.corner(samples)
 # -
 
 # ## Phase plots
@@ -620,7 +621,7 @@ plt.yticks([])
 plt.legend(fontsize=12)
 plt.xlim(bins[0], bins[-1])
 plt.xlabel("density [g/cc]")
-plt.ylabel("posterior density")
+_ = plt.ylabel("posterior density")
 # -
 
 # ## Citations
