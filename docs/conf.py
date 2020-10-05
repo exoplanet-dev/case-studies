@@ -4,6 +4,7 @@
 import os
 import subprocess
 
+import nbsphinx
 import sphinx_typlog_theme
 from pkg_resources import DistributionNotFound, get_distribution
 
@@ -14,14 +15,21 @@ except DistributionNotFound:
 
 
 def setup(app):
-    app.add_stylesheet("css/exoplanet.css?v=2019-08-02")
+    app.add_css_file("css/exoplanet.css?v=2019-08-02")
 
+
+# nbsphinx hacks
+nbsphinx.RST_TEMPLATE = nbsphinx.RST_TEMPLATE.replace(
+    "{%- if width %}", "{%- if 0 %}"
+).replace("{%- if height %}", "{%- if 0 %}")
 
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
+    "rtds_action",
+    "nbsphinx",
 ]
 
 autodoc_mock_imports = [
@@ -61,6 +69,12 @@ release = __version__
 exclude_patterns = ["_build"]
 pygments_style = "sphinx"
 
+# rtds action
+rtds_action_github_repo = "exoplanet-dev/case-studies"
+rtds_action_path = "tutorials"
+rtds_action_artifact_prefix = "notebooks-for-"
+rtds_action_github_token = os.environ["GITHUB_TOKEN"]
+
 # List of case studies
 case_studies = [
     dict(
@@ -73,7 +87,7 @@ case_studies = [
         title="Putting it all together",
         figure="together_35_0.png",
     ),
-    dict(slug="tess", title="Fitting TESS data", figure="tess_29_0.png"),
+    dict(slug="tess", title="Fitting TESS data", figure="tess_19_0.png"),
     dict(
         slug="quick-tess",
         title="Quick fits for TESS light curves",

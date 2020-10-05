@@ -5,11 +5,11 @@ Table of Contents
    :maxdepth: 2
    :caption: Case studies
 
-   tutorials/stellar-variability
-   tutorials/together
-   tutorials/tess
-   tutorials/quick-tess
-   tutorials/ttv
-   tutorials/eb
-   tutorials/rv-multi
-   tutorials/lc-multi
+   tutorials/stellar-variability.ipynb
+   tutorials/together.ipynb
+   tutorials/tess.ipynb
+   tutorials/quick-tess.ipynb
+   tutorials/ttv.ipynb
+   tutorials/eb.ipynb
+   tutorials/rv-multi.ipynb
+   tutorials/lc-multi.ipynb

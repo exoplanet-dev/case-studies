@@ -129,7 +129,7 @@ _ = plt.xlabel("time since primary eclipse [days]")
 # ## Probabilistic model
 #
 # Then we define the probabilistic model using PyMC3 and exoplanet.
-# This is similar to the other tutorials and case studies, but here we're using a [`SecondaryEclipseLightCurve`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.SecondaryEclipseLightCurve) to generate the model light curve and we're modeling the radial velocity trends using a Gaussian process instead of a polynomial.
+# This is similar to the other tutorials and case studies, but here we're using a [SecondaryEclipseLightCurve](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.SecondaryEclipseLightCurve) to generate the model light curve and we're modeling the radial velocity trends using a Gaussian process instead of a polynomial.
 # Otherwise, things should look pretty familiar!
 #
 # After defining the model, we iteratively clip outliers in the light curve using sigma clipping and then estimate the maximum a posteriori parameters.
@@ -563,11 +563,9 @@ print("for p(e) = 1:   R1 = {0:.3f} ± {1:.3f}".format(mean, sigma))
 
 # As you can see (and as one would hope) this choice of prior does not significantly change our inference of the primary radius.
 
-# + active=""
 # ## Citations
 #
-# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
-# -
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [citations.get_citations_for_model](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

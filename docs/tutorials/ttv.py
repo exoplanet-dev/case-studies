@@ -23,8 +23,8 @@ import lightkurve as lk
 
 # # Fitting transit times
 #
-# Fitting for or marginalizing over the transit times or transit timing variations (TTVs) can be useful for several reasons, and it is a compelling use case for `exoplanet` becuase the number of parameters in the model increases significantly because there will be a new parameter for each transit.
-# The performance of the NUTS sampler used by `exoplanet` scales well with the number of parameters, so a TTV model should be substantially faster to run to convergence with `exoplanet` than with other tools.
+# Fitting for or marginalizing over the transit times or transit timing variations (TTVs) can be useful for several reasons, and it is a compelling use case for *exoplanet* becuase the number of parameters in the model increases significantly because there will be a new parameter for each transit.
+# The performance of the NUTS sampler used by *exoplanet* scales well with the number of parameters, so a TTV model should be substantially faster to run to convergence with *exoplanet* than with other tools.
 # There are a few definitions and subtleties that should be considered before jumping in.
 #
 # In this tutorial, we will be using a "descriptive" model [orbits.TTVOrbit](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.orbits.TTVOrbit) to fit the light curve where the underlying motion is still Keplerian, but the time coordinate is warped to make `t0` a function of time.
@@ -32,17 +32,17 @@ import lightkurve as lk
 # This means that other variations (like transit duration variations) are not currently supported, but it would be possible to include more general effects.
 # `exoplanet` also supports photodynamics modeling using the [orbits.ReboundOrbit](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.orbits.ReboundOrbit) for more detailed analysis, but that is a topic for a future tutorial.
 #
-# It is also important to note that "transit time" within `exoplanet` (and most other transit fitting software) is defined as the time of conjunction (called `t0` in the code): the time when the true anomaly is $\pi/2 - \omega$.
+# It is also important to note that "transit time" within *exoplanet* (and most other transit fitting software) is defined as the time of conjunction (called `t0` in the code): the time when the true anomaly is $\pi/2 - \omega$.
 # Section 18 of [the EXOFASTv2 paper](https://arxiv.org/abs/1907.09480) includes an excellent discussion of some of the commonly used definitions of "transit time" in the literature.
 #
 # Finally, there is a subtlety in the definition of the "period" of an orbit with TTVs.
 # Two possible definitions are: (1) the average time between transits, or (2) the slope of a least squares fit to the transit times as a function of transit number.
-# In `exoplanet`, we use the latter definition and call this parameter the `ttv_period` to distinguish it from the `period` of the underlying Keplerian motion which sets the shape and duration of the transit.
+# In *exoplanet*, we use the latter definition and call this parameter the `ttv_period` to distinguish it from the `period` of the underlying Keplerian motion which sets the shape and duration of the transit.
 # By default, these two periods are constrained to be equal, but it can be useful to fit for both parameters since the shape of the transit might not be perfectly described by the same period.
 # That being said, if you fit for both periods, make sure that you constrain `ttv_period` and `period` to be similar or things can get a bit ugly.
 #
 # To get started, let's generate some simulated transit times.
-# We'll use the [`orbits.ttv.compute_expected_transit_times`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.orbits.ttv.compute_expected_transit_times) function to get the expected transit times for a linear ephemeris within some observation baseline:
+# We'll use the [orbits.ttv.compute_expected_transit_times](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.orbits.ttv.compute_expected_transit_times) function to get the expected transit times for a linear ephemeris within some observation baseline:
 
 # +
 import numpy as np
@@ -85,7 +85,7 @@ ax2.set_xlabel("transit time [days]")
 _ = ax1.set_title("true TTVs")
 # -
 
-# Now, like in the [Transit fitting](https://docs.exoplanet.codes/en/stable/tutorials/transit/) tutorial, we'll set up the the model using `PyMC3` and `exoplanet`, and then simulate a data set from that model.
+# Now, like in the [Transit fitting](https://docs.exoplanet.codes/en/stable/tutorials/transit/) tutorial, we'll set up the the model using *PyMC3* and *exoplanet*, and then simulate a data set from that model.
 
 # +
 import pymc3 as pm
@@ -319,7 +319,7 @@ _ = ax1.set_title("posterior inference")
 
 # ## Citations
 #
-# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [citations.get_citations_for_model](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

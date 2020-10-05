@@ -16,14 +16,14 @@ jobs:
     strategy:
       matrix:
         notebook-name:
-        - docs/tutorials/tess.py
-        - docs/tutorials/together.py
-        - docs/tutorials/eb.py
-        - docs/tutorials/quick-tess.py
-        - docs/tutorials/lc-multi.py
-        - docs/tutorials/stellar-variability.py
-        - docs/tutorials/ttv.py
-        - docs/tutorials/rv-multi.py
+          - docs/tutorials/tess.py
+          - docs/tutorials/together.py
+          - docs/tutorials/eb.py
+          - docs/tutorials/quick-tess.py
+          - docs/tutorials/lc-multi.py
+          - docs/tutorials/stellar-variability.py
+          - docs/tutorials/ttv.py
+          - docs/tutorials/rv-multi.py
     steps:
       - uses: actions/checkout@v2
         with:
@@ -74,9 +74,9 @@ jobs:
         with:
           name: notebooks-for-${{ github.sha }}
           path: docs/tutorials
-      # - name: Trigger RTDs build
-      #   uses: dfm/rtds-action@v1.0.0
-      #   with:
-      #     webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
-      #     webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
-      #     commit_ref: ${{ github.ref }}
+      - name: Trigger RTDs build
+        uses: dfm/rtds-action@v1
+        with:
+          webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
+          webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
+          commit_ref: ${{ github.ref }}

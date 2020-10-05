@@ -24,7 +24,7 @@ import lightkurve as lk
 # # Putting it all together
 
 # In this tutorial, we will combine many of the previous tutorials to perform a fit of the K2-24 system using the K2 transit data and the RVs from [Petigura et al. (2016)](https://arxiv.org/abs/1511.04497).
-# This is the same system that we fit in the :ref:`rv` tutorial and we'll combine that model with the transit model from the [Transit fitting](https://docs.exoplanet.codes/en/stable/tutorials/transit/) tutorial and the Gaussian Process noise model from the [Gaussian process models for stellar variability](./stellar-variability.ipynb) case study.
+# This is the same system that we fit in the [Radial velocity fitting](https://docs.exoplanet.codes/en/stable/tutorials/rv/) tutorial and we'll combine that model with the transit model from the [Transit fitting](https://docs.exoplanet.codes/en/stable/tutorials/transit/) tutorial and the Gaussian Process noise model from the [Gaussian process models for stellar variability](./stellar-variability.ipynb) case study.
 #
 # ## Datasets and initializations
 #
@@ -626,7 +626,7 @@ _ = plt.ylabel("posterior density")
 
 # ## Citations
 #
-# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [citations.get_citations_for_model](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()

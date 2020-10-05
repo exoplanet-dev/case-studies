@@ -144,7 +144,7 @@ plt.ylabel("relative flux [ppt]")
 _ = plt.title("TIC 10863087; map model")
 
 # That looks pretty good!
-# Now let's sample from the posterior using [the PyMC3 Extras (`pymc3-ext`) library](https://github.com/exoplanet-dev/pymc3-ext):
+# Now let's sample from the posterior using [the PyMC3 Extras (pymc3-ext) library](https://github.com/exoplanet-dev/pymc3-ext):
 
 np.random.seed(10863087)
 with model:
@@ -222,7 +222,7 @@ _ = plt.ylabel("posterior density")
 
 # ## Citations
 #
-# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [`citations.get_citations_for_model`](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
+# As described in the [citation tutorial](https://docs.exoplanet.codes/en/stable/tutorials/citation/), we can use [citations.get_citations_for_model](https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model) to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.
 
 with model:
     txt, bib = xo.citations.get_citations_for_model()
