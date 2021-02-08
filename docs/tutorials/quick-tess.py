@@ -23,9 +23,11 @@ import lightkurve as lk
 # -
 
 # # Quick fits for TESS light curves
-
 # + active=""
-# .. note:: You will need exoplanet version 0.2.6 or later to run this tutorial.
+#
+# .. note:: 
+#
+#     You will need exoplanet version 0.2.6 or later to run this tutorial.
 # -
 
 # In this tutorial, we will fit the TESS light curve for a known transiting planet.
