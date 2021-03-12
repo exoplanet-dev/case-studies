@@ -1,6 +1,5 @@
 -e git+https://github.com/exoplanet-dev/exoplanet.git#egg=exoplanet
-celerite2
-pymc3-ext
+-e git+https://github.com/exoplanet-dev/celerite2.git#egg=celerite2
 nbformat
 nbconvert
 corner
