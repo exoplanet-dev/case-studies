@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.9"
-      - name: Install dependencies
+      - name: Build wheels for dependencies
         run: |
           python -m pip install -U pip
           python -m pip install -U wheel
@@ -66,6 +66,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U pip
+          python -m pip install -U wheel
           python -m pip install --no-index --find-links=./wheels -r requirements.txt
 
       - name: Execute the notebooks
