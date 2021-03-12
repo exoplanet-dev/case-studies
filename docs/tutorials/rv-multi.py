@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -87,16 +87,20 @@ _ = plt.ylabel("radial velocity [m/s]")
 # +
 import pymc3 as pm
 import exoplanet as xo
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 
 import pymc3_ext as pmx
 from celerite2.theano import terms, GaussianProcess
 
+t_phase = np.linspace(-0.5, 0.5, 5000)
+
 with pm.Model() as model:
 
     # Parameters describing the orbit
-    K = pm.Lognormal("K", mu=np.log(300), sigma=10)
-    P = pm.Lognormal("P", mu=np.log(2093.07), sigma=10)
+    log_K = pm.Normal("log_K", mu=np.log(300), sigma=10)
+    log_P = pm.Normal("log_P", mu=np.log(2093.07), sigma=10)
+    K = pm.Deterministic("K", tt.exp(log_K))
+    P = pm.Deterministic("P", tt.exp(log_P))
 
     ecs = pmx.UnitDisk("ecs", testval=np.array([0.7, -0.3]))
     ecc = pm.Deterministic("ecc", tt.sum(ecs ** 2))
@@ -109,8 +113,8 @@ with pm.Model() as model:
     )
 
     # Noise model parameters
-    sigma_gp = pm.Lognormal("sigma_gp", mu=np.log(10), sigma=50)
-    rho_gp = pm.Lognormal("rho_gp", mu=np.log(50), sigma=50)
+    log_sigma_gp = pm.Normal("log_sigma_gp", mu=np.log(10), sigma=50)
+    log_rho_gp = pm.Normal("log_rho_gp", mu=np.log(50), sigma=50)
 
     # Per instrument parameters
     means = pm.Normal(
@@ -134,17 +138,20 @@ with pm.Model() as model:
     def rv_model(x):
         return orbit.get_radial_velocity(x, K=K)
 
-    kernel = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3)
+    kernel = terms.SHOTerm(
+        sigma=tt.exp(log_sigma_gp), rho=tt.exp(log_rho_gp), Q=1.0 / 3
+    )
     gp = GaussianProcess(kernel, t=t, diag=diag, mean=rv_model)
     gp.marginal("obs", observed=resid)
     pm.Deterministic("gp_pred", gp.predict(resid, include_mean=False))
+    pm.Deterministic("rv_phase", rv_model(P * t_phase + tp))
 
     map_soln = model.test_point
     map_soln = pmx.optimize(map_soln, [means])
     map_soln = pmx.optimize(map_soln, [means, phase])
-    map_soln = pmx.optimize(map_soln, [means, phase, K])
-    map_soln = pmx.optimize(map_soln, [means, tp, K, P, ecs])
-    map_soln = pmx.optimize(map_soln, [sigmas, sigma_gp, rho_gp])
+    map_soln = pmx.optimize(map_soln, [means, phase, log_K])
+    map_soln = pmx.optimize(map_soln, [means, tp, K, log_P, ecs])
+    map_soln = pmx.optimize(map_soln, [sigmas, log_sigma_gp, log_rho_gp])
     map_soln = pmx.optimize(map_soln)
 # -
 
@@ -153,7 +160,9 @@ with pm.Model() as model:
 # +
 t_pred = np.linspace(t.min() - 400, t.max() + 400, 5000)
 with model:
-    plt.plot(t_pred, xo.eval_in_model(rv_model(t_pred), map_soln), "k", lw=0.5)
+    plt.plot(
+        t_pred, pmx.eval_in_model(rv_model(t_pred), map_soln), "k", lw=0.5
+    )
 
 detrended = rv - map_soln["mean"] - map_soln["gp_pred"]
 plt.errorbar(t, detrended, yerr=rv_err, fmt=",k")
@@ -171,33 +180,37 @@ _ = plt.title("map model", fontsize=14)
 np.random.seed(39091)
 with model:
     trace = pmx.sample(
-        tune=3500, draws=3000, start=map_soln, chains=2, cores=2
+        tune=3500,
+        draws=3000,
+        start=map_soln,
+        chains=2,
+        cores=2,
+        return_inferencedata=True,
     )
 
 # Then we can look at some summaries of the trace and the constraints on some of the key parameters:
 
 # +
 import corner
+import arviz as az
 
-corner.corner(
-    pm.trace_to_dataframe(trace, varnames=["P", "K", "tp", "ecc", "omega"])
+corner.corner(trace, var_names=["P", "K", "tp", "ecc", "omega"])
+
+az.summary(
+    trace, var_names=["P", "K", "tp", "ecc", "omega", "means", "sigmas"]
 )
-
-with model:
-    summary = pm.summary(
-        trace, var_names=["P", "K", "tp", "ecc", "omega", "means", "sigmas"]
-    )
-summary
 # -
 
 # And finally we can plot the phased RV curve and overplot our posterior inference:
 
 # +
-mu = np.mean(trace["mean"] + trace["gp_pred"], axis=0)
-mu_var = np.var(trace["mean"], axis=0)
-jitter_var = np.median(trace["diag"], axis=0)
-period = np.median(trace["P"])
-tp = np.median(trace["tp"])
+flat_samps = trace.posterior.stack(sample=("chain", "draw"))
+
+mu = np.mean(flat_samps["mean"].values + flat_samps["gp_pred"].values, axis=-1)
+mu_var = np.var(flat_samps["mean"], axis=-1)
+jitter_var = np.median(flat_samps["diag"], axis=-1)
+period = np.median(flat_samps["P"])
+tp = np.median(flat_samps["tp"])
 
 detrended = rv - mu
 folded = ((t - tp + 0.5 * period) % period) / period
@@ -226,16 +239,11 @@ plt.scatter(
     vmax=10,
 )
 
-t_phase = np.linspace(-0.5, 0.5, 5000)
-with model:
-    func = xo.get_theano_function_for_var(
-        rv_model(model.P * t_phase + model.tp)
-    )
-    for point in xo.get_samples_from_trace(trace, 100):
-        args = xo.get_args_for_theano_function(point)
-        x, y = t_phase + 0.5, func(*args)
-        plt.plot(x, y, "k", lw=0.5, alpha=0.5)
-        plt.plot(x + 1, y, "k", lw=0.5, alpha=0.5)
+x = t_phase + 0.5
+y = np.mean(flat_samps["rv_phase"], axis=-1)
+plt.plot(x, y, "k", lw=0.5, alpha=0.5)
+plt.plot(x + 1, y, "k", lw=0.5, alpha=0.5)
+
 plt.axvline(1, color="k", lw=0.5)
 plt.xlim(0, 2)
 plt.xlabel("phase")

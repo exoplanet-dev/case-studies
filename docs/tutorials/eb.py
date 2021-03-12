@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -23,10 +23,6 @@ import lightkurve as lk
 # -
 
 # # Fitting a detached eclipsing binary
-
-# + active=""
-# .. note:: You will need exoplanet version 0.3.1 or later to run this tutorial.
-# -
 
 # In this case study, we'll go through the steps required to fit the light curve and radial velocity measurements for the detached eclipsing binary system HD 23642.
 # This is a bright system that has been fit by many authors ([1](https://arxiv.org/abs/astro-ph/0403444), [2](https://arxiv.org/abs/astro-ph/0409507), [3](https://ui.adsabs.harvard.edu/abs/2007A%26A...463..579G/abstract), [4](https://arxiv.org/abs/1602.01901), and [5](https://arxiv.org/abs/1603.08484) to name a few) so this is a good benchmark for our demonstration.
@@ -69,7 +65,7 @@ hdr = tpf.hdu[1].header
 texp = hdr["FRAMETIM"] * hdr["NUM_FRM"]
 texp /= 60.0 * 60.0 * 24.0
 
-x = np.ascontiguousarray(lc.time, dtype=np.float64)
+x = np.ascontiguousarray(lc.time.value, dtype=np.float64)
 y = np.ascontiguousarray(lc.flux, dtype=np.float64)
 mu = np.median(y)
 y = (y / mu - 1) * 1e3
@@ -136,7 +132,7 @@ _ = plt.xlabel("time since primary eclipse [days]")
 
 # +
 import pymc3 as pm
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 
 import exoplanet as xo
 import pymc3_ext as pmx
@@ -154,27 +150,33 @@ def build_model(mask):
         u2 = xo.QuadLimbDark("u2")
 
         # Parameters describing the primary
-        M1 = pm.Lognormal("M1", mu=0.0, sigma=10.0)
-        R1 = pm.Lognormal("R1", mu=0.0, sigma=10.0)
+        log_M1 = pm.Normal("log_M1", mu=0.0, sigma=10.0)
+        log_R1 = pm.Normal("log_R1", mu=0.0, sigma=10.0)
+        M1 = pm.Deterministic("M1", tt.exp(log_M1))
+        R1 = pm.Deterministic("R1", tt.exp(log_R1))
 
         # Secondary ratios
-        k = pm.Lognormal("k", mu=0.0, sigma=10.0)  # radius ratio
-        q = pm.Lognormal("q", mu=0.0, sigma=10.0)  # mass ratio
-        s = pm.Lognormal(
-            "s", mu=np.log(0.5), sigma=10.0
+        log_k = pm.Normal("log_k", mu=0.0, sigma=10.0)  # radius ratio
+        log_q = pm.Normal("log_q", mu=0.0, sigma=10.0)  # mass ratio
+        log_s = pm.Normal(
+            "log_s", mu=np.log(0.5), sigma=10.0
         )  # surface brightness ratio
+        pm.Deterministic("k", tt.exp(log_k))
+        pm.Deterministic("q", tt.exp(log_q))
+        pm.Deterministic("s", tt.exp(log_s))
 
         # Prior on flux ratio
         pm.Normal(
             "flux_prior",
             mu=lit_flux_ratio[0],
             sigma=lit_flux_ratio[1],
-            observed=k ** 2 * s,
+            observed=tt.exp(2 * log_k + log_s),
         )
 
         # Parameters describing the orbit
-        b = xo.ImpactParameter("b", ror=k, testval=1.5)
-        period = pm.Lognormal("period", mu=np.log(lit_period), sigma=1.0)
+        b = xo.ImpactParameter("b", ror=tt.exp(log_k), testval=1.5)
+        log_period = pm.Normal("log_period", mu=np.log(lit_period), sigma=1.0)
+        period = pm.Deterministic("period", tt.exp(log_period))
         t0 = pm.Normal("t0", mu=lit_t0, sigma=1.0)
 
         # Parameters describing the eccentricity: ecs = [e * cos(w), e * sin(w)]
@@ -183,8 +185,8 @@ def build_model(mask):
         omega = pm.Deterministic("omega", tt.arctan2(ecs[1], ecs[0]))
 
         # Build the orbit
-        R2 = pm.Deterministic("R2", k * R1)
-        M2 = pm.Deterministic("M2", q * M1)
+        R2 = pm.Deterministic("R2", tt.exp(log_k + log_R1))
+        M2 = pm.Deterministic("M2", tt.exp(log_q + log_M1))
         orbit = xo.orbits.KeplerianOrbit(
             period=period,
             t0=t0,
@@ -242,7 +244,7 @@ def build_model(mask):
         kernel_rv = terms.SHOTerm(sigma=sigma_rv_gp, w0=rho_rv_gp, Q=1.0 / 3)
 
         # Set up the light curve model
-        lc = xo.SecondaryEclipseLightCurve(u1, u2, s)
+        lc = xo.SecondaryEclipseLightCurve(u1, u2, tt.exp(log_s))
 
         def model_lc(t):
             return (
@@ -262,7 +264,9 @@ def build_model(mask):
             return mean_rv + 1e-3 * orbit.get_radial_velocity(t)
 
         def model_rv2(t):
-            return mean_rv - 1e-3 * orbit.get_radial_velocity(t) / q
+            return mean_rv - 1e-3 * orbit.get_radial_velocity(t) * tt.exp(
+                -log_q
+            )
 
         # Condition the radial velocity model on the data
         gp_rv1 = GaussianProcess(
@@ -278,21 +282,23 @@ def build_model(mask):
         map_soln = model.test_point
 
         # First the RV parameters
-        map_soln = pmx.optimize(map_soln, [mean_rv, q])
+        map_soln = pmx.optimize(map_soln, [mean_rv, log_q])
         map_soln = pmx.optimize(
             map_soln, [mean_rv, sigma_rv1, sigma_rv2, sigma_rv_gp, rho_rv_gp]
         )
 
         # Then the LC parameters
-        map_soln = pmx.optimize(map_soln, [mean_lc, R1, k, s, b])
-        map_soln = pmx.optimize(map_soln, [mean_lc, R1, k, s, b, u1, u2])
+        map_soln = pmx.optimize(map_soln, [mean_lc, log_R1, log_k, log_s, b])
+        map_soln = pmx.optimize(
+            map_soln, [mean_lc, log_R1, log_k, log_s, b, u1, u2]
+        )
         map_soln = pmx.optimize(
             map_soln, [mean_lc, sigma_lc, sigma_gp, rho_gp]
         )
-        map_soln = pmx.optimize(map_soln, [t0, period])
+        map_soln = pmx.optimize(map_soln, [t0, log_period])
 
         # Then all the parameters together
-        map_soln = pmx.optimize(map_soln, [mean_rv, q, ecs])
+        map_soln = pmx.optimize(map_soln, [mean_rv, log_q, ecs])
         map_soln = pmx.optimize(map_soln)
 
         model.gp_lc = gp_lc
@@ -317,7 +323,7 @@ def sigma_clip():
         model, map_soln = build_model(mask)
 
         with model:
-            mdl = xo.eval_in_model(
+            mdl = pmx.eval_in_model(
                 model.model_lc(x[mask]) + model.gp_lc_pred, map_soln
             )
 
@@ -371,10 +377,10 @@ _ = plt.title("HD 23642; map model", fontsize=14)
 # +
 with model:
     gp_pred = (
-        xo.eval_in_model(model.gp_lc_pred, map_soln) + map_soln["mean_lc"]
+        pmx.eval_in_model(model.gp_lc_pred, map_soln) + map_soln["mean_lc"]
     )
     lc = (
-        xo.eval_in_model(model.model_lc(model.x), map_soln)
+        pmx.eval_in_model(model.model_lc(model.x), map_soln)
         - map_soln["mean_lc"]
     )
 
@@ -437,15 +443,14 @@ with model:
         chains=2,
         initial_accept=0.8,
         target_accept=0.95,
+        return_inferencedata=True,
     )
 
 # As usual, we can check the convergence diagnostics for some of the key parameters.
 
-with model:
-    summary = pm.summary(
-        trace, var_names=["M1", "M2", "R1", "R2", "ecs", "incl", "s"]
-    )
-summary
+import arviz as az
+
+az.summary(trace, var_names=["M1", "M2", "R1", "R2", "ecs", "incl", "s"])
 
 # ## Results
 #
@@ -455,9 +460,9 @@ summary
 # +
 import corner
 
-samples = pm.trace_to_dataframe(trace, varnames=["k", "q", "ecs"])
 _ = corner.corner(
-    samples,
+    trace,
+    var_names=["k", "q", "ecs"],
     labels=[
         "$k = R_2 / R_1$",
         "$q = M_2 / M_1$",

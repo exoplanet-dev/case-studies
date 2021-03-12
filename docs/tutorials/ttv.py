@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -90,7 +90,7 @@ _ = ax1.set_title("true TTVs")
 # +
 import pymc3 as pm
 import pymc3_ext as pmx
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 
 np.random.seed(9485023)
 
@@ -145,7 +145,7 @@ with pm.Model() as model:
     # NOTE: if you are fitting real data, you shouldn't include this line #
     #       because you already have data!                                #
     # ******************************************************************* #
-    y = xo.eval_in_model(light_curve)
+    y = pmx.eval_in_model(light_curve)
     y += yerr * np.random.randn(len(y))
     # ******************************************************************* #
     # End of fake data creation; you want to include the following lines  #
@@ -204,7 +204,7 @@ for n, letter in enumerate("bc"):
 
 # +
 with model:
-    t_warp = xo.eval_in_model(orbit._warp_times(t), map_soln)
+    t_warp = pmx.eval_in_model(orbit._warp_times(t), map_soln)
 
 for n, letter in enumerate("bc"):
     plt.figure()
@@ -235,38 +235,34 @@ for n, letter in enumerate("bc"):
 np.random.seed(230948)
 with model:
     trace = pmx.sample(
-        tune=1000, draws=1000, start=map_soln, cores=2, chains=2
+        tune=1000,
+        draws=1000,
+        start=map_soln,
+        cores=2,
+        chains=2,
+        return_inferencedata=True,
     )
 
 # Then check the convergence diagnostics:
 
-with model:
-    summary = pm.summary(
-        trace, var_names=["mean", "u", "logr", "b", "tts_0", "tts_1"]
-    )
-summary
+import arviz as az
+
+az.summary(trace, var_names=["mean", "u", "logr", "b", "tts_0", "tts_1"])
 
 # And plot the corner plot of the physical parameters:
 
 # +
 import corner
 
+names = ["period", "r", "b"]
+
 with model:
-    truths = np.concatenate(
-        list(map(np.atleast_1d, xo.eval_in_model([orbit.period, r, b])))
-    )
-samples = pm.trace_to_dataframe(trace, varnames=["period", "r", "b"])
+    truths = dict(zip(names, xo.eval_in_model([orbit.period, r, b])))
+
 _ = corner.corner(
-    samples,
+    trace,
     truths=truths,
-    labels=[
-        "period 1",
-        "period 2",
-        "radius 1",
-        "radius 2",
-        "impact 1",
-        "impact 2",
-    ],
+    var_names=names,
 )
 # -
 
@@ -275,11 +271,13 @@ _ = corner.corner(
 # Finally, let's plot the posterior estimates of the the transit times in an O-C diagram:
 
 # +
+flat_samps = trace.posterior.stack(sample=("chain", "draw"))
+
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
 
-q = np.percentile(trace["ttvs_0"], [16, 50, 84], axis=0)
+q = np.percentile(flat_samps["ttvs_0"], [16, 50, 84], axis=-1)
 ax1.fill_between(
-    np.mean(trace["tts_0"], axis=0),
+    np.mean(flat_samps["tts_0"], axis=-1),
     q[0],
     q[2],
     color="C0",
@@ -295,9 +293,9 @@ ax1.set_ylim(np.max(np.abs(ax1.get_ylim())) * np.array([-1, 1]))
 
 ax1.set_ylabel("$O-C$ [days]")
 
-q = np.percentile(trace["ttvs_1"], [16, 50, 84], axis=0)
+q = np.percentile(flat_samps["ttvs_1"], [16, 50, 84], axis=-1)
 ax2.fill_between(
-    np.mean(trace["tts_1"], axis=0),
+    np.mean(flat_samps["tts_1"], axis=-1),
     q[0],
     q[2],
     color="C1",

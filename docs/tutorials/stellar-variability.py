@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -34,15 +34,15 @@ import numpy as np
 import lightkurve as lk
 import matplotlib.pyplot as plt
 
-lcf = lk.search_lightcurvefile("TIC 10863087").download_all(
-    quality_bitmask="hardest"
-)
-lc = lcf.PDCSAP_FLUX.stitch().remove_nans().remove_outliers()
+lcf = lk.search_lightcurve(
+    "TIC 10863087", mission="TESS", author="SPOC"
+).download_all(quality_bitmask="hardest", flux_column="pdcsap_flux")
+lc = lcf.stitch().remove_nans().remove_outliers()
 lc = lc[:5000]
 _, mask = lc.flatten().remove_outliers(sigma=3.0, return_mask=True)
 lc = lc[~mask]
 
-x = np.ascontiguousarray(lc.time, dtype=np.float64)
+x = np.ascontiguousarray(lc.time.value, dtype=np.float64)
 y = np.ascontiguousarray(lc.flux, dtype=np.float64)
 yerr = np.ascontiguousarray(lc.flux_err, dtype=np.float64)
 mu = np.mean(y)
@@ -85,7 +85,7 @@ _ = plt.ylabel("power")
 # +
 import pymc3 as pm
 import pymc3_ext as pmx
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 from celerite2.theano import terms, GaussianProcess
 
 with pm.Model() as model:
@@ -94,7 +94,7 @@ with pm.Model() as model:
     mean = pm.Normal("mean", mu=0.0, sd=10.0)
 
     # A jitter term describing excess white noise
-    jitter = pm.Lognormal("jitter", mu=np.log(np.mean(yerr)), sd=2.0)
+    log_jitter = pm.Normal("log_jitter", mu=np.log(np.mean(yerr)), sd=2.0)
 
     # A term to describe the non-periodic variability
     sigma = pm.InverseGamma(
@@ -108,18 +108,27 @@ with pm.Model() as model:
     sigma_rot = pm.InverseGamma(
         "sigma_rot", **pmx.estimate_inverse_gamma_parameters(1.0, 5.0)
     )
-    period = pm.Lognormal("period", mu=np.log(peak["period"]), sd=2.0)
-    Q0 = pm.Lognormal("Q0", mu=0.0, sd=2.0)
-    dQ = pm.Lognormal("dQ", mu=0.0, sd=2.0)
+    log_period = pm.Normal("log_period", mu=np.log(peak["period"]), sd=2.0)
+    period = pm.Deterministic("period", tt.exp(log_period))
+    log_Q0 = pm.Normal("log_Q0", mu=0.0, sd=2.0)
+    log_dQ = pm.Normal("log_dQ", mu=0.0, sd=2.0)
     f = pm.Uniform("f", lower=0.1, upper=1.0)
 
     # Set up the Gaussian Process model
     kernel = terms.SHOTerm(sigma=sigma, rho=rho, Q=1 / 3.0)
     kernel += terms.RotationTerm(
-        sigma=sigma_rot, period=period, Q0=Q0, dQ=dQ, f=f
+        sigma=sigma_rot,
+        period=period,
+        Q0=tt.exp(log_Q0),
+        dQ=tt.exp(log_dQ),
+        f=f,
     )
     gp = GaussianProcess(
-        kernel, t=x, diag=yerr ** 2 + jitter ** 2, mean=mean, quiet=True
+        kernel,
+        t=x,
+        diag=yerr ** 2 + tt.exp(2 * log_jitter),
+        mean=mean,
+        quiet=True,
     )
 
     # Compute the Gaussian Process likelihood and add it into the
@@ -155,30 +164,31 @@ with model:
         cores=2,
         chains=2,
         target_accept=0.95,
+        return_inferencedata=True,
     )
 
 # Now we can do the usual convergence checks:
 
-with model:
-    summary = pm.summary(
-        trace,
-        var_names=[
-            "f",
-            "dQ",
-            "Q0",
-            "period",
-            "sigma_rot",
-            "rho",
-            "sigma",
-            "jitter",
-            "mean",
-        ],
-    )
-summary
+import arviz as az
+
+az.summary(
+    trace,
+    var_names=[
+        "f",
+        "log_dQ",
+        "log_Q0",
+        "log_period",
+        "sigma_rot",
+        "rho",
+        "sigma",
+        "log_jitter",
+        "mean",
+    ],
+)
 
 # And plot the posterior distribution over rotation period:
 
-period_samples = trace["period"]
+period_samples = np.asarray(trace.posterior["period"]).flatten()
 plt.hist(period_samples, 25, histtype="step", color="k", density=True)
 plt.yticks([])
 plt.xlabel("rotation period [days]")

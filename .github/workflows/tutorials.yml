@@ -39,11 +39,11 @@ jobs:
     strategy:
       matrix:
         notebook-name:
-          - docs/tutorials/tess.py
-          - docs/tutorials/together.py
-          - docs/tutorials/eb.py
+          # - docs/tutorials/tess.py
+          # - docs/tutorials/together.py
+          # - docs/tutorials/eb.py
           - docs/tutorials/quick-tess.py
-          - docs/tutorials/lc-multi.py
+          # - docs/tutorials/lc-multi.py
           - docs/tutorials/stellar-variability.py
           - docs/tutorials/ttv.py
           - docs/tutorials/rv-multi.py
