@@ -1,10 +1,10 @@
 name: Tutorials
 on:
+  schedule:
+    - cron: "0 0 * * 1"
   push:
     branches:
       - main
-  pull_request:
-    branches:
   release:
     types:
       - published
@@ -32,7 +32,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.9"
 
       - uses: actions/cache@v2
         with:
