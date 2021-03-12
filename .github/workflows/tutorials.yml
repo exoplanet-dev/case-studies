@@ -66,8 +66,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U pip
-          python -m pip install -U wheel
-          python -m pip install --no-index --find-links=./wheels -r requirements.txt
+          python -m pip install wheels/*.whl
 
       - name: Execute the notebooks
         run: |
