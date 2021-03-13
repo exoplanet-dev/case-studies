@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -23,13 +22,7 @@ import lightkurve as lk
 # -
 
 # # Quick fits for TESS light curves
-# + active=""
 #
-# .. note::
-#
-#     You will need exoplanet version 0.2.6 or later to run this tutorial.
-# -
-
 # In this tutorial, we will fit the TESS light curve for a known transiting planet.
 # While the [Fitting TESS data](./tess.ipynb) case study goes through the full details of an end-to-end fit, this tutorial is significantly faster to run and it can give pretty excellent results depending on your goals.
 # Some of the main differences are:
