@@ -1,3 +1,19 @@
+# -*- coding: utf-8 -*-
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: light
+#       format_version: '1.5'
+#       jupytext_version: 1.10.3
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# +
 """isort:skip_file"""
 
 get_ipython().magic('config InlineBackend.figure_format = "retina"')
@@ -21,6 +37,8 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 logger = logging.getLogger("theano.gof.compilelock")
+logger.setLevel(logging.ERROR)
+logger = logging.getLogger("theano.tensor.opt")
 logger.setLevel(logging.ERROR)
 logger = logging.getLogger("exoplanet")
 logger.setLevel(logging.DEBUG)

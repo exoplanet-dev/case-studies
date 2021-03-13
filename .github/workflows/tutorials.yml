@@ -96,6 +96,7 @@ jobs:
           name: notebooks-for-${{ github.sha }}
           path: docs/tutorials
       - name: Trigger RTDs build
+        if: ${{ github.event_name != 'pull_request' && github.event_name != 'schedule' }}
         uses: dfm/rtds-action@v1
         with:
           webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}

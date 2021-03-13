@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -25,7 +25,7 @@ import lightkurve as lk
 # # Quick fits for TESS light curves
 # + active=""
 #
-# .. note:: 
+# .. note::
 #
 #     You will need exoplanet version 0.2.6 or later to run this tutorial.
 # -
@@ -47,11 +47,12 @@ import numpy as np
 import lightkurve as lk
 import matplotlib.pyplot as plt
 
-lcfs = lk.search_lightcurvefile("TIC 286923464", mission="TESS").download_all()
-lc = lcfs.PDCSAP_FLUX.stitch()
-lc = lc.remove_nans().remove_outliers(sigma=7)
+lcfs = lk.search_lightcurve(
+    "TIC 286923464", mission="TESS", author="SPOC"
+).download_all(flux_column="pdcsap_flux")
+lc = lcfs.stitch().remove_nans().remove_outliers(sigma=7)
 
-x = np.ascontiguousarray(lc.time, dtype=np.float64)
+x = np.ascontiguousarray(lc.time.value, dtype=np.float64)
 y = np.ascontiguousarray(1e3 * (lc.flux - 1), dtype=np.float64)
 yerr = np.ascontiguousarray(1e3 * lc.flux_err, dtype=np.float64)
 
@@ -62,7 +63,7 @@ plt.xlabel("time [days]")
 _ = plt.ylabel("relative flux [ppt]")
 # -
 
-# Then, find the period, phase and depth of the transit using box least squares:
+# Then, find the period, phase and depth of the transit using box least squares:stitch
 
 # +
 import exoplanet as xo
@@ -114,7 +115,7 @@ _ = plt.xlim(-0.25, 0.25)
 
 # +
 import pymc3 as pm
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 
 import pymc3_ext as pmx
 from celerite2.theano import terms, GaussianProcess
@@ -129,18 +130,25 @@ with pm.Model() as model:
 
     # Gaussian process noise model
     sigma = pm.InverseGamma("sigma", alpha=3.0, beta=2 * np.median(yerr))
-    sigma_gp = pm.Lognormal("sigma_gp", mu=0.0, sigma=10.0)
-    rho_gp = pm.Lognormal("rho_gp", mu=np.log(10.0), sigma=10.0)
-    kernel = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3)
-    noise_params = [sigma, sigma_gp, rho_gp]
+    log_sigma_gp = pm.Normal("log_sigma_gp", mu=0.0, sigma=10.0)
+    log_rho_gp = pm.Normal("log_rho_gp", mu=np.log(10.0), sigma=10.0)
+    kernel = terms.SHOTerm(
+        sigma=tt.exp(log_sigma_gp), rho=tt.exp(log_rho_gp), Q=1.0 / 3
+    )
+    noise_params = [sigma, log_sigma_gp, log_rho_gp]
 
     # Planet parameters
-    ror = pm.Lognormal("ror", mu=0.5 * np.log(depth_guess * 1e-3), sigma=10.0)
+    log_ror = pm.Normal(
+        "log_ror", mu=0.5 * np.log(depth_guess * 1e-3), sigma=10.0
+    )
+    ror = pm.Deterministic("ror", tt.exp(log_ror))
 
     # Orbital parameters
-    period = pm.Lognormal("period", mu=np.log(period_guess), sigma=1.0)
+    log_period = pm.Normal("log_period", mu=np.log(period_guess), sigma=1.0)
+    period = pm.Deterministic("period", tt.exp(log_period))
     t0 = pm.Normal("t0", mu=t0_guess, sigma=1.0)
-    dur = pm.Lognormal("dur", mu=np.log(0.1), sigma=10.0)
+    log_dur = pm.Normal("log_dur", mu=np.log(0.1), sigma=10.0)
+    dur = pm.Deterministic("dur", tt.exp(log_dur))
     b = xo.distributions.ImpactParameter("b", ror=ror)
 
     # Set up the orbit
@@ -203,23 +211,28 @@ _ = plt.xlim(-0.25, 0.25)
 np.random.seed(286923464)
 with model:
     trace = pmx.sample(
-        tune=2000, draws=2000, start=map_soln, chains=2, cores=2
+        tune=2000,
+        draws=2000,
+        start=map_soln,
+        chains=2,
+        cores=2,
+        return_inferencedata=True,
     )
 
 # Then we can take a look at the summary statistics:
 
-with model:
-    summary = pm.summary(trace)
-summary
+import arviz as az
+
+az.summary(trace)
 
 # And plot the posterior covariances compared to the values from [Pepper et al. (2019)](https://arxiv.org/abs/1911.05150):
 
 # +
 import corner
-import astropy.units as u
 
-samples = pm.trace_to_dataframe(trace, varnames=["period", "ror", "b"])
-_ = corner.corner(samples, truths=[6.134980, 0.05538, 0.125])
+_ = corner.corner(
+    trace, var_names=["period", "ror", "b"], truths=[6.134980, 0.05538, 0.125]
+)
 # -
 
 # ## Bonus: eccentricity
@@ -244,7 +257,7 @@ tic_rho_star = float(star["rho"]), float(star["e_rho"])
 print("rho_star = {0} ± {1}".format(*tic_rho_star))
 
 # Extract the implied density from the fit
-rho_circ = np.repeat(trace["rho_circ"], 100)
+rho_circ = np.repeat(np.asarray(trace.posterior["rho_circ"]).flatten(), 100)
 
 # Sample eccentricity and omega from their priors (the math might
 # be a little more subtle for more informative priors, but I leave
