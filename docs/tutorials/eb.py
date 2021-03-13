@@ -448,9 +448,11 @@ with model:
 
 # As usual, we can check the convergence diagnostics for some of the key parameters.
 
+# +
 import arviz as az
 
 az.summary(trace, var_names=["M1", "M2", "R1", "R2", "ecs", "incl", "s"])
+# -
 
 # ## Results
 #
@@ -477,13 +479,22 @@ _ = corner.corner(
 # The orange contours in this figure show the results transformed to a uniform prior on eccentricity as discussed below.
 # These contours are provided to demonstrate (qualitatively) that these inferences are not sensitive to the choice of prior.
 
-samples = pm.trace_to_dataframe(trace, varnames=["R1", "R2", "M1", "M2"])
-weights = 1.0 / trace["ecc"]
+flat_samps = trace.posterior.stack(sample=("chain", "draw"))
+weights = 1.0 / flat_samps["ecc"].values
 weights *= len(weights) / np.sum(weights)
 fig = corner.corner(
-    samples, weights=weights, plot_datapoints=False, color="C1"
+    trace,
+    var_names=["R1", "R2", "M1", "M2"],
+    weights=weights,
+    plot_datapoints=False,
+    color="C1",
 )
-_ = corner.corner(samples, truths=[1.727, 1.503, 2.203, 1.5488], fig=fig)
+_ = corner.corner(
+    trace,
+    var_names=["R1", "R2", "M1", "M2"],
+    truths=[1.727, 1.503, 2.203, 1.5488],
+    fig=fig,
+)
 
 # ## A note about eccentricities
 #
@@ -496,19 +507,20 @@ _ = corner.corner(samples, truths=[1.727, 1.503, 2.203, 1.5488], fig=fig)
 # Note, especially, how the shape of the $e\,\sin\omega$ density changes.
 
 # +
+esinw = flat_samps["ecc"].values * np.sin(flat_samps["omega"].values)
 plt.hist(
-    trace["ecc"] * np.sin(trace["omega"]),
+    esinw,
     50,
     density=True,
     histtype="step",
     label="$p(e) = 2\,e$",
 )
 plt.hist(
-    trace["ecc"] * np.sin(trace["omega"]),
+    esinw,
     50,
     density=True,
     histtype="step",
-    weights=1.0 / trace["ecc"],
+    weights=1.0 / flat_samps["ecc"].values,
     label="$p(e) = 1$",
 )
 plt.xlabel("$e\,\sin(\omega)$")
@@ -518,14 +530,18 @@ plt.legend(fontsize=12)
 
 plt.figure()
 plt.hist(
-    trace["ecc"], 50, density=True, histtype="step", label="$p(e) = 2\,e$"
-)
-plt.hist(
-    trace["ecc"],
+    flat_samps["ecc"].values,
     50,
     density=True,
     histtype="step",
-    weights=1.0 / trace["ecc"],
+    label="$p(e) = 2\,e$",
+)
+plt.hist(
+    flat_samps["ecc"].values,
+    50,
+    density=True,
+    histtype="step",
+    weights=1.0 / flat_samps["ecc"].values,
     label="$p(e) = 1$",
 )
 plt.xlabel("$e$")
@@ -538,22 +554,22 @@ _ = plt.legend(fontsize=12)
 # We can then use the `corner.quantile` function to compute summary statistics of the weighted samples as follows.
 # For example, here how to compute the 90% posterior upper limit for the eccentricity:
 
-weights = 1.0 / trace["ecc"]
+weights = 1.0 / flat_samps["ecc"].values
 print(
     "for p(e) = 2*e: p(e < x) = 0.9 -> x = {0:.5f}".format(
-        corner.quantile(trace["ecc"], [0.9])[0]
+        corner.quantile(flat_samps["ecc"].values, [0.9])[0]
     )
 )
 print(
     "for p(e) = 1:   p(e < x) = 0.9 -> x = {0:.5f}".format(
-        corner.quantile(trace["ecc"], [0.9], weights=weights)[0]
+        corner.quantile(flat_samps["ecc"].values, [0.9], weights=weights)[0]
     )
 )
 
 # Or, the posterior mean and variance for the radius of the primary:
 
 # +
-samples = trace["R1"]
+samples = flat_samps["R1"].values
 
 print(
     "for p(e) = 2*e: R1 = {0:.3f} ± {1:.3f}".format(

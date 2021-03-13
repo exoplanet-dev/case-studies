@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -32,15 +32,16 @@ import lightkurve as lk
 import numpy as np
 import lightkurve as lk
 import matplotlib.pyplot as plt
+from astropy.io import fits
 
-lc_file = lk.search_lightcurvefile("TIC 261136679", sector=1).download(
-    quality_bitmask="hardest"
-)
-lc = lc_file.PDCSAP_FLUX.remove_nans().normalize().remove_outliers()
-time = lc.time
+lc_file = lk.search_lightcurve(
+    "TIC 261136679", sector=1, author="SPOC"
+).download(quality_bitmask="hardest", flux_column="pdcsap_flux")
+lc = lc_file.remove_nans().normalize().remove_outliers()
+time = lc.time.value
 flux = lc.flux
 m = lc.quality == 0
-with lc_file.hdu as hdu:
+with fits.open(lc_file.filename) as hdu:
     hdr = hdu[1].header
 
 texp = hdr["FRAMETIM"] * hdr["NUM_FRM"]
@@ -122,7 +123,7 @@ _ = ax.set_xlabel("time since transit")
 # +
 import exoplanet as xo
 import pymc3 as pm
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 
 import pymc3_ext as pmx
 from celerite2.theano import terms, GaussianProcess
@@ -149,14 +150,16 @@ def build_model(mask=None, start=None):
         )
 
         # Orbital parameters for the planets
-        period = pm.Lognormal("period", mu=np.log(bls_period), sd=1)
         t0 = pm.Normal("t0", mu=bls_t0, sd=1)
-        r_pl = pm.Lognormal(
-            "r_pl",
+        log_period = pm.Normal("log_period", mu=np.log(bls_period), sd=1)
+        log_r_pl = pm.Normal(
+            "log_r_pl",
             sd=1.0,
             mu=0.5 * np.log(1e-3 * np.array(bls_depth))
             + np.log(R_star_huang[0]),
         )
+        period = pm.Deterministic("period", tt.exp(log_period))
+        r_pl = pm.Deterministic("r_pl", tt.exp(log_r_pl))
         ror = pm.Deterministic("ror", r_pl / r_star)
         b = xo.distributions.ImpactParameter("b", ror=ror)
 
@@ -166,9 +169,13 @@ def build_model(mask=None, start=None):
         xo.eccentricity.kipping13("ecc_prior", fixed=True, observed=ecc)
 
         # Transit jitter & GP parameters
-        sigma_lc = pm.Lognormal("sigma_lc", mu=np.log(np.std(y[mask])), sd=10)
-        rho_gp = pm.Lognormal("rho_gp", mu=0, sd=10)
-        sigma_gp = pm.Lognormal("sigma_gp", mu=np.log(np.std(y[mask])), sd=10)
+        log_sigma_lc = pm.Normal(
+            "log_sigma_lc", mu=np.log(np.std(y[mask])), sd=10
+        )
+        log_rho_gp = pm.Normal("log_rho_gp", mu=0, sd=10)
+        log_sigma_gp = pm.Normal(
+            "log_sigma_gp", mu=np.log(np.std(y[mask])), sd=10
+        )
 
         # Orbit model
         orbit = xo.orbits.KeplerianOrbit(
@@ -193,8 +200,12 @@ def build_model(mask=None, start=None):
         resid = y[mask] - light_curve
 
         # GP model for the light curve
-        kernel = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1 / np.sqrt(2))
-        gp = GaussianProcess(kernel, t=x[mask], yerr=sigma_lc)
+        kernel = terms.SHOTerm(
+            sigma=tt.exp(log_sigma_gp),
+            rho=tt.exp(log_rho_gp),
+            Q=1 / np.sqrt(2),
+        )
+        gp = GaussianProcess(kernel, t=x[mask], yerr=tt.exp(log_sigma_lc))
         gp.marginal("gp", observed=resid)
         pm.Deterministic("gp_pred", gp.predict(resid))
 
@@ -202,17 +213,19 @@ def build_model(mask=None, start=None):
         # a better solution by trying different combinations of parameters in turn
         if start is None:
             start = model.test_point
-        map_soln = pmx.optimize(start=start, vars=[sigma_lc, sigma_gp, rho_gp])
-        map_soln = pmx.optimize(start=map_soln, vars=[r_pl])
+        map_soln = pmx.optimize(
+            start=start, vars=[log_sigma_lc, log_sigma_gp, log_rho_gp]
+        )
+        map_soln = pmx.optimize(start=map_soln, vars=[log_r_pl])
         map_soln = pmx.optimize(start=map_soln, vars=[b])
-        map_soln = pmx.optimize(start=map_soln, vars=[period, t0])
+        map_soln = pmx.optimize(start=map_soln, vars=[log_period, t0])
         map_soln = pmx.optimize(start=map_soln, vars=[u_star])
-        map_soln = pmx.optimize(start=map_soln, vars=[r_pl])
+        map_soln = pmx.optimize(start=map_soln, vars=[log_r_pl])
         map_soln = pmx.optimize(start=map_soln, vars=[b])
         map_soln = pmx.optimize(start=map_soln, vars=[ecs])
         map_soln = pmx.optimize(start=map_soln, vars=[mean])
         map_soln = pmx.optimize(
-            start=map_soln, vars=[sigma_lc, sigma_gp, rho_gp]
+            start=map_soln, vars=[log_sigma_lc, log_sigma_gp, log_rho_gp]
         )
         map_soln = pmx.optimize(start=map_soln)
 
@@ -301,25 +314,26 @@ with model:
         chains=2,
         initial_accept=0.8,
         target_accept=0.95,
+        return_inferencedata=True,
     )
 
-with model:
-    summary = pm.summary(
-        trace,
-        var_names=[
-            "omega",
-            "ecc",
-            "r_pl",
-            "b",
-            "t0",
-            "period",
-            "r_star",
-            "m_star",
-            "u_star",
-            "mean",
-        ],
-    )
-summary
+import arviz as az
+
+az.summary(
+    trace,
+    var_names=[
+        "omega",
+        "ecc",
+        "r_pl",
+        "b",
+        "t0",
+        "period",
+        "r_star",
+        "m_star",
+        "u_star",
+        "mean",
+    ],
+)
 
 # ## Results
 #
@@ -327,12 +341,16 @@ summary
 # First, let's look at the folded light curve plot:
 
 # +
+flat_samps = trace.posterior.stack(sample=("chain", "draw"))
+
 # Compute the GP prediction
-gp_mod = np.median(trace["gp_pred"] + trace["mean"][:, None], axis=0)
+gp_mod = np.median(
+    flat_samps["gp_pred"].values + flat_samps["mean"].values[None, :], axis=-1
+)
 
 # Get the posterior median orbital parameters
-p = np.median(trace["period"])
-t0 = np.median(trace["t0"])
+p = np.median(flat_samps["period"])
+t0 = np.median(flat_samps["t0"])
 
 # Plot the folded data
 x_fold = (x[mask] - t0 + 0.5 * p) % p - 0.5 * p
@@ -350,8 +368,9 @@ plt.plot(
 # Plot the folded model
 inds = np.argsort(x_fold)
 inds = inds[np.abs(x_fold)[inds] < 0.3]
-pred = trace["light_curves"][:, inds, 0]
-pred = np.percentile(pred, [16, 50, 84], axis=0)
+pred = np.percentile(
+    flat_samps["light_curves"][inds, 0], [16, 50, 84], axis=-1
+)
 plt.plot(x_fold[inds], pred[1], color="C1", label="model")
 art = plt.fill_between(
     x_fold[inds], pred[0], pred[2], color="C1", alpha=0.5, zorder=1000
@@ -360,7 +379,7 @@ art.set_edgecolor("none")
 
 # Annotate the plot with the planet's period
 txt = "period = {0:.5f} +/- {1:.5f} d".format(
-    np.mean(trace["period"]), np.std(trace["period"])
+    np.mean(flat_samps["period"].values), np.std(flat_samps["period"].values)
 )
 plt.annotate(
     txt,
@@ -386,14 +405,14 @@ _ = plt.xlim(-0.15, 0.15)
 import corner
 import astropy.units as u
 
-varnames = ["period", "b", "ecc", "r_pl"]
-samples = pm.trace_to_dataframe(trace, varnames=varnames)
-
-# Convert the radius to Earth radii
-samples["r_pl"] = (np.array(samples["r_pl"]) * u.R_sun).to(u.R_earth).value
+trace.posterior["r_earth"] = (
+    trace.posterior["r_pl"].coords,
+    (trace.posterior["r_pl"].values * u.R_sun).to(u.R_earth).value,
+)
 
 _ = corner.corner(
-    samples[["period", "r_pl", "b", "ecc"]],
+    trace,
+    var_names=["period", "r_earth", "b", "ecc"],
     labels=[
         "period [days]",
         "radius [Earth radii]",

@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -229,7 +229,7 @@ print(msini)
 
 # +
 import pymc3 as pm
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 
 import pymc3_ext as pmx
 from celerite2.theano import terms, GaussianProcess
@@ -254,16 +254,20 @@ def build_model(mask=None, start=None):
         )
 
         # Orbital parameters for the planets
-        m_pl = pm.Lognormal("m_pl", mu=np.log(msini.value), sd=1, shape=2)
-        period = pm.Lognormal("period", mu=np.log(periods), sd=1, shape=2)
         t0 = pm.Normal("t0", mu=np.array(t0s), sd=1, shape=2)
-        r_pl = pm.Lognormal(
-            "r_pl",
+        log_m_pl = pm.Normal("log_m_pl", mu=np.log(msini.value), sd=1, shape=2)
+        log_period = pm.Normal("log_period", mu=np.log(periods), sd=1, shape=2)
+        log_r_pl = pm.Normal(
+            "log_r_pl",
             mu=0.5 * np.log(1e-3 * np.array(depths))
             + np.log(R_star_petigura[0]),
             sd=1.0,
             shape=2,
         )
+
+        m_pl = pm.Deterministic("m_pl", tt.exp(log_m_pl))
+        r_pl = pm.Deterministic("r_pl", tt.exp(log_r_pl))
+        period = pm.Deterministic("period", tt.exp(log_period))
         ror = pm.Deterministic("ror", r_pl / r_star)
         b = xo.ImpactParameter("b", ror=ror, shape=2)
 
@@ -275,17 +279,21 @@ def build_model(mask=None, start=None):
         )
 
         # RV jitter & a quadratic RV trend
-        sigma_rv = pm.Lognormal(
-            "sigma_rv", mu=np.log(np.median(yerr_rv)), sd=5
+        log_sigma_rv = pm.Normal(
+            "log_sigma_rv", mu=np.log(np.median(yerr_rv)), sd=5
         )
         trend = pm.Normal(
             "trend", mu=0, sd=10.0 ** -np.arange(3)[::-1], shape=3
         )
 
         # Transit jitter & GP parameters
-        sigma_lc = pm.Lognormal("sigma_lc", mu=np.log(np.std(y[mask])), sd=10)
-        rho_gp = pm.Lognormal("rho_gp", mu=0.0, sd=10)
-        sigma_gp = pm.Lognormal("sigma_gp", mu=np.log(np.std(y[mask])), sd=10)
+        log_sigma_lc = pm.Normal(
+            "log_sigma_lc", mu=np.log(np.std(y[mask])), sd=10
+        )
+        log_rho_gp = pm.Normal("log_rho_gp", mu=0.0, sd=10)
+        log_sigma_gp = pm.Normal(
+            "log_sigma_gp", mu=np.log(np.std(y[mask])), sd=10
+        )
 
         # Orbit models
         orbit = xo.orbits.KeplerianOrbit(
@@ -311,8 +319,12 @@ def build_model(mask=None, start=None):
         resid = y[mask] - light_curve
 
         # GP model for the light curve
-        kernel = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1 / np.sqrt(2))
-        gp = GaussianProcess(kernel, t=x[mask], yerr=sigma_lc)
+        kernel = terms.SHOTerm(
+            sigma=tt.exp(log_sigma_gp),
+            rho=tt.exp(log_rho_gp),
+            Q=1 / np.sqrt(2),
+        )
+        gp = GaussianProcess(kernel, t=x[mask], yerr=tt.exp(log_sigma_lc))
         gp.marginal("transit_obs", observed=resid)
         pm.Deterministic("gp_pred", gp.predict(resid))
 
@@ -338,7 +350,7 @@ def build_model(mask=None, start=None):
         get_rv_model(t_rv, name="_pred")
 
         # The likelihood for the RVs
-        err = tt.sqrt(yerr_rv ** 2 + sigma_rv ** 2)
+        err = tt.sqrt(yerr_rv ** 2 + tt.exp(2 * log_sigma_rv))
         pm.Normal("obs", mu=rv_model, sd=err, observed=y_rv)
 
         # Fit for the maximum a posteriori parameters, I've found that I can get
@@ -346,11 +358,13 @@ def build_model(mask=None, start=None):
         if start is None:
             start = model.test_point
         map_soln = pmx.optimize(start=start, vars=[trend])
-        map_soln = pmx.optimize(start=map_soln, vars=[sigma_lc])
-        map_soln = pmx.optimize(start=map_soln, vars=[r_pl, b])
-        map_soln = pmx.optimize(start=map_soln, vars=[period, t0])
-        map_soln = pmx.optimize(start=map_soln, vars=[sigma_lc, sigma_gp])
-        map_soln = pmx.optimize(start=map_soln, vars=[rho_gp])
+        map_soln = pmx.optimize(start=map_soln, vars=[log_sigma_lc])
+        map_soln = pmx.optimize(start=map_soln, vars=[log_r_pl, b])
+        map_soln = pmx.optimize(start=map_soln, vars=[log_period, t0])
+        map_soln = pmx.optimize(
+            start=map_soln, vars=[log_sigma_lc, log_sigma_gp]
+        )
+        map_soln = pmx.optimize(start=map_soln, vars=[log_rho_gp])
         map_soln = pmx.optimize(start=map_soln)
 
     return model, map_soln
@@ -376,7 +390,7 @@ def plot_rv_curve(soln):
     ax.set_ylabel("radial velocity [m/s]")
 
     ax = axes[1]
-    err = np.sqrt(yerr_rv ** 2 + soln["sigma_rv"] ** 2)
+    err = np.sqrt(yerr_rv ** 2 + np.exp(2 * soln["log_sigma_rv"]))
     ax.errorbar(x_rv, y_rv - soln["rv_model"], yerr=err, fmt=".k")
     ax.axhline(0, color="k", lw=1)
     ax.set_ylabel("residuals [m/s]")
@@ -477,25 +491,28 @@ with model:
         chains=2,
         initial_accept=0.8,
         target_accept=0.99,
+        return_inferencedata=True,
     )
 
 # Let's look at the convergence diagnostics for some of the key parameters:
 
-with model:
-    summary = pm.summary(
-        trace,
-        var_names=[
-            "period",
-            "r_pl",
-            "m_pl",
-            "ecc",
-            "omega",
-            "b",
-            "sigma_gp",
-            "rho_gp",
-        ],
-    )
-summary
+# +
+import arviz as az
+
+az.summary(
+    trace,
+    var_names=[
+        "period",
+        "r_pl",
+        "m_pl",
+        "ecc",
+        "omega",
+        "b",
+        "log_sigma_gp",
+        "log_rho_gp",
+    ],
+)
+# -
 
 # As you see, the effective number of samples for the impact parameters and eccentricites are lower than for the other parameters.
 # This is because of the correlations that I mentioned above:
@@ -503,29 +520,33 @@ summary
 # +
 import corner
 
-varnames = ["b", "ecc", "r_pl"]
-samples = pm.trace_to_dataframe(trace, varnames=varnames)
-_ = corner.corner(samples)
+_ = corner.corner(trace, var_names=["b", "ecc", "r_pl"])
 # -
 
 # ## Phase plots
 #
 # Finally, we can make folded plots of the transits and the radial velocities and compare to the posterior model predictions. (Note: planets b and c in this tutorial are swapped compared to the labels from [Petigura et al. (2016)](https://arxiv.org/abs/1511.04497))
 
+# +
+flat_samps = trace.posterior.stack(sample=("chain", "draw"))
+
 for n, letter in enumerate("bc"):
     plt.figure()
 
     # Compute the GP prediction
-    gp_mod = np.median(trace["gp_pred"] + trace["mean"][:, None], axis=0)
+    gp_mod = np.median(
+        flat_samps["gp_pred"].values + flat_samps["mean"].values[None, :],
+        axis=-1,
+    )
 
     # Get the posterior median orbital parameters
-    p = np.median(trace["period"][:, n])
-    t0 = np.median(trace["t0"][:, n])
+    p = np.median(flat_samps["period"][n])
+    t0 = np.median(flat_samps["t0"][n])
 
     # Compute the median of posterior estimate of the contribution from
     # the other planet. Then we can remove this from the data to plot
     # just the planet we care about.
-    other = np.median(trace["light_curves"][:, :, (n + 1) % 2], axis=0)
+    other = np.median(flat_samps["light_curves"][:, (n + 1) % 2, :], axis=-1)
 
     # Plot the folded data
     x_fold = (x[mask] - t0 + 0.5 * p) % p - 0.5 * p
@@ -536,8 +557,9 @@ for n, letter in enumerate("bc"):
     # Plot the folded model
     inds = np.argsort(x_fold)
     inds = inds[np.abs(x_fold)[inds] < 0.3]
-    pred = trace["light_curves"][:, inds, n]
-    pred = np.percentile(pred, [16, 50, 84], axis=0)
+    pred = np.percentile(
+        flat_samps["light_curves"][inds, n, :], [16, 50, 84], axis=-1
+    )
     plt.plot(x_fold[inds], pred[1], color="C1", label="model")
     art = plt.fill_between(
         x_fold[inds], pred[0], pred[2], color="C1", alpha=0.5, zorder=1000
@@ -546,7 +568,8 @@ for n, letter in enumerate("bc"):
 
     # Annotate the plot with the planet's period
     txt = "period = {0:.4f} +/- {1:.4f} d".format(
-        np.mean(trace["period"][:, n]), np.std(trace["period"][:, n])
+        np.mean(flat_samps["period"][n].values),
+        np.std(flat_samps["period"][n].values),
     )
     plt.annotate(
         txt,
@@ -565,19 +588,20 @@ for n, letter in enumerate("bc"):
     plt.ylabel("de-trended flux")
     plt.title("K2-24{0}".format(letter))
     plt.xlim(-0.3, 0.3)
+# -
 
 for n, letter in enumerate("bc"):
     plt.figure()
 
     # Get the posterior median orbital parameters
-    p = np.median(trace["period"][:, n])
-    t0 = np.median(trace["t0"][:, n])
+    p = np.median(flat_samps["period"][n])
+    t0 = np.median(flat_samps["t0"][n])
 
     # Compute the median of posterior estimate of the background RV
     # and the contribution from the other planet. Then we can remove
     # this from the data to plot just the planet we care about.
-    other = np.median(trace["vrad"][:, :, (n + 1) % 2], axis=0)
-    other += np.median(trace["bkg"], axis=0)
+    other = np.median(flat_samps["vrad"][:, (n + 1) % 2], axis=-1)
+    other += np.median(flat_samps["bkg"], axis=-1)
 
     # Plot the folded data
     x_fold = (x_rv - t0 + 0.5 * p) % p - 0.5 * p
@@ -587,7 +611,9 @@ for n, letter in enumerate("bc"):
     # planet
     t_fold = (t_rv - t0 + 0.5 * p) % p - 0.5 * p
     inds = np.argsort(t_fold)
-    pred = np.percentile(trace["vrad_pred"][:, inds, n], [16, 50, 84], axis=0)
+    pred = np.percentile(
+        flat_samps["vrad_pred"][inds, n], [16, 50, 84], axis=-1
+    )
     plt.plot(t_fold[inds], pred[1], color="C1", label="model")
     art = plt.fill_between(
         t_fold[inds], pred[0], pred[2], color="C1", alpha=0.3
@@ -603,14 +629,16 @@ for n, letter in enumerate("bc"):
 # We can also compute the posterior constraints on the planet densities.
 
 # +
-volume = 4 / 3 * np.pi * trace["r_pl"] ** 3
-density = u.Quantity(trace["m_pl"] / volume, unit=u.M_earth / u.R_sun ** 3)
+volume = 4 / 3 * np.pi * flat_samps["r_pl"].values ** 3
+density = u.Quantity(
+    flat_samps["m_pl"].values / volume, unit=u.M_earth / u.R_sun ** 3
+)
 density = density.to(u.g / u.cm ** 3).value
 
 bins = np.linspace(0, 1.1, 45)
 for n, letter in enumerate("bc"):
     plt.hist(
-        density[:, n],
+        density[n],
         bins,
         histtype="step",
         lw=2,

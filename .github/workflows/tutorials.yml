@@ -39,11 +39,11 @@ jobs:
     strategy:
       matrix:
         notebook-name:
-          # - docs/tutorials/tess.py
-          # - docs/tutorials/together.py
-          # - docs/tutorials/eb.py
+          - docs/tutorials/tess.py
+          - docs/tutorials/together.py
+          - docs/tutorials/eb.py
           - docs/tutorials/quick-tess.py
-          # - docs/tutorials/lc-multi.py
+          - docs/tutorials/lc-multi.py
           - docs/tutorials/stellar-variability.py
           - docs/tutorials/ttv.py
           - docs/tutorials/rv-multi.py
@@ -96,6 +96,7 @@ jobs:
           name: notebooks-for-${{ github.sha }}
           path: docs/tutorials
       - name: Trigger RTDs build
+        if: ${{ github.event_name != 'pull_request' && github.event_name != 'schedule' }}
         uses: dfm/rtds-action@v1
         with:
           webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}

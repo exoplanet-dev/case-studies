@@ -46,29 +46,34 @@ import lightkurve as lk
 # +
 import numpy as np
 import lightkurve as lk
+from astropy.io import fits
 from collections import OrderedDict
 
-kepler_lcfs = lk.search_lightcurvefile(
-    "HAT-P-11", mission="Kepler"
-).download_all()
-kepler_lc = kepler_lcfs.PDCSAP_FLUX.stitch().remove_nans()
-kepler_t = np.ascontiguousarray(kepler_lc.time, dtype=np.float64)
+kepler_lcfs = lk.search_lightcurve(
+    "HAT-P-11", mission="Kepler", cadence="long"
+).download_all(flux_column="pdcsap_flux")
+kepler_lc = kepler_lcfs.stitch().remove_nans()
+kepler_t = np.ascontiguousarray(kepler_lc.time.value, dtype=np.float64)
 kepler_y = np.ascontiguousarray(1e3 * (kepler_lc.flux - 1), dtype=np.float64)
 kepler_yerr = np.ascontiguousarray(1e3 * kepler_lc.flux_err, dtype=np.float64)
 
-hdr = kepler_lcfs[0].hdu[1].header
+with fits.open(kepler_lcfs[0].filename) as hdu:
+    hdr = hdu[1].header
 kepler_texp = hdr["FRAMETIM"] * hdr["NUM_FRM"]
 kepler_texp /= 60.0 * 60.0 * 24.0
 
-tess_lcfs = lk.search_lightcurvefile("HAT-P-11", mission="TESS").download_all()
-tess_lc = tess_lcfs.PDCSAP_FLUX.stitch().remove_nans()
+tess_lcfs = lk.search_lightcurve(
+    "HAT-P-11", mission="TESS", author="SPOC"
+).download_all(flux_column="pdcsap_flux")
+tess_lc = tess_lcfs.stitch().remove_nans()
 tess_t = np.ascontiguousarray(
-    tess_lc.time + 2457000 - 2454833, dtype=np.float64
+    tess_lc.time.value + 2457000 - 2454833, dtype=np.float64
 )
 tess_y = np.ascontiguousarray(1e3 * (tess_lc.flux - 1), dtype=np.float64)
 tess_yerr = np.ascontiguousarray(1e3 * tess_lc.flux_err, dtype=np.float64)
 
-hdr = tess_lcfs[0].hdu[1].header
+with fits.open(tess_lcfs[0].filename) as hdu:
+    hdr = hdu[1].header
 tess_texp = hdr["FRAMETIM"] * hdr["NUM_FRM"]
 tess_texp /= 60.0 * 60.0 * 24.0
 
@@ -106,7 +111,7 @@ _ = axes[0].set_ylabel("relative flux [ppt]")
 import pymc3 as pm
 import pymc3_ext as pmx
 import exoplanet as xo
-import theano.tensor as tt
+import aesara_theano_fallback.tensor as tt
 from functools import partial
 from celerite2.theano import terms, GaussianProcess
 
@@ -126,9 +131,11 @@ for i in range(10):
     with pm.Model() as model:
 
         # Shared orbital parameters
-        period = pm.Lognormal("period", mu=np.log(lit_period), sigma=1.0)
+        log_period = pm.Normal("log_period", mu=np.log(lit_period), sigma=1.0)
+        period = pm.Deterministic("period", tt.exp(log_period))
         t0 = pm.Normal("t0", mu=t0_ref, sigma=1.0)
-        dur = pm.Lognormal("dur", mu=np.log(0.1), sigma=10.0)
+        log_dur = pm.Normal("log_dur", mu=np.log(0.1), sigma=10.0)
+        dur = pm.Deterministic("dur", tt.exp(log_dur))
         b = pmx.UnitUniform("b")
         ld_arg = 1 - tt.sqrt(1 - b ** 2)
         orbit = xo.orbits.KeplerianOrbit(
@@ -160,11 +167,13 @@ for i in range(10):
                 star = xo.LimbDarkLightCurve(u)
 
                 # The radius ratio
-                approx_depth = pm.Lognormal(
-                    "approx_depth", mu=np.log(4e-3), sigma=10
+                log_approx_depth = pm.Normal(
+                    "log_approx_depth", mu=np.log(4e-3), sigma=10
                 )
                 ld = 1 - u[0] * ld_arg - u[1] * ld_arg ** 2
-                ror = pm.Deterministic("ror", tt.sqrt(approx_depth / ld))
+                ror = pm.Deterministic(
+                    "ror", tt.exp(0.5 * log_approx_depth) / tt.sqrt(ld)
+                )
 
                 # Noise parameters
                 med_yerr = np.median(yerr)
@@ -185,7 +194,7 @@ for i in range(10):
                 )
 
                 # Keep track of the parameters for optimization
-                parameters[name] = [mean, u, approx_depth]
+                parameters[name] = [mean, u, log_approx_depth]
                 parameters[f"{name}_noise"] = [sigma, sigma_gp]
 
             # The light curve model
@@ -213,7 +222,7 @@ for i in range(10):
             map_soln = pmx.optimize(map_soln, parameters[name])
         for name in datasets:
             map_soln = pmx.optimize(map_soln, parameters[f"{name}_noise"])
-            map_soln = pmx.optimize(map_soln, parameters[name] + [dur, b])
+            map_soln = pmx.optimize(map_soln, parameters[name] + [log_dur, b])
         map_soln = pmx.optimize(map_soln)
 
         # Do some sigma clipping
@@ -245,8 +254,8 @@ for i in range(10):
 dt = np.linspace(-0.2, 0.2, 500)
 
 with model:
-    trends = xo.eval_in_model([gp_preds[k] for k in datasets], map_soln)
-    phase_curves = xo.eval_in_model(
+    trends = pmx.eval_in_model([gp_preds[k] for k in datasets], map_soln)
+    phase_curves = pmx.eval_in_model(
         [lc_models[k](t0 + dt) for k in datasets], map_soln
     )
 
@@ -298,21 +307,35 @@ with model:
         cores=2,
         chains=2,
         initial_accept=0.5,
+        target_accept=0.95,
+        return_inferencedata=True,
     )
 
 # And check the convergence diagnostics:
 
-with model:
-    summary = pm.summary(trace)
-summary
+# +
+import arviz as az
+
+az.summary(trace)
+# -
 
 # Since we fit for a radius ratio in each band, we can see if the transit depth is different in Kepler compared to TESS.
 # The plot below demonstrates that there is no statistically significant difference between the radii measured in these two bands:
 
 plt.hist(
-    trace["Kepler_ror"], 30, density=True, histtype="step", label="Kepler"
+    trace.posterior["Kepler_ror"].values.flatten(),
+    30,
+    density=True,
+    histtype="step",
+    label="Kepler",
 )
-plt.hist(trace["TESS_ror"], 30, density=True, histtype="step", label="TESS")
+plt.hist(
+    trace.posterior["TESS_ror"].values.flatten(),
+    30,
+    density=True,
+    histtype="step",
+    label="TESS",
+)
 plt.yticks([])
 plt.xlabel("effective radius ratio")
 _ = plt.legend(fontsize=12)
@@ -323,10 +346,15 @@ _ = plt.legend(fontsize=12)
 import corner
 
 fig = corner.corner(
-    trace["TESS_u"], bins=40, color="C1", range=((0.5, 0.9), (-0.5, 0.1))
+    trace,
+    var_names=["TESS_u"],
+    bins=40,
+    color="C1",
+    range=((0.5, 0.9), (-0.5, 0.1)),
 )
 corner.corner(
-    trace["Kepler_u"],
+    trace,
+    var_names=["Kepler_u"],
     bins=40,
     color="C0",
     fig=fig,
