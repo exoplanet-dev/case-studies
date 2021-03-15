@@ -87,17 +87,17 @@ case_studies = [
         title="Putting it all together",
         figure="together_35_0.png",
     ),
-    dict(slug="tess", title="Fitting TESS data", figure="tess_19_0.png"),
+    dict(slug="tess", title="Fitting TESS data", figure="tess_20_0.png"),
     dict(
         slug="quick-tess",
         title="Quick fits for TESS light curves",
-        figure="quick-tess_14_0.png",
+        figure="quick-tess_12_0.png",
     ),
-    dict(slug="ttv", title="Fitting transit times", figure="ttv_19_0.png"),
+    dict(slug="ttv", title="Fitting transit times", figure="ttv_20_0.png"),
     dict(
         slug="eb",
         title="Fitting a detached eclipsing binary",
-        figure="eb_13_0.png",
+        figure="eb_12_0.png",
     ),
     dict(
         slug="rv-multi",
