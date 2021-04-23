@@ -230,7 +230,7 @@ for i in range(10):
         clipped = dict()
         masks = dict()
         for name in datasets:
-            mdl = xo.eval_in_model(gp_preds_with_mean[name], map_soln)
+            mdl = pmx.eval_in_model(gp_preds_with_mean[name], map_soln)
             resid = datasets[name][1] - mdl
             sigma = np.sqrt(np.median((resid - np.median(resid)) ** 2))
             masks[name] = np.abs(resid - np.median(resid)) < 7 * sigma

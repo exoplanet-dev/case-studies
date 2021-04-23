@@ -180,7 +180,7 @@ with pm.Model() as model:
 
 # +
 with model:
-    gp_pred, lc_pred = xo.eval_in_model(
+    gp_pred, lc_pred = pmx.eval_in_model(
         [gp.predict(y, include_mean=False), lc_model(x)], map_soln
     )
 

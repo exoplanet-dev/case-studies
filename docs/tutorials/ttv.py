@@ -257,7 +257,7 @@ import corner
 names = ["period", "r", "b"]
 
 with model:
-    truths = dict(zip(names, xo.eval_in_model([orbit.period, r, b])))
+    truths = dict(zip(names, pmx.eval_in_model([orbit.period, r, b])))
 
 _ = corner.corner(
     trace,

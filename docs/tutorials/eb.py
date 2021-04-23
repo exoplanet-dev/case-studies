@@ -355,7 +355,7 @@ plt.plot(fold, y2_rv - mean, ".", label="secondary")
 
 x_phase = np.linspace(-0.5 * period, 0.5 * period, 500)
 with model:
-    y1_mod, y2_mod = xo.eval_in_model(
+    y1_mod, y2_mod = pmx.eval_in_model(
         [model.model_rv1(x_phase + t0), model.model_rv2(x_phase + t0)],
         map_soln,
     )
