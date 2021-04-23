@@ -310,7 +310,7 @@ def build_model(mask=None, start=None):
         # Compute the model light curve
         light_curves = pm.Deterministic(
             "light_curves",
-            xo.LimbDarkLightCurve(u_star).get_light_curve(
+            xo.LimbDarkLightCurve(u_star[0], u_star[1]).get_light_curve(
                 orbit=orbit, r=r_pl, t=x[mask], texp=texp
             )
             * 1e3,

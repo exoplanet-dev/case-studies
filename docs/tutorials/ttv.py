@@ -133,7 +133,7 @@ with pm.Model() as model:
         pm.Deterministic("ttvs_{0}".format(i), orbit.ttvs[i])
 
     # The rest of this block follows the transit fitting tutorial
-    light_curves = xo.LimbDarkLightCurve(u).get_light_curve(
+    light_curves = xo.LimbDarkLightCurve(u[0], u[1]).get_light_curve(
         orbit=orbit, r=r, t=t, texp=texp
     )
     light_curve = pm.math.sum(light_curves, axis=-1) + mean
