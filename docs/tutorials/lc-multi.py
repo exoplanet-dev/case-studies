@@ -164,7 +164,7 @@ for i in range(10):
 
                 # The limb darkening
                 u = xo.QuadLimbDark("u")
-                star = xo.LimbDarkLightCurve(u)
+                star = xo.LimbDarkLightCurve(u[0], u[1])
 
                 # The radius ratio
                 log_approx_depth = pm.Normal(

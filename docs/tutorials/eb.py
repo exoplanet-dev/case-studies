@@ -206,17 +206,17 @@ def build_model(mask):
         sigma_lc = pm.InverseGamma(
             "sigma_lc",
             testval=1.0,
-            **xo.estimate_inverse_gamma_parameters(0.1, 2.0)
+            **pmx.estimate_inverse_gamma_parameters(0.1, 2.0)
         )
         sigma_gp = pm.InverseGamma(
             "sigma_gp",
             testval=0.5,
-            **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
+            **pmx.estimate_inverse_gamma_parameters(1.0, 5.0)
         )
         rho_gp = pm.InverseGamma(
             "rho_gp",
             testval=5.0,
-            **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
+            **pmx.estimate_inverse_gamma_parameters(1.0, 5.0)
         )
         kernel_lc = terms.SHOTerm(sigma=sigma_gp, rho=rho_gp, Q=1.0 / 3)
 
@@ -224,22 +224,22 @@ def build_model(mask):
         sigma_rv1 = pm.InverseGamma(
             "sigma_rv1",
             testval=1.0,
-            **xo.estimate_inverse_gamma_parameters(0.5, 5.0)
+            **pmx.estimate_inverse_gamma_parameters(0.5, 5.0)
         )
         sigma_rv2 = pm.InverseGamma(
             "sigma_rv2",
             testval=1.0,
-            **xo.estimate_inverse_gamma_parameters(0.5, 5.0)
+            **pmx.estimate_inverse_gamma_parameters(0.5, 5.0)
         )
         sigma_rv_gp = pm.InverseGamma(
             "sigma_rv_gp",
             testval=1.5,
-            **xo.estimate_inverse_gamma_parameters(1.0, 5.0)
+            **pmx.estimate_inverse_gamma_parameters(1.0, 5.0)
         )
         rho_rv_gp = pm.InverseGamma(
             "rho_rv_gp",
             testval=2.0,
-            **xo.estimate_inverse_gamma_parameters(1.0, 25.0)
+            **pmx.estimate_inverse_gamma_parameters(1.0, 25.0)
         )
         kernel_rv = terms.SHOTerm(sigma=sigma_rv_gp, w0=rho_rv_gp, Q=1.0 / 3)
 
