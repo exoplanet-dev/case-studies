@@ -151,7 +151,7 @@ with pm.Model() as model:
     pm.Deterministic("rho_circ", orbit.rho_star)
 
     # Set up the mean transit model
-    star = xo.LimbDarkLightCurve(u[0], u[1])
+    star = xo.LimbDarkLightCurve(u)
 
     def lc_model(t):
         return mean + 1e3 * tt.sum(
