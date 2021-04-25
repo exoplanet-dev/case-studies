@@ -18,10 +18,3 @@ A few things to double check:
 
 Finally, please edit the `docs/conf.py` file to include the info about your case study in the `case_studies` variable.
 If it's not clear what to do there, we can discuss it in the pull request thread.
-
-Updating the notebooks
-----------------------
-
-To update the notebooks you'll want a big machine (I'll do this at work for an actual release - you don't need to do this if you're contributing!).
-You'll need a file `.github_api_key` with (surprise!) your GitHub API key as the only contents.
-Then you can run `./run_notebooks.sh` to automatically execute the notebooks and push them to the `auto_notebooks` branch.
