@@ -1,4 +1,4 @@
--e git+https://github.com/exoplanet-dev/celerite2.git#egg=celerite2
+celerite2
 pymc3-ext
 nbformat
 nbconvert
