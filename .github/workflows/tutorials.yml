@@ -108,8 +108,8 @@ jobs:
 
       - name: Move the files
         run: |
-          mkdir -p docs/tutorials
-          find . -name notebooks/\*.ipynb -exec cp {} docs/tutorials \;
+          mkdir -p docs/_build/jupyter_execute
+          find . -name notebooks/\*.ipynb -exec cp {} docs/_build/jupyter_execute \;
           ls .
           ls docs/_build/jupyter_execute
 
