@@ -11,7 +11,28 @@ on:
   workflow_dispatch:
 
 jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - name: Build wheels for dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -U wheel
+          python -m pip wheel --wheel-dir=./wheels -r requirements.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wheels
+          path: ./wheels
+
   notebooks:
+    needs: install
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,10 +56,15 @@ jobs:
         with:
           python-version: "3.9"
 
+      - uses: actions/download-artifact@v2
+        with:
+          name: wheels
+          path: ./wheels
+
       - name: Install dependencies
         run: |
           python -m pip install -U pip
-          python -m pip install -r requirements.txt
+          python -m pip install wheels/*.whl
 
       - name: Execute the notebooks
         run: |
@@ -65,18 +91,25 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: wheels
+          path: ./wheels
 
       - name: Install dependencies
         run: |
           python -m pip install -U pip
-          python -m pip install -r requirements.txt
+          python -m pip install wheels/*.whl
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ./notebooks
 
       - name: Move the files
         run: |
           mkdir -p docs/tutorials
-          find . -name \*.ipynb -exec cp {} docs/tutorials \;
+          find . -name notebooks/\*.ipynb -exec cp {} docs/tutorials \;
           ls .
           ls docs/_build/jupyter_execute
 
