@@ -1,9 +1,7 @@
+exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@main
+sphinx-book-theme @ git+https://github.com/executablebooks/sphinx-book-theme.git@cf5338cd20f155f1976a7b9ba351a86917a12983
+myst-nb
 celerite2
-pymc3-ext
-nbformat
-nbconvert
+pymc3-ext>=0.1.0
 corner
 lightkurve
-ipykernel
-jupyter
-jupytext
