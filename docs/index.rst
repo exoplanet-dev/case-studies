@@ -16,8 +16,8 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
-   tutorials/stellar-variability.md
-   tutorials/quick-tess.md
+   tutorials/stellar-variability.ipynb
+   tutorials/quick-tess.ipynb
 
 .. code-block:: python
 
