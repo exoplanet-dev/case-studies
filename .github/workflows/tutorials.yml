@@ -40,9 +40,9 @@ jobs:
           # - docs/tutorials/tess.py
           # - docs/tutorials/together.py
           # - docs/tutorials/eb.py
-          - docs/tutorials/quick-tess.md
+          - docs/tutorials/quick-tess.ipynb
           # - docs/tutorials/lc-multi.py
-          - docs/tutorials/stellar-variability.md
+          - docs/tutorials/stellar-variability.ipynb
           # - docs/tutorials/ttv.py
           # - docs/tutorials/rv-multi.py
     steps:
@@ -108,10 +108,9 @@ jobs:
 
       - name: Move the files
         run: |
-          mkdir -p docs/_build/jupyter_execute
-          find . -name notebooks/\*.ipynb -exec cp {} docs/_build/jupyter_execute \;
+          find . -name notebooks/\*.ipynb -exec cp {} docs/tutorials \;
           ls .
-          ls docs/_build/jupyter_execute
+          ls docs/tutorials
 
       - name: Build the docs
         run: |

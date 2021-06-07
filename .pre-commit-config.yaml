@@ -6,12 +6,17 @@ repos:
   - id: end-of-file-fixer
     exclude_types: [json]
 
+- repo: https://github.com/kynan/nbstripout
+  rev: "0.3.9"
+  hooks:
+  - id: nbstripout
+
 - repo: https://github.com/mwouts/jupytext
   rev: v1.11.2
   hooks:
   - id: jupytext
     files: |
-      (?x)^(docs/tutorials/.*\.md)$
+      (?x)^(docs/tutorials/.*\.ipynb)$
     args: [--pipe, black]
     additional_dependencies:
       - black
