@@ -75,7 +75,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: notebook-${{ hashFiles(matrix.notebook-name) }}
+          name: executed-${{ hashFiles(matrix.notebook-name) }}
           path: ${{ matrix.notebook-name }}
 
   combine:
@@ -106,14 +106,13 @@ jobs:
       - name: Download executed notebooks
         uses: actions/download-artifact@v2
         with:
-          name: "notebook-*"
-          path: ./notebooks
+          path: ./executed
 
       - name: Move the files
         run: |
           rm -rf docs/tutorials
           mkdir -p docs/tutorials
-          find . -name notebooks/\*/\*.ipynb -exec cp {} docs/tutorials \;
+          find . -name executed/executed-\*/\*.ipynb -exec cp {} docs/tutorials \;
           ls .
           ls docs/tutorials
 
@@ -132,7 +131,7 @@ jobs:
         with:
           branch: gh-pages
           folder: docs/_build/dirhtml
-          target-folder:
+          single-commit: true
           clean: true
           clean-exclude: |
             .nojekyll
