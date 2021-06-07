@@ -1,5 +1,5 @@
-exoplanet Case Studies
-======================
+exoplanet: Case Studies
+=======================
 
 These pages contain "case studies" for `the exoplanet project
 <https://docs.exoplanet.codes>`_. Each case study is an example of a real world
@@ -16,11 +16,14 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
-   tutorials/about.ipynb
+   tutorials/rv.ipynb
+   tutorials/transit.ipynb
+   tutorials/astrometric.ipynb
    tutorials/stellar-variability.ipynb
    tutorials/joint.ipynb
    tutorials/tess.ipynb
    tutorials/quick-tess.ipynb
+   tutorials/ttv.ipynb
 
 .. code-block:: python
 
