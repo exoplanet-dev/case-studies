@@ -110,6 +110,7 @@ jobs:
 
       - name: Move the files
         run: |
+          ls -R
           rm -rf docs/tutorials
           mkdir -p docs/tutorials
           find . -name executed/executed-\*/\*.ipynb -exec cp {} docs/tutorials \;
