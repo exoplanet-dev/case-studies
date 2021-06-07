@@ -75,8 +75,8 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ hashFiles('docs/tutorials/*.ipynb') }}
-          path: docs/tutorials/*.ipynb
+          name: ${{ hashFiles(matrix.notebook-name) }}
+          path: ${{ matrix.notebook-name }}
 
   combine:
     needs: notebooks
@@ -110,6 +110,7 @@ jobs:
       - name: Move the files
         run: |
           rm -rf docs/tutorials
+          mkdir -p docs/tutorials
           find . -name notebooks/\*.ipynb -exec cp {} docs/tutorials \;
           ls .
           ls docs/tutorials
