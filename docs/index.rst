@@ -16,7 +16,10 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
+   tutorials/about.ipynb
    tutorials/stellar-variability.ipynb
+   tutorials/joint.ipynb
+   tutorials/tess.ipynb
    tutorials/quick-tess.ipynb
 
 .. code-block:: python
