@@ -25,7 +25,7 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -U wheel
-          python -m pip wheel --wheel-dir=./wheels -r requirements.txt
+          python -m pip wheel --wheel-dir=./wheels -r requirements-execute.txt
       - uses: actions/upload-artifact@v2
         with:
           name: wheels
@@ -92,16 +92,10 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Download built dependencies
-        uses: actions/download-artifact@v2
-        with:
-          name: wheels
-          path: ./wheels
-
       - name: Install dependencies
         run: |
           python -m pip install -U pip
-          python -m pip install wheels/*.whl
+          python -m pip install -r requirements-docs.txt
 
       - name: Download executed notebooks
         uses: actions/download-artifact@v2
@@ -113,14 +107,12 @@ jobs:
           ls -R
           rm -rf docs/tutorials
           mkdir -p docs/tutorials
-          find . -name executed/executed-\*/\*.ipynb -exec cp {} docs/tutorials \;
-          ls .
-          ls docs/tutorials
+          find executed -name "*.ipynb" -exec cp {} docs/tutorials \;
+          ls -R
 
       - name: Build the docs
-        run: |
-          cd docs
-          make dirhtml
+        working-directory: docs
+        run: make dirhtml
 
       - uses: actions/upload-artifact@v2
         with:
