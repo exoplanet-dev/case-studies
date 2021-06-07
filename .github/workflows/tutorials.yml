@@ -109,6 +109,7 @@ jobs:
 
       - name: Move the files
         run: |
+          rm -rf docs/tutorials
           find . -name notebooks/\*.ipynb -exec cp {} docs/tutorials \;
           ls .
           ls docs/tutorials
@@ -122,6 +123,18 @@ jobs:
         with:
           name: docs
           path: docs/_build/dirhtml
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: docs/_build/dirhtml
+          target-folder:
+          clean: true
+          clean-exclude: |
+            .nojekyll
+            CNAME
+            dev/*
 
       # - uses: actions/upload-artifact@v2
       #   with:
