@@ -75,7 +75,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ hashFiles(matrix.notebook-name) }}
+          name: notebook-${{ hashFiles(matrix.notebook-name) }}
           path: ${{ matrix.notebook-name }}
 
   combine:
@@ -92,7 +92,8 @@ jobs:
         with:
           python-version: "3.9"
 
-      - uses: actions/download-artifact@v2
+      - name: Download built dependencies
+        uses: actions/download-artifact@v2
         with:
           name: wheels
           path: ./wheels
@@ -102,16 +103,17 @@ jobs:
           python -m pip install -U pip
           python -m pip install wheels/*.whl
 
-      - name: Download all artifacts
+      - name: Download executed notebooks
         uses: actions/download-artifact@v2
         with:
+          name: "notebook-*"
           path: ./notebooks
 
       - name: Move the files
         run: |
           rm -rf docs/tutorials
           mkdir -p docs/tutorials
-          find . -name notebooks/\*.ipynb -exec cp {} docs/tutorials \;
+          find . -name notebooks/\*/\*.ipynb -exec cp {} docs/tutorials \;
           ls .
           ls docs/tutorials
 
