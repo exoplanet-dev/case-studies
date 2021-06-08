@@ -91,9 +91,10 @@ jobs:
         with:
           branch: gh-pages
           folder: docs/_build/dirhtml
+          target-folder: ${{ github.ref }}
           single-commit: true
           clean: true
           clean-exclude: |
             .nojekyll
             CNAME
-            dev/*
+            refs/*
