@@ -1,4 +1,4 @@
-exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@tutorial-updates
+exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@main
 celerite2
 pymc3-ext>=0.1.0
 corner
