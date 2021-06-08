@@ -20,6 +20,8 @@ jobs:
           - docs/tutorials/rv.ipynb
           - docs/tutorials/transit.ipynb
           - docs/tutorials/astrometric.ipynb
+          - docs/tutorials/stellar-variability.ipynb
+          - docs/tutorials/eb.ipynb
           # - docs/tutorials/tess.py
           # - docs/tutorials/together.py
           # - docs/tutorials/eb.py

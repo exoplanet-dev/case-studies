@@ -24,13 +24,6 @@ Table of Contents
    tutorials/tess.ipynb
    tutorials/quick-tess.ipynb
    tutorials/ttv.ipynb
-
-.. code-block:: python
-
-   tutorials/together.py
-   tutorials/tess.py
-   tutorials/quick-tess.py
-   tutorials/ttv.py
-   tutorials/eb.py
-   tutorials/rv-multi.py
-   tutorials/lc-multi.py
+   tutorials/eb.ipynb
+   tutorials/rv-multi.ipynb
+   tutorials/lc-multi.ipynb
