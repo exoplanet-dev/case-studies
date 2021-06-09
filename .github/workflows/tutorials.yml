@@ -18,6 +18,7 @@ jobs:
       matrix:
         notebook-name:
           - docs/tutorials/joint.ipynb
+          - docs/tutorials/tess.ipynb
           - docs/tutorials/eb.ipynb
           - docs/tutorials/stellar-variability.ipynb
           - docs/tutorials/astrometric.ipynb
