@@ -17,11 +17,12 @@ jobs:
     strategy:
       matrix:
         notebook-name:
-          - docs/tutorials/rv.ipynb
-          - docs/tutorials/transit.ipynb
-          - docs/tutorials/astrometric.ipynb
+          - docs/tutorials/joint.ipynb
+          - docs/tutorials/eb.ipynb
           - docs/tutorials/stellar-variability.ipynb
-          # - docs/tutorials/eb.ipynb
+          - docs/tutorials/astrometric.ipynb
+          - docs/tutorials/transit.ipynb
+          - docs/tutorials/rv.ipynb
     steps:
       - uses: actions/checkout@v2
         with:
