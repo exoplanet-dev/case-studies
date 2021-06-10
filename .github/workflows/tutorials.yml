@@ -92,13 +92,12 @@ jobs:
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.4
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           branch: gh-pages
           folder: docs/_build/dirhtml
-          target-folder: ${{ github.ref }}
           single-commit: true
           clean: true
           clean-exclude: |
             .nojekyll
             CNAME
-            refs/*
