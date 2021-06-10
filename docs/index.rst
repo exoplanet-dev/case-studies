@@ -48,4 +48,4 @@ Case studies
    tutorials/eb.ipynb
    tutorials/rv-multi.ipynb
    tutorials/lc-multi.ipynb
-   `Main exoplanet docs <https://docs.exoplanet.codes>`_
+   Main exoplanet docs <https://docs.exoplanet.codes>
