@@ -5,49 +5,27 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "*"
   pull_request:
-    branches:
-      - main
-  release:
-    types:
-      - published
   workflow_dispatch:
 
 jobs:
-  install:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: true
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-      - name: Build wheels for dependencies
-        run: |
-          python -m pip install -U pip
-          python -m pip install -U wheel
-          python -m pip wheel --wheel-dir=./wheels -r requirements.txt
-      - uses: actions/upload-artifact@v2
-        with:
-          name: wheels
-          path: ./wheels
-
   notebooks:
-    needs: install
+    name: Execute ${{ matrix.notebook-name }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         notebook-name:
-          - docs/tutorials/tess.py
-          - docs/tutorials/together.py
-          - docs/tutorials/eb.py
-          - docs/tutorials/quick-tess.py
-          - docs/tutorials/lc-multi.py
-          - docs/tutorials/stellar-variability.py
-          - docs/tutorials/ttv.py
-          - docs/tutorials/rv-multi.py
+          - docs/tutorials/lc-multi.ipynb
+          - docs/tutorials/joint.ipynb
+          - docs/tutorials/tess.ipynb
+          - docs/tutorials/eb.ipynb
+          - docs/tutorials/stellar-variability.ipynb
+          - docs/tutorials/rv-multi.ipynb
+          - docs/tutorials/astrometric.ipynb
+          - docs/tutorials/transit.ipynb
+          - docs/tutorials/rv.ipynb
     steps:
       - uses: actions/checkout@v2
         with:
@@ -59,23 +37,10 @@ jobs:
         with:
           python-version: "3.9"
 
-      - uses: actions/download-artifact@v2
-        with:
-          name: wheels
-          path: ./wheels
-
       - name: Install dependencies
         run: |
           python -m pip install -U pip
-          python -m pip install wheels/*.whl
-
-      - name: Install released exoplanet
-        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
-        run: python -m pip install exoplanet
-
-      - name: Install GitHub exoplanet
-        if: ${{ github.event_name != 'release' || github.event.action != 'published' }}
-        run: python -m pip install -e git+https://github.com/exoplanet-dev/exoplanet.git#egg=exoplanet
+          python -m pip install -r requirements-execute.txt
 
       - name: Execute the notebooks
         run: |
@@ -85,29 +50,55 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ hashFiles('docs/tutorials/*.ipynb') }}
-          path: docs/tutorials/*.ipynb
+          name: executed-${{ hashFiles(matrix.notebook-name) }}
+          path: ${{ matrix.notebook-name }}
 
   combine:
+    name: Build the docs page
     needs: notebooks
     runs-on: ubuntu-latest
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v2
-      - name: Move the files
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
         run: |
-          mkdir -p docs/tutorials
-          find . -name \*.ipynb -exec cp {} docs/tutorials \;
-          ls .
-          ls docs/tutorials
+          python -m pip install -U pip
+          python -m pip install -r requirements-docs.txt
+
+      - name: Download the executed notebooks
+        uses: actions/download-artifact@v2
+        with:
+          path: ./executed
+
+      - name: Move the executed notebooks to their correct locations
+        run: find executed -name "*.ipynb" -exec cp {} docs/tutorials \;
+
+      - name: Build the docs
+        working-directory: docs
+        run: make dirhtml
+
       - uses: actions/upload-artifact@v2
         with:
-          name: notebooks-for-${{ github.sha }}
-          path: docs/tutorials
-      - name: Trigger RTDs build
-        if: ${{ github.event_name != 'pull_request' && github.event_name != 'schedule' }}
-        uses: dfm/rtds-action@v1
+          name: docs
+          path: docs/_build/dirhtml
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
-          webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
-          commit_ref: ${{ github.ref }}
+          branch: gh-pages
+          folder: docs/_build/dirhtml
+          target-folder: ${{ github.ref }}
+          single-commit: true
+          clean: true
+          clean-exclude: |
+            .nojekyll
+            CNAME
+            refs/*

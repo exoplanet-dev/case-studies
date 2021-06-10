@@ -1,9 +1,0 @@
-celerite2
-pymc3-ext
-nbformat
-nbconvert
-corner
-lightkurve
-ipykernel
-jupyter
-jupytext

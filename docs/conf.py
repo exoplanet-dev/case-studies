@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-import subprocess
-
-import nbsphinx
-import sphinx_typlog_theme
 from pkg_resources import DistributionNotFound, get_distribution
 
 try:
@@ -14,66 +9,56 @@ except DistributionNotFound:
     __version__ = "unknown version"
 
 
-def setup(app):
-    app.add_css_file("css/exoplanet.css?v=2019-08-02")
-
-
-# nbsphinx hacks
-nbsphinx.RST_TEMPLATE = nbsphinx.RST_TEMPLATE.replace(
-    "{%- if width %}", "{%- if 0 %}"
-).replace("{%- if height %}", "{%- if 0 %}")
-
+# General stuff
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
-    "rtds_action",
-    "nbsphinx",
+    "myst_nb",
 ]
 
-autodoc_mock_imports = [
-    "numpy",
-    "scipy",
-    "astropy",
-    "pymc3",
-    "theano",
-    "tqdm",
-    "rebound_pymc3",
-]
-
-# Convert the tutorials
-if os.environ.get("READTHEDOCS", "False") == "True":
-    subprocess.check_call("make tutorials", shell=True)
-
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3/", None),
-    "numpy": ("https://docs.scipy.org/doc/numpy/", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
-    "astropy": ("https://docs.astropy.org/en/stable/", None),
-    "exoplanet": ("https://docs.exoplanet.codes/en/latest/", None),
-}
+myst_enable_extensions = ["dollarmath", "colon_fence"]
 
 templates_path = ["_templates"]
 source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "case studies"
+project = "exoplanet"
 author = "Dan Foreman-Mackey"
-copyright = "2018, 2019, 2020, " + author
+copyright = "2018, 2019, 2020, 2021, " + author
 
 version = __version__
 release = __version__
 
 exclude_patterns = ["_build"]
-pygments_style = "sphinx"
 
-# rtds action
-rtds_action_github_repo = "exoplanet-dev/case-studies"
-rtds_action_path = "tutorials"
-rtds_action_artifact_prefix = "notebooks-for-"
-rtds_action_github_token = os.environ["GITHUB_TOKEN"]
+# HTML theme
+html_theme = "sphinx_book_theme"
+html_copy_source = True
+html_show_sourcelink = True
+html_sourcelink_suffix = ""
+html_title = "exoplanet"
+html_logo = "_static/logo.png"
+html_favicon = "_static/favicon.png"
+html_static_path = ["_static"]
+html_css_files = ["exoplanet.css"]
+html_theme_options = {
+    "path_to_docs": "docs",
+    "repository_url": "https://github.com/exoplanet-dev/case-studies",
+    "repository_branch": "main",
+    "launch_buttons": {
+        "binderhub_url": "https://mybinder.org",
+        "notebook_interface": "jupyterlab",
+    },
+    "use_edit_page_button": True,
+    "use_issues_button": True,
+    "use_repository_button": True,
+    "use_download_button": True,
+}
+jupyter_execute_notebooks = "off"
+execution_timeout = -1
 
 # List of case studies
 case_studies = [
@@ -110,21 +95,6 @@ case_studies = [
         figure="lc-multi_7_0.png",
     ),
 ]
-
-# HTML theme
-html_favicon = "_static/logo.png"
-html_theme = "exoplanet"
-html_theme_path = ["_themes", sphinx_typlog_theme.get_path()]
-html_theme_options = {"logo": "logo.png"}
-html_sidebars = {
-    "**": ["logo.html", "globaltoc.html", "relations.html", "searchbox.html"]
-}
-html_static_path = ["_static"]
-html_additional_pages = {"index": "index.html"}
-
-# Get the git branch name
 html_context = dict(
-    this_branch="master",
-    this_version=os.environ.get("READTHEDOCS_VERSION", "latest"),
     case_studies=case_studies,
 )
