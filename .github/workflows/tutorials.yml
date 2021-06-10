@@ -17,10 +17,12 @@ jobs:
     strategy:
       matrix:
         notebook-name:
+          - docs/tutorials/lc-multi.ipynb
           - docs/tutorials/joint.ipynb
           - docs/tutorials/tess.ipynb
           - docs/tutorials/eb.ipynb
           - docs/tutorials/stellar-variability.ipynb
+          - docs/tutorials/rv-multi.ipynb
           - docs/tutorials/astrometric.ipynb
           - docs/tutorials/transit.ipynb
           - docs/tutorials/rv.ipynb
