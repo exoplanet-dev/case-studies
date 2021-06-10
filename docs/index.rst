@@ -14,10 +14,10 @@ If you run into issues executing these case studies (or variations on them) on
 your own computer, do one of the following:
 
 - If there seems to be a bug, `open an issue on the exoplanet GitHub repo
-<https://github.com/exoplanet-dev/exoplanet/issues>`_.
+  <https://github.com/exoplanet-dev/exoplanet/issues>`_.
 
 - If you have a conceptual issue or a particularly tricky or interesting fit,
-`start a discussion <https://github.com/exoplanet-dev/exoplanet/discussions>`_.
+  `start a discussion <https://github.com/exoplanet-dev/exoplanet/discussions>`_.
 
 For more information about ``exoplanet``, check out the main documentation page
 at `docs.exoplanet.codes <https://docs.exoplanet.codes>`_.
