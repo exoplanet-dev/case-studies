@@ -21,7 +21,9 @@ jobs:
           - docs/tutorials/joint.ipynb
           - docs/tutorials/tess.ipynb
           - docs/tutorials/eb.ipynb
+          - docs/tutorials/quick-tess.ipynb
           - docs/tutorials/stellar-variability.ipynb
+          - docs/tutorials/ttv.ipynb
           - docs/tutorials/rv-multi.ipynb
           - docs/tutorials/astrometric.ipynb
           - docs/tutorials/transit.ipynb
