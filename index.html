@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>exoplanet: Case Studies &#8212; exoplanet</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.9359c37b55a5988de97dce26f47073bc.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/exoplanet.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+    <link rel="index" title="Index" href="genindex/" />
+    <link rel="search" title="Search" href="search/" />
+    <link rel="next" title="Radial velocity fitting" href="tutorials/rv/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="#">
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">exoplanet</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search/" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/rv/">
+   Radial velocity fitting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/transit/">
+   Transit fitting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/astrometric/">
+   Astrometric fitting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/stellar-variability/">
+   Gaussian process models for stellar variability
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/joint/">
+   Joint RV &amp; transit fits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/tess/">
+   Fitting TESS data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/quick-tess/">
+   Quick fits for TESS light curves
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/ttv/">
+   Fitting transit times
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/eb/">
+   Fitting a detached eclipsing binary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/rv-multi/">
+   RVs with multiple instruments
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/lc-multi/">
+   Light curves from multiple instruments
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference external" href="https://docs.exoplanet.codes">
+   Main exoplanet docs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/index.rst"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/exoplanet-dev/case-studies"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/exoplanet-dev/case-studies/issues/new?title=Issue%20on%20page%20%2Findex.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/exoplanet-dev/case-studies/edit/main/docs/index.rst"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#case-studies">
+   Case studies
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="exoplanet-case-studies">
+<h1>exoplanet: Case Studies<a class="headerlink" href="#exoplanet-case-studies" title="Permalink to this headline">¶</a></h1>
+<p>These pages contain “case studies” for <a class="reference external" href="https://docs.exoplanet.codes">the exoplanet project</a>. Each case study is an example of a real world
+application of the <code class="docutils literal notranslate"><span class="pre">exoplanet</span></code> library for analyzing data in astronomy. They
+are implemented as Jupyter notebooks, and you can download the notebook or
+launch it using <a class="reference external" href="https://mybinder.org">Binder</a> using the menus at the top
+right of each case study.</p>
+<p>For more information about <code class="docutils literal notranslate"><span class="pre">exoplanet</span></code>, check out the main documentation page
+at <a class="reference external" href="https://docs.exoplanet.codes">docs.exoplanet.codes</a>.</p>
+<div class="hint admonition">
+<p class="admonition-title">Tips &amp; tricks</p>
+<p>⏰ Note that the runtime for some of these notebooks can be as long as half an
+hour, but we’ve tried to keep the studies as self-contained and reproducible
+as possible. This computation is generally dominated by the sampling step so
+if you want to get a rough sense of the expected runtime for a particular
+case study, scroll down to take a look at the progress bar generated by the
+call to the <code class="docutils literal notranslate"><span class="pre">sample</span></code> function.</p>
+<p>🐛 If you run into bugs when executing these case studies (or variations on
+them) on your own computer, <a class="reference external" href="https://github.com/exoplanet-dev/exoplanet/issues">open an issue on the exoplanet GitHub repo</a>.</p>
+<p>💡 If you have a conceptual issue or a particularly tricky or interesting
+fit, <a class="reference external" href="https://github.com/exoplanet-dev/exoplanet/discussions">start a discussion</a> on GitHub so that
+we can all learn together.</p>
+</div>
+<div class="section" id="case-studies">
+<h2>Case studies<a class="headerlink" href="#case-studies" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/rv/">Radial velocity fitting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/rv/#the-radial-velocity-model-in-pymc3">The radial velocity model in PyMC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/rv/#sampling">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/rv/#phase-plots">Phase plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/rv/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/transit/">Transit fitting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/transit/#the-transit-model-in-pymc3">The transit model in PyMC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/transit/#sampling">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/transit/#phase-plots">Phase plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/transit/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/astrometric/">Astrometric fitting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/astrometric/#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/astrometric/#astrometric-conventions">Astrometric conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/astrometric/#fitting-the-astrometric-orbit-with-exoplanet">Fitting the astrometric orbit with <em>exoplanet</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/astrometric/#including-parallax">Including parallax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/astrometric/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/stellar-variability/">Gaussian process models for stellar variability</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/stellar-variability/#a-gaussian-process-model-for-stellar-variability">A Gaussian process model for stellar variability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/stellar-variability/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/joint/">Joint RV &amp; transit fits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/joint/#datasets-and-initializations">Datasets and initializations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/joint/#a-joint-transit-and-radial-velocity-model-in-pymc3">A joint transit and radial velocity model in PyMC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/joint/#sigma-clipping">Sigma clipping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/joint/#sampling">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/joint/#phase-plots">Phase plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/joint/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/tess/">Fitting TESS data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tess/#transit-search">Transit search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tess/#the-transit-model-in-pymc3">The transit model in PyMC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tess/#results">Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tess/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/quick-tess/">Quick fits for TESS light curves</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/quick-tess/#the-probabilistic-model">The probabilistic model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/quick-tess/#bonus-eccentricity">Bonus: eccentricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/quick-tess/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/ttv/">Fitting transit times</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/ttv/#sampling">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/ttv/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/eb/">Fitting a detached eclipsing binary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/eb/#data-access">Data access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/eb/#probabilistic-model">Probabilistic model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/eb/#sampling">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/eb/#results">Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/eb/#a-note-about-eccentricities">A note about eccentricities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/eb/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/rv-multi/">RVs with multiple instruments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/rv-multi/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/lc-multi/">Light curves from multiple instruments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/lc-multi/#a-brief-aside-on-dataset-weighting">A brief aside on dataset “weighting”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/lc-multi/#the-probabilistic-model">The probabilistic model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/lc-multi/#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.exoplanet.codes">Main exoplanet docs</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='right-next' id="next-link" href="tutorials/rv/" title="next page">Radial velocity fitting</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Dan Foreman-Mackey<br/>
+        
+            &copy; Copyright 2018, 2019, 2020, 2021, Dan Foreman-Mackey.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
