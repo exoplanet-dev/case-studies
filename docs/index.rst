@@ -44,6 +44,8 @@ Case studies
    tutorials/joint.ipynb
    tutorials/tess.ipynb
    tutorials/quick-tess.ipynb
+   tutorials/joint.ipynb
+   tutorials/lc-gp-transit.ipynb
    tutorials/ttv.ipynb
    tutorials/eb.ipynb
    tutorials/rv-multi.ipynb

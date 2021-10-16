@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         notebook-name:
+          - docs/tutorials/lc-gp-transit.ipynb
           - docs/tutorials/lc-multi.ipynb
           - docs/tutorials/joint.ipynb
           - docs/tutorials/tess.ipynb
