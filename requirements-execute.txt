@@ -1,4 +1,5 @@
 exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@main
+astropy<5
 celerite2
 pymc3-ext>=0.1.0
 corner
