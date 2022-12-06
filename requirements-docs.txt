@@ -1,3 +1,4 @@
 exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@main
 sphinx-book-theme
 myst-nb
+ipython
