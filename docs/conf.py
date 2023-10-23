@@ -35,6 +35,10 @@ release = __version__
 
 exclude_patterns = ["_build"]
 
+intersphinx_mapping = {
+    "exoplanet": ("https://docs.exoplanet.codes/en/latest/", None),
+}
+
 # HTML theme
 html_theme = "sphinx_book_theme"
 html_copy_source = True
