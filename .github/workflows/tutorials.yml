@@ -30,7 +30,7 @@ jobs:
           - docs/tutorials/transit.ipynb
           - docs/tutorials/rv.ipynb
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
@@ -61,7 +61,7 @@ jobs:
     needs: notebooks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
