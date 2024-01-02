@@ -51,7 +51,7 @@ jobs:
         env:
           NOTEBOOK_NAME: ${{ matrix.notebook-name }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: executed-${{ hashFiles(matrix.notebook-name) }}
           path: ${{ matrix.notebook-name }}
@@ -88,7 +88,7 @@ jobs:
         working-directory: docs
         run: make dirhtml
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: docs
           path: docs/_build/dirhtml
