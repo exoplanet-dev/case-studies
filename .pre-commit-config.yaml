@@ -7,12 +7,12 @@ repos:
     exclude_types: [json]
 
 - repo: https://github.com/kynan/nbstripout
-  rev: "0.6.1"
+  rev: "0.7.1"
   hooks:
   - id: nbstripout
 
 - repo: https://github.com/mwouts/jupytext
-  rev: v1.15.2
+  rev: v1.16.1
   hooks:
   - id: jupytext
     files: |
