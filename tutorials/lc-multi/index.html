@@ -1,0 +1,1987 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Light curves from multiple instruments &#8212; exoplanet</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/exoplanet.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=37838749"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/lc-multi';</script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="prev" title="RVs with multiple instruments" href="../rv-multi/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="exoplanet - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="exoplanet - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../rv/">Radial velocity fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transit/">Transit fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../astrometric/">Astrometric fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stellar-variability/">Gaussian process models for stellar variability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joint/">Joint RV &amp; transit fits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tess/">Fitting TESS data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick-tess/">Quick fits for TESS light curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-gp-transit/">Simultaneous Fitting of a Transit with Stellar Variability</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../ttv/">Fitting transit times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eb/">Fitting a detached eclipsing binary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rv-multi/">RVs with multiple instruments</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Light curves from multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.exoplanet.codes">Main exoplanet docs</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/exoplanet-dev/case-studies/main?urlpath=lab/tree/docs/tutorials/lc-multi.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/edit/main/docs/tutorials/lc-multi.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/issues/new?title=Issue%20on%20page%20%2Ftutorials/lc-multi.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/tutorials/lc-multi.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Light curves from multiple instruments</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-brief-aside-on-dataset-weighting">A brief aside on dataset “weighting”</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-probabilistic-model">The probabilistic model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="light-curves-from-multiple-instruments">
+<span id="lc-multi"></span><h1>Light curves from multiple instruments<a class="headerlink" href="#light-curves-from-multiple-instruments" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exoplanet</span>
+
+<span class="n">exoplanet</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">docs_setup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;exoplanet.__version__ = &#39;</span><span class="si">{</span><span class="n">exoplanet</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matplotlib is building the font cache; this may take a moment.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exoplanet.__version__ = &#39;0.5.4.dev27+g75d7fcc&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the <a class="reference internal" href="../rv-multi/#rv-multi"><span class="std std-ref">RVs with multiple instruments</span></a> case study, we discussed fitting the radial velocity curve for a planetary system observed using multiple instruments.
+You might also want to fit data from multiple instruments when fitting the light curve of a transiting planet and that’s what we work through in this example.
+This is a somewhat more complicated example than the radial velocity case because some of the physical properties of the system can vary as as function of the instrument.
+Specifically, the transit depth (or the effective radius of the planet) will be a function of the filter or effective wavelength of the observations.
+This is the idea behind transit spectroscopy and the method used in this case study could (and should!) be extended to that use case.
+In this case, we’ll combine the light curves from the Kepler and TESS missions for the planet host HAT-P-11.</p>
+<section id="a-brief-aside-on-dataset-weighting">
+<h2>A brief aside on dataset “weighting”<a class="headerlink" href="#a-brief-aside-on-dataset-weighting" title="Link to this heading">#</a></h2>
+<p>Before getting into the details of this case study, let’s spend a minute talking about a topic that comes up a lot when discussing combining observations from different instruments or techniques.
+To many people, it seems intuitive that one should (and perhaps must) “weight” how much each dataset contributes to the likelihood based on how much they “trust” those data.
+For example, you might be worried that a dataset with more datapoints will have a larger effect on the the results than you would like.
+While this might seem intuitive, it’s wrong: <strong>the only way to combine datasets is to multiply their likelihood functions</strong>.
+Instead, it is useful to understand what you actually mean when you say that you don’t “trust” a dataset as much as another.
+<strong>What you’re really saying is that you don’t believe the observation model that you wrote down</strong>.
+For example, you might think that the quoted error bars are underestimated or there might be correlated noise that an uncorrelated normal observation model can’t capture.
+The benefit of thinking about it this way is that it suggests a solution to the problem: incorporate a more flexible observation model that can capture these issues.
+In this case study, the 4 years of (long-cadence) Kepler observations only include about two times as many data points as one month of TESS observations.
+But, as you can see in the figure below, these two datasets have different noise properties (both in terms of photon noise and correlated noise) so we will fit using a different flexible Gaussian process noise model for each data set that will take these different properties into account.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">lightkurve</span> <span class="k">as</span> <span class="nn">lk</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Period and reference transit time from the literature for initialization</span>
+<span class="n">lit_period</span> <span class="o">=</span> <span class="mf">4.887803076</span>
+<span class="n">lit_t0</span> <span class="o">=</span> <span class="mf">124.8130808</span>
+
+
+<span class="k">def</span> <span class="nf">transit_mask</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">t</span> <span class="o">-</span> <span class="n">lit_t0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">lit_period</span><span class="p">)</span> <span class="o">%</span> <span class="n">lit_period</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">lit_period</span><span class="p">)</span>
+        <span class="o">&lt;</span> <span class="mf">0.2</span>
+    <span class="p">)</span>
+
+
+<span class="n">kepler_lcfs</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_lightcurve</span><span class="p">(</span>
+    <span class="s2">&quot;HAT-P-11&quot;</span><span class="p">,</span> <span class="n">mission</span><span class="o">=</span><span class="s2">&quot;Kepler&quot;</span><span class="p">,</span> <span class="n">cadence</span><span class="o">=</span><span class="s2">&quot;long&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">(</span><span class="n">flux_column</span><span class="o">=</span><span class="s2">&quot;pdcsap_flux&quot;</span><span class="p">)</span>
+<span class="n">kepler_lc</span> <span class="o">=</span> <span class="n">kepler_lcfs</span><span class="o">.</span><span class="n">stitch</span><span class="p">()</span><span class="o">.</span><span class="n">remove_nans</span><span class="p">()</span>
+
+<span class="c1"># For the purposes of this example, let&#39;s only clip out data near the transits</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">transit_mask</span><span class="p">(</span><span class="n">kepler_lc</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="n">kepler_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">kepler_lc</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">kepler_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span>
+    <span class="mf">1e3</span> <span class="o">*</span> <span class="p">(</span><span class="n">kepler_lc</span><span class="o">.</span><span class="n">flux</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+<span class="p">)</span>
+<span class="n">kepler_yerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span>
+    <span class="mf">1e3</span> <span class="o">*</span> <span class="n">kepler_lc</span><span class="o">.</span><span class="n">flux_err</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+<span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">kepler_lcfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+<span class="n">kepler_texp</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s2">&quot;FRAMETIM&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">hdr</span><span class="p">[</span><span class="s2">&quot;NUM_FRM&quot;</span><span class="p">]</span>
+<span class="n">kepler_texp</span> <span class="o">/=</span> <span class="mf">60.0</span> <span class="o">*</span> <span class="mf">60.0</span> <span class="o">*</span> <span class="mf">24.0</span>
+
+<span class="n">tess_lcfs</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_lightcurve</span><span class="p">(</span>
+    <span class="s2">&quot;HAT-P-11&quot;</span><span class="p">,</span> <span class="n">mission</span><span class="o">=</span><span class="s2">&quot;TESS&quot;</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s2">&quot;SPOC&quot;</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">(</span><span class="n">flux_column</span><span class="o">=</span><span class="s2">&quot;pdcsap_flux&quot;</span><span class="p">)</span>
+<span class="n">tess_lc</span> <span class="o">=</span> <span class="n">tess_lcfs</span><span class="o">.</span><span class="n">stitch</span><span class="p">()</span><span class="o">.</span><span class="n">remove_nans</span><span class="p">()</span>
+
+<span class="c1"># For the purposes of this example, let&#39;s only clip out data near the transits</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">tess_lc</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">2457000</span> <span class="o">-</span> <span class="mi">2454833</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">transit_mask</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">tess_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">tess_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="mf">1e3</span> <span class="o">*</span> <span class="p">(</span><span class="n">tess_lc</span><span class="o">.</span><span class="n">flux</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">tess_yerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">tess_lc</span><span class="o">.</span><span class="n">flux_err</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tess_lcfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+<span class="n">tess_texp</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s2">&quot;FRAMETIM&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">hdr</span><span class="p">[</span><span class="s2">&quot;NUM_FRM&quot;</span><span class="p">]</span>
+<span class="n">tess_texp</span> <span class="o">/=</span> <span class="mf">60.0</span> <span class="o">*</span> <span class="mf">60.0</span> <span class="o">*</span> <span class="mf">24.0</span>
+
+<span class="n">datasets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;Kepler&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">kepler_t</span><span class="p">,</span> <span class="n">kepler_y</span><span class="p">,</span> <span class="n">kepler_yerr</span><span class="p">,</span> <span class="n">kepler_texp</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s2">&quot;TESS&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">tess_t</span><span class="p">,</span> <span class="n">tess_y</span><span class="p">,</span> <span class="n">tess_yerr</span><span class="p">,</span> <span class="n">tess_texp</span><span class="p">]),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">datasets</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datasets</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;time [KBJD]&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+    <span class="n">x_mid</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x_mid</span> <span class="o">-</span> <span class="mi">10</span><span class="p">,</span> <span class="n">x_mid</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;relative flux [ppt]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/09edd2299749e393694c2e0e2d737699a7786d088d67ebc4de7ef6134bf8662b.png" src="../../_images/09edd2299749e393694c2e0e2d737699a7786d088d67ebc4de7ef6134bf8662b.png" />
+</div>
+</div>
+</section>
+<section id="the-probabilistic-model">
+<h2>The probabilistic model<a class="headerlink" href="#the-probabilistic-model" title="Link to this heading">#</a></h2>
+<p>This model is mostly the same as the one used in <a class="reference internal" href="../quick-tess/"><span class="std std-doc">Quick fits for TESS light curves</span></a>, but we’re allowing for different noise variances (both the white noise component and the GP amplitude), effective planet radii, and limb-darkening coefficients for each dataset.
+For the purposes of demonstration, we’re sharing the length scale of the GP between the two datasets, but this could just have well been a different parameter for each dataset without changing the results.
+The final change that we’re using is to use the approximate transit depth <code class="docutils literal notranslate"><span class="pre">approx_depth</span></code> (the depth of the transit at minimum assuming the limb-darkening profile is constant under the disk of the planet) as a parameter instead of the radius ratio.
+This does not have a large effect on the performance or the results, but it can sometimes be a useful parameterization when dealing with high signal-to-noise transits because it reduces the covariance between the radius parameter and the limb darkening coefficients.
+As usual, we run a few iterations of sigma clipping and then find the maximum a posteriori parameters to check to make sure that everything is working:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">pymc3_ext</span> <span class="k">as</span> <span class="nn">pmx</span>
+<span class="kn">import</span> <span class="nn">exoplanet</span> <span class="k">as</span> <span class="nn">xo</span>
+<span class="kn">import</span> <span class="nn">aesara_theano_fallback.tensor</span> <span class="k">as</span> <span class="nn">tt</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">celerite2.theano</span> <span class="kn">import</span> <span class="n">terms</span><span class="p">,</span> <span class="n">GaussianProcess</span>
+
+<span class="c1"># Find a reference transit time near the middle of the observations to avoid</span>
+<span class="c1"># strong covariances between period and t0</span>
+<span class="n">x_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">datasets</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="n">x_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">datasets</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="n">x_mid</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_min</span> <span class="o">+</span> <span class="n">x_max</span><span class="p">)</span>
+<span class="n">t0_ref</span> <span class="o">=</span> <span class="n">lit_t0</span> <span class="o">+</span> <span class="n">lit_period</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">x_mid</span> <span class="o">-</span> <span class="n">lit_t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">lit_period</span><span class="p">)</span>
+
+<span class="c1"># Do several rounds of sigma clipping</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+        <span class="c1"># Shared orbital parameters</span>
+        <span class="n">log_period</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_period&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lit_period</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;period&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_period</span><span class="p">))</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;t0&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">t0_ref</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">log_dur</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_dur&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+        <span class="n">dur</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;dur&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_dur</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">UnitUniform</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+        <span class="n">ld_arg</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">tt</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">orbit</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">orbits</span><span class="o">.</span><span class="n">KeplerianOrbit</span><span class="p">(</span>
+            <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">dur</span><span class="p">,</span> <span class="n">t0</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span>
+        <span class="p">)</span>
+
+        <span class="c1"># We&#39;ll also say that the timescale of the GP will be shared</span>
+        <span class="n">rho_gp</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span>
+            <span class="s2">&quot;rho_gp&quot;</span><span class="p">,</span>
+            <span class="n">testval</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">pmx</span><span class="o">.</span><span class="n">estimate_inverse_gamma_parameters</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Loop over the instruments</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">lc_models</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">gp_preds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">gp_preds_with_mean</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">texp</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datasets</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="c1"># We define the per-instrument parameters in a submodel so that we</span>
+            <span class="c1"># don&#39;t have to prefix the names manually</span>
+            <span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">):</span>
+                <span class="c1"># The flux zero point</span>
+                <span class="n">mean</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+
+                <span class="c1"># The limb darkening</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">QuadLimbDark</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
+                <span class="n">star</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">LimbDarkLightCurve</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+                <span class="c1"># The radius ratio</span>
+                <span class="n">log_approx_depth</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+                    <span class="s2">&quot;log_approx_depth&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">4e-3</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span>
+                <span class="p">)</span>
+                <span class="n">ld</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ld_arg</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">ld_arg</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">ror</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span>
+                    <span class="s2">&quot;ror&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">log_approx_depth</span><span class="p">)</span> <span class="o">/</span> <span class="n">tt</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ld</span><span class="p">)</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Noise parameters</span>
+                <span class="n">med_yerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">yerr</span><span class="p">)</span>
+                <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">sigma</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span>
+                    <span class="s2">&quot;sigma&quot;</span><span class="p">,</span>
+                    <span class="n">testval</span><span class="o">=</span><span class="n">med_yerr</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">pmx</span><span class="o">.</span><span class="n">estimate_inverse_gamma_parameters</span><span class="p">(</span>
+                        <span class="n">med_yerr</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">std</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">sigma_gp</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span>
+                    <span class="s2">&quot;sigma_gp&quot;</span><span class="p">,</span>
+                    <span class="n">testval</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">pmx</span><span class="o">.</span><span class="n">estimate_inverse_gamma_parameters</span><span class="p">(</span>
+                        <span class="n">med_yerr</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">std</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Keep track of the parameters for optimization</span>
+                <span class="n">parameters</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">mean</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">log_approx_depth</span><span class="p">]</span>
+                <span class="n">parameters</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_noise&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">sigma</span><span class="p">,</span> <span class="n">sigma_gp</span><span class="p">]</span>
+
+            <span class="c1"># The light curve model</span>
+            <span class="k">def</span> <span class="nf">lc_model</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">star</span><span class="p">,</span> <span class="n">ror</span><span class="p">,</span> <span class="n">texp</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">mean</span> <span class="o">+</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                    <span class="n">star</span><span class="o">.</span><span class="n">get_light_curve</span><span class="p">(</span><span class="n">orbit</span><span class="o">=</span><span class="n">orbit</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">ror</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">texp</span><span class="o">=</span><span class="n">texp</span><span class="p">),</span>
+                    <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">lc_model</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">lc_model</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">star</span><span class="p">,</span> <span class="n">ror</span><span class="p">,</span> <span class="n">texp</span><span class="p">)</span>
+            <span class="n">lc_models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">lc_model</span>
+
+            <span class="c1"># The Gaussian Process noise model</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="n">terms</span><span class="o">.</span><span class="n">SHOTerm</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="n">sigma_gp</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho_gp</span><span class="p">,</span> <span class="n">Q</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">gp</span> <span class="o">=</span> <span class="n">GaussianProcess</span><span class="p">(</span>
+                <span class="n">kernel</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">diag</span><span class="o">=</span><span class="n">yerr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">lc_model</span>
+            <span class="p">)</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">marginal</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_obs&quot;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">gp_preds</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">include_mean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">gp_preds_with_mean</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">gp_preds</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span> <span class="n">gp</span><span class="o">.</span><span class="n">mean_value</span>
+
+        <span class="c1"># Optimize the model</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">test_point</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
+            <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="n">parameters</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
+            <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="n">parameters</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_noise&quot;</span><span class="p">])</span>
+            <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="n">parameters</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">log_dur</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">)</span>
+
+        <span class="c1"># Do some sigma clipping</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">)</span>
+        <span class="n">clipped</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">masks</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
+            <span class="n">mdl</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">eval_in_model</span><span class="p">(</span><span class="n">gp_preds_with_mean</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">map_soln</span><span class="p">)</span>
+            <span class="n">resid</span> <span class="o">=</span> <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">mdl</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">((</span><span class="n">resid</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">resid</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">masks</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">resid</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">resid</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">sigma</span>
+            <span class="n">clipped</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">masks</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sigma clipped </span><span class="si">{</span><span class="n">clipped</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> light curve points&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clipped</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
+                <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">masks</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
+                <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">masks</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
+                <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="n">masks</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [Kepler_log_approx_depth, Kepler_u, Kepler_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='73' class='' max='73' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [73/73 00:00&lt;00:00 logp = -7.692e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -36929.236803204934 -&gt; -7691.628762474603
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_log_approx_depth, TESS_u, TESS_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='22' class='' max='22' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [22/22 00:00&lt;00:00 logp = -7.487e+03]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>logp: -7691.628762474603 -&gt; -7487.191191803736
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [Kepler_sigma_gp, Kepler_sigma]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='16' class='' max='16' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [16/16 00:00&lt;00:00 logp = -2.130e+03]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -7487.191191803736 -&gt; -2129.5725026909645
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [b, log_dur, Kepler_log_approx_depth, Kepler_u, Kepler_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='73' class='' max='73' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [73/73 00:00&lt;00:00 logp = -1.214e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -2129.5725026909513 -&gt; -1214.4800760991861
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_sigma_gp, TESS_sigma]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='11' class='' max='11' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [11/11 00:00&lt;00:00 logp = -1.183e+03]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -1214.480076099188 -&gt; -1183.3252055930907
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [b, log_dur, TESS_log_approx_depth, TESS_u, TESS_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='80' class='' max='80' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [80/80 00:00&lt;00:00 logp = -1.129e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -1183.3252055930898 -&gt; -1129.3497091106904
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_sigma_gp, TESS_sigma, TESS_log_approx_depth, TESS_u, TESS_mean, Kepler_sigma_gp, Kepler_sigma, Kepler_log_approx_depth, Kepler_u, Kepler_mean, rho_gp, b, log_dur, t0, log_period]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='118' class='' max='118' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [118/118 00:00&lt;00:00 logp = 4.508e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -1129.3497091106904 -&gt; 450.83274224393335
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma clipped 85 Kepler light curve points
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma clipped 5 TESS light curve points
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [Kepler_log_approx_depth, Kepler_u, Kepler_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='140' class='' max='140' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [140/140 00:00&lt;00:00 logp = -4.580e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -33780.41785260407 -&gt; -4579.641145818629
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_log_approx_depth, TESS_u, TESS_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='23' class='' max='23' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [23/23 00:00&lt;00:00 logp = -4.371e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -4579.641145818629 -&gt; -4371.4689632143845
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [Kepler_sigma_gp, Kepler_sigma]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='108' class='' max='108' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [108/108 00:00&lt;00:00 logp = -1.579e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -4371.4689632143845 -&gt; -1578.8758995074395
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [b, log_dur, Kepler_log_approx_depth, Kepler_u, Kepler_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='148' class='' max='148' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [148/148 00:00&lt;00:00 logp = -4.444e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -1578.8758995074304 -&gt; -444.35799127592236
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_sigma_gp, TESS_sigma]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='11' class='' max='11' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [11/11 00:00&lt;00:00 logp = -4.005e+02]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -444.357991275931 -&gt; -400.4764775691433
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [b, log_dur, TESS_log_approx_depth, TESS_u, TESS_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='77' class='' max='77' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [77/77 00:00&lt;00:00 logp = -3.441e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -400.4764775691342 -&gt; -344.0780055433611
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_sigma_gp, TESS_sigma, TESS_log_approx_depth, TESS_u, TESS_mean, Kepler_sigma_gp, Kepler_sigma, Kepler_log_approx_depth, Kepler_u, Kepler_mean, rho_gp, b, log_dur, t0, log_period]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='138' class='' max='138' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [138/138 00:00&lt;00:00 logp = 1.666e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -344.0780055433611 -&gt; 1666.232312891606
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma clipped 25 Kepler light curve points
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma clipped 0 TESS light curve points
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [Kepler_log_approx_depth, Kepler_u, Kepler_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='65' class='' max='65' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [65/65 00:00&lt;00:00 logp = -4.296e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -33497.08903313941 -&gt; -4296.353798783744
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_log_approx_depth, TESS_u, TESS_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='23' class='' max='23' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [23/23 00:00&lt;00:00 logp = -4.088e+03]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -4296.353798783744 -&gt; -4088.181616179497
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [Kepler_sigma_gp, Kepler_sigma]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='67' class='' max='67' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [67/67 00:00&lt;00:00 logp = -1.533e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -4088.181616179497 -&gt; -1533.051893660302
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [b, log_dur, Kepler_log_approx_depth, Kepler_u, Kepler_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='64' class='' max='64' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [64/64 00:00&lt;00:00 logp = -3.666e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -1533.0518936603007 -&gt; -366.59209630661235
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_sigma_gp, TESS_sigma]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='10' class='' max='10' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [10/10 00:00&lt;00:00 logp = -3.223e+02]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -366.59209630663054 -&gt; -322.3472945254148
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [b, log_dur, TESS_log_approx_depth, TESS_u, TESS_mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='64' class='' max='64' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [64/64 00:00&lt;00:00 logp = -2.682e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -322.34729452539887 -&gt; -268.1962541098783
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [TESS_sigma_gp, TESS_sigma, TESS_log_approx_depth, TESS_u, TESS_mean, Kepler_sigma_gp, Kepler_sigma, Kepler_log_approx_depth, Kepler_u, Kepler_mean, rho_gp, b, log_dur, t0, log_period]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='110' class='' max='110' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [110/110 00:00&lt;00:00 logp = 1.852e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -268.1962541098783 -&gt; 1851.8496467593022
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma clipped 7 Kepler light curve points
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma clipped 0 TESS light curve points
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the two phased light curves (with the Gaussian process model removed).
+We can see the effect of exposure time integration and the difference in photometric precision, but everything should be looking good!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">trends</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">eval_in_model</span><span class="p">([</span><span class="n">gp_preds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">],</span> <span class="n">map_soln</span><span class="p">)</span>
+    <span class="n">phase_curves</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">eval_in_model</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">lc_models</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="n">t0</span> <span class="o">+</span> <span class="n">dt</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">],</span> <span class="n">map_soln</span>
+    <span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datasets</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="p">[</span><span class="n">name</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">period</span> <span class="o">=</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;period&quot;</span><span class="p">]</span>
+    <span class="n">folded</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;t0&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">period</span><span class="p">)</span> <span class="o">%</span> <span class="n">period</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">period</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">folded</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.2</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">folded</span><span class="p">[</span><span class="n">m</span><span class="p">],</span>
+        <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">trends</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="n">map_soln</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_mean&quot;</span><span class="p">])[</span><span class="n">m</span><span class="p">],</span>
+        <span class="s2">&quot;.k&quot;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">mec</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">dt</span><span class="p">,</span> <span class="n">phase_curves</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="n">map_soln</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_mean&quot;</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;C</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;axes fraction&quot;</span><span class="p">,</span>
+        <span class="n">va</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+        <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;time since transit [days]&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;relative flux [ppt]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ff66cbb06547c864593b735b1391bffa78639fd9f56f470cfa370dbdd50088df.png" src="../../_images/ff66cbb06547c864593b735b1391bffa78639fd9f56f470cfa370dbdd50088df.png" />
+</div>
+</div>
+<p>Then we run the MCMC:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">platform</span>
+
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">tune</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+        <span class="n">draws</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">map_soln</span><span class="p">,</span>
+        <span class="c1"># Parallel sampling runs poorly or crashes on macos</span>
+        <span class="n">cores</span><span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span> <span class="k">else</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [TESS_sigma_gp, TESS_sigma, TESS_log_approx_depth, TESS_u, TESS_mean, Kepler_sigma_gp, Kepler_sigma, Kepler_log_approx_depth, Kepler_u, Kepler_mean, rho_gp, b, log_dur, t0, log_period]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='6000' class='' max='6000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [6000/6000 05:39&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_500 tune and 1_500 draw iterations (3_000 + 3_000 draws total) took 340 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The number of effective samples is smaller than 10% for some parameters.
+</pre></div>
+</div>
+</div>
+</div>
+<p>And check the convergence diagnostics:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>log_period</th>
+      <td>1.587</td>
+      <td>0.000</td>
+      <td>1.587</td>
+      <td>1.587</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2977.0</td>
+      <td>2109.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>t0</th>
+      <td>2011.505</td>
+      <td>0.000</td>
+      <td>2011.505</td>
+      <td>2011.505</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>3022.0</td>
+      <td>2241.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>log_dur</th>
+      <td>-2.388</td>
+      <td>0.002</td>
+      <td>-2.392</td>
+      <td>-2.383</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>454.0</td>
+      <td>423.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>Kepler_mean</th>
+      <td>-0.447</td>
+      <td>0.525</td>
+      <td>-1.482</td>
+      <td>0.504</td>
+      <td>0.010</td>
+      <td>0.008</td>
+      <td>3046.0</td>
+      <td>2337.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>Kepler_log_approx_depth</th>
+      <td>-5.683</td>
+      <td>0.003</td>
+      <td>-5.689</td>
+      <td>-5.678</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>640.0</td>
+      <td>391.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>TESS_mean</th>
+      <td>0.285</td>
+      <td>0.395</td>
+      <td>-0.437</td>
+      <td>1.039</td>
+      <td>0.007</td>
+      <td>0.006</td>
+      <td>3276.0</td>
+      <td>1838.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>TESS_log_approx_depth</th>
+      <td>-5.668</td>
+      <td>0.013</td>
+      <td>-5.693</td>
+      <td>-5.644</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2430.0</td>
+      <td>1941.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>period</th>
+      <td>4.888</td>
+      <td>0.000</td>
+      <td>4.888</td>
+      <td>4.888</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2977.0</td>
+      <td>2109.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>dur</th>
+      <td>0.092</td>
+      <td>0.000</td>
+      <td>0.091</td>
+      <td>0.092</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>454.0</td>
+      <td>423.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>b</th>
+      <td>0.380</td>
+      <td>0.080</td>
+      <td>0.249</td>
+      <td>0.506</td>
+      <td>0.009</td>
+      <td>0.006</td>
+      <td>244.0</td>
+      <td>62.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>rho_gp</th>
+      <td>15.821</td>
+      <td>1.118</td>
+      <td>13.743</td>
+      <td>17.827</td>
+      <td>0.018</td>
+      <td>0.013</td>
+      <td>3804.0</td>
+      <td>2392.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>Kepler_u[0]</th>
+      <td>0.724</td>
+      <td>0.026</td>
+      <td>0.676</td>
+      <td>0.773</td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td>321.0</td>
+      <td>200.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>Kepler_u[1]</th>
+      <td>-0.121</td>
+      <td>0.044</td>
+      <td>-0.201</td>
+      <td>-0.034</td>
+      <td>0.002</td>
+      <td>0.001</td>
+      <td>484.0</td>
+      <td>504.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>Kepler_ror</th>
+      <td>0.060</td>
+      <td>0.001</td>
+      <td>0.059</td>
+      <td>0.061</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>241.0</td>
+      <td>59.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>Kepler_sigma</th>
+      <td>0.043</td>
+      <td>0.001</td>
+      <td>0.042</td>
+      <td>0.044</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>3943.0</td>
+      <td>2388.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>Kepler_sigma_gp</th>
+      <td>4.788</td>
+      <td>0.263</td>
+      <td>4.298</td>
+      <td>5.271</td>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>3420.0</td>
+      <td>2290.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>TESS_u[0]</th>
+      <td>0.634</td>
+      <td>0.109</td>
+      <td>0.436</td>
+      <td>0.823</td>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>835.0</td>
+      <td>1118.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>TESS_u[1]</th>
+      <td>-0.159</td>
+      <td>0.153</td>
+      <td>-0.411</td>
+      <td>0.103</td>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>688.0</td>
+      <td>706.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>TESS_ror</th>
+      <td>0.060</td>
+      <td>0.001</td>
+      <td>0.059</td>
+      <td>0.061</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>290.0</td>
+      <td>118.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>TESS_sigma</th>
+      <td>0.421</td>
+      <td>0.014</td>
+      <td>0.396</td>
+      <td>0.447</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2797.0</td>
+      <td>2168.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>TESS_sigma_gp</th>
+      <td>0.801</td>
+      <td>0.084</td>
+      <td>0.658</td>
+      <td>0.971</td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td>3780.0</td>
+      <td>2312.0</td>
+      <td>1.00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Since we fit for a radius ratio in each band, we can see if the transit depth is different in Kepler compared to TESS.
+The plot below demonstrates that there is no statistically significant difference between the radii measured in these two bands:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+    <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;Kepler_ror&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+    <span class="mi">20</span><span class="p">,</span>
+    <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">histtype</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Kepler&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+    <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;TESS_ror&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+    <span class="mi">20</span><span class="p">,</span>
+    <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">histtype</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;TESS&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;effective radius ratio&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/1de93c7df1c5ed998671384ca4e8465e7ecede3d4ee2d77dd45c39f44c8736ea.png" src="../../_images/1de93c7df1c5ed998671384ca4e8465e7ecede3d4ee2d77dd45c39f44c8736ea.png" />
+</div>
+</div>
+<p>We can also compare the inferred limb-darkening coefficients:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">corner</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span>
+    <span class="n">trace</span><span class="p">,</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TESS_u&quot;</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span>
+    <span class="nb">range</span><span class="o">=</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span>
+    <span class="n">trace</span><span class="p">,</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kepler_u&quot;</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span>
+    <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;$u_1$&quot;</span><span class="p">,</span> <span class="s2">&quot;$u_2$&quot;</span><span class="p">],</span>
+    <span class="nb">range</span><span class="o">=</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Kepler&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;TESS&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center left&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ac91816d90db85fe144d72e37a5bb53726e1ef31cf05c554b0b7d4c236a3775c.png" src="../../_images/ac91816d90db85fe144d72e37a5bb53726e1ef31cf05c554b0b7d4c236a3775c.png" />
+</div>
+</div>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>As described in the <a class="reference external" href="https://docs.exoplanet.codes/en/stable/tutorials/citation/">citation tutorial</a>, we can use <a class="reference external" href="https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model">citations.get_citations_for_model</a> to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">txt</span><span class="p">,</span> <span class="n">bib</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">citations</span><span class="o">.</span><span class="n">get_citations_for_model</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This research made use of \textsf{exoplanet} \citep{exoplanet:joss,
+exoplanet:zenodo} and its dependencies \citep{celerite2:foremanmackey17,
+celerite2:foremanmackey18, exoplanet:arviz, exoplanet:astropy13,
+exoplanet:astropy18, exoplanet:pymc3, exoplanet:theano}.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bib</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>@article{exoplanet:joss,
+       author = {{Foreman-Mackey}, Daniel and {Luger}, Rodrigo and {Agol}, Eric
+                and {Barclay}, Thomas and {Bouma}, Luke G. and {Brandt},
+                Timothy D. and {Czekala}, Ian and {David}, Trevor J. and
+                {Dong}, Jiayin and {Gilbert}, Emily A. and {Gordon}, Tyler A.
+                and {Hedges}, Christina and {Hey}, Daniel R. and {Morris},
+                Brett M. and {Price-Whelan}, Adrian M. and {Savel}, Arjun B.},
+        title = &quot;{exoplanet: Gradient-based probabilistic inference for
+                  exoplanet data \&amp; other astronomical time series}&quot;,
+      journal = {arXiv e-prints},
+         year = 2021,
+        month = may,
+          eid = {arXiv:2105.01994},
+        pages = {arXiv:2105.01994},
+archivePrefix = {arXiv},
+       eprint = {2105.01994},
+ primaryClass = {astro-ph.IM},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210501994F},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+...
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../rv-multi/"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">RVs with multiple instruments</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-brief-aside-on-dataset-weighting">A brief aside on dataset “weighting”</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-probabilistic-model">The probabilistic model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dan Foreman-Mackey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018, 2019, 2020, 2021, Dan Foreman-Mackey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

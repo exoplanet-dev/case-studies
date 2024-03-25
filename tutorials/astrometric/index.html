@@ -1,0 +1,1745 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Astrometric fitting &#8212; exoplanet</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/exoplanet.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=37838749"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/astrometric';</script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Gaussian process models for stellar variability" href="../stellar-variability/" />
+    <link rel="prev" title="Transit fitting" href="../transit/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="exoplanet - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="exoplanet - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../rv/">Radial velocity fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transit/">Transit fitting</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Astrometric fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stellar-variability/">Gaussian process models for stellar variability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joint/">Joint RV &amp; transit fits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tess/">Fitting TESS data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick-tess/">Quick fits for TESS light curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-gp-transit/">Simultaneous Fitting of a Transit with Stellar Variability</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../ttv/">Fitting transit times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eb/">Fitting a detached eclipsing binary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rv-multi/">RVs with multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-multi/">Light curves from multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.exoplanet.codes">Main exoplanet docs</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/exoplanet-dev/case-studies/main?urlpath=lab/tree/docs/tutorials/astrometric.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/edit/main/docs/tutorials/astrometric.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/issues/new?title=Issue%20on%20page%20%2Ftutorials/astrometric.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/tutorials/astrometric.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Astrometric fitting</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astrometric-conventions">Astrometric conventions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-astrometric-orbit-with-exoplanet">Fitting the astrometric orbit with <em>exoplanet</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#including-parallax">Including parallax</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="astrometric-fitting">
+<span id="astrometric"></span><h1>Astrometric fitting<a class="headerlink" href="#astrometric-fitting" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exoplanet</span>
+
+<span class="n">exoplanet</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">docs_setup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;exoplanet.__version__ = &#39;</span><span class="si">{</span><span class="n">exoplanet</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exoplanet.__version__ = &#39;0.5.4.dev27+g75d7fcc&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this case study we’ll walk through the simplest astrometric example with <code class="docutils literal notranslate"><span class="pre">exoplanet</span></code> and then explain how to build up a more complicated example with parallax measurements. For our dataset, we’ll use astrometric and radial velocity observations of a binary star system.</p>
+<p>Astrometric observations usually consist of measurements of the separation and position angle of the secondary star (or directly imaged exoplanet), relative to the primary star as a function of time. The simplest astrometric orbit (in terms of number of parameters), describes the orbit using a semi-major axis <code class="docutils literal notranslate"><span class="pre">a_ang</span></code> measured in <em>arcseconds</em>, since the distance to the system is assumed to be unknown. We’ll work through this example first, then introduce the extra constraints provided by parallax information.</p>
+<section id="data">
+<h2>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h2>
+<p>First, let’s load and examine the data. We’ll use the astrometric measurements of HR 466 (HD 10009) as compiled by <a class="reference external" href="https://ui.adsabs.harvard.edu/#abs/1998A&amp;amp;AS..131..377P/abstract">Pourbaix 1998</a>. The speckle observations are originally from <a class="reference external" href="https://ui.adsabs.harvard.edu/#abs/1996AJ....111..370H/abstract">Hartkopf et al. 1996</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
+<span class="kn">from</span> <span class="nn">astropy.time</span> <span class="kn">import</span> <span class="n">Time</span>
+
+<span class="c1"># grab the formatted data and do some munging</span>
+<span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;https://gist.github.com/iancze/262aba2429cb9aee3fd5b5e1a4582d4d/raw/c5fa5bc39fec90d2cc2e736eed479099e3e598e3/&quot;</span>
+
+<span class="n">astro_data_full</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="n">dirname</span> <span class="o">+</span> <span class="s2">&quot;astro.txt&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="n">fill_values</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)]</span>
+<span class="p">)</span>
+
+<span class="c1"># convert UT date to JD</span>
+<span class="n">astro_dates</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">astro_data_full</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;decimalyear&quot;</span><span class="p">)</span>
+
+<span class="c1"># Following the Pourbaix et al. 1998 analysis, we&#39;ll limit ourselves to the highest quality data</span>
+<span class="c1"># since the raw collection of data outside of these ranges has some ambiguities in swapping</span>
+<span class="c1"># the primary and secondary star</span>
+<span class="n">ind</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="n">astro_dates</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mf">1975.0</span><span class="p">)</span>
+    <span class="o">&amp;</span> <span class="p">(</span><span class="n">astro_dates</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mf">1999.73</span><span class="p">)</span>
+    <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">astro_data_full</span><span class="p">[</span><span class="s2">&quot;rho&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+    <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">astro_data_full</span><span class="p">[</span><span class="s2">&quot;PA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">astro_data</span> <span class="o">=</span> <span class="n">astro_data_full</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+
+<span class="n">astro_yrs</span> <span class="o">=</span> <span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span>
+<span class="n">astro_dates</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s2">&quot;jd&quot;</span>
+<span class="n">astro_jds</span> <span class="o">=</span> <span class="n">astro_dates</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Many of these measurements in this heterogeneous dataset do not have reported error measurements. For these, we assume a modest uncertainty of <span class="math notranslate nohighlight">\(1^\circ\)</span> in position angle and <span class="math notranslate nohighlight">\(0.01^{\prime\prime}\)</span> in separation for the sake of specifying something, but we’ll include a jitter term for both of these measurements as well. The scatter in points around the final solution will be a decent guide of what the measurement uncertainties actually were.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;rho_err&quot;</span><span class="p">][</span><span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;rho_err&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;PA_err&quot;</span><span class="p">][</span><span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;PA_err&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="c1"># Convert all masked frames to be raw np arrays, since theano has issues with astropy masked columns</span>
+<span class="n">rho_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;rho&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># arcsec</span>
+<span class="n">rho_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;rho_err&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="c1"># The position angle measurements come in degrees in the range [0, 360].</span>
+<span class="c1"># We&#39;ll convert this to radians in the range [-pi, pi]</span>
+<span class="n">deg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+<span class="n">theta_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;PA&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">deg</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">theta_data</span><span class="p">[</span><span class="n">theta_data</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+<span class="n">theta_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">astro_data</span><span class="p">[</span><span class="s2">&quot;PA_err&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">deg</span><span class="p">)</span>  <span class="c1"># radians</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="astrometric-conventions">
+<h2>Astrometric conventions<a class="headerlink" href="#astrometric-conventions" title="Link to this heading">#</a></h2>
+<p>The conventions describing the orientation of the orbits are described in detail in the <em>exoplanet</em> paper; we summarize them briefly here. Generally, we follow the conventions from Pourbaix et al. 1998, which are a consistent set conforming to the right-hand-rule and the conventions of the visual binary field, where the ascending node is that where the secondary is <em>receeding</em> from the observer (without radial velocity information, there is a <span class="math notranslate nohighlight">\(\pi\)</span> degeneracy in which node is ascending, and so common practice in the literature is to report a value in the range <span class="math notranslate nohighlight">\([0,\pi]\)</span>). The orbital inclination ranges from <span class="math notranslate nohighlight">\([0, \pi\)</span>]. <span class="math notranslate nohighlight">\(i = 0\)</span> describes a face-on orbit rotating counter-clockwise on the sky plane, while <span class="math notranslate nohighlight">\(i=\pi\)</span> describes a face-on orbit rotating clockwise on the sky. <span class="math notranslate nohighlight">\(i = \pi/2\)</span> is an edge-on orbit.</p>
+<p>The observer frame <span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(Y\)</span>, <span class="math notranslate nohighlight">\(Z\)</span> is oriented on the sky such that <span class="math notranslate nohighlight">\(+Z\)</span> points towards the observer, <span class="math notranslate nohighlight">\(X\)</span> is the north axis, and <span class="math notranslate nohighlight">\(Y\)</span> is the east axis. <em>All</em> angles are measured in radians, and the position angle is returned in the range <span class="math notranslate nohighlight">\([-\pi, \pi]\)</span>, which is the degrees east of north (be sure to check your data is in this format too!) The radial velocity is still defined such that a positive radial velocity corresponds to motion away from the observer.</p>
+<p>In an astrometric-only orbit, it is common practice in the field to report <span class="math notranslate nohighlight">\(\omega = \omega_\mathrm{secondary}\)</span>, whereas with an RV orbit it is generally common practice to report <span class="math notranslate nohighlight">\(\omega = \omega_\mathrm{primary}\)</span>. The result is that unless the authors specify what they’re using, in a joint astrometric-RV orbit there is an ambiguity to which <span class="math notranslate nohighlight">\(\omega\)</span> the authors mean, since <span class="math notranslate nohighlight">\(\omega_\mathrm{primary} = \omega_\mathrm{secondary} + \pi\)</span>. To standardize this across the <em>exoplanet</em> package, in all orbits (including astrometric-only) <span class="math notranslate nohighlight">\(\omega = \omega_\mathrm{primary}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Make a plot of the astrometric data on the sky</span>
+<span class="c1"># The convention is that North is up and East is left</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">rho_data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_data</span><span class="p">)</span>  <span class="c1"># X is north</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">rho_data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_data</span><span class="p">)</span>  <span class="c1"># Y is east</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="s2">&quot;.k&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\Delta \delta$ [&#39;&#39;]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\Delta \alpha \cos \delta$ [&#39;&#39;]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;k*&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="s2">&quot;datalim&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/f61080cc662a6b852799bf10e994fc71ebfca327bef3ca8b96694c79e492b161.png" src="../../_images/f61080cc662a6b852799bf10e994fc71ebfca327bef3ca8b96694c79e492b161.png" />
+</div>
+</div>
+<p>The plot on the sky is helpful to look at, but the “raw” measurements are the values of <span class="math notranslate nohighlight">\(\rho\)</span> (separation) and <span class="math notranslate nohighlight">\(\theta\)</span> (also called P.A., position angle) that we listed in our data table, and that the measurement uncertainties live on these values as nice Gaussians. So, to visualize this space more clearly, we can plot <span class="math notranslate nohighlight">\(\rho\)</span> vs. time and P.A. vs. time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_yrs</span><span class="p">,</span> <span class="n">rho_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">rho_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\rho\,$ [&quot;]&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_yrs</span><span class="p">,</span> <span class="n">theta_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">theta_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;P.A. [radians]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;time [years]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/e6a1c2a934735fb9d5ccf63ae9af021a810d4b6f0bd1e5806e27c999488a0060.png" src="../../_images/e6a1c2a934735fb9d5ccf63ae9af021a810d4b6f0bd1e5806e27c999488a0060.png" />
+</div>
+</div>
+</section>
+<section id="fitting-the-astrometric-orbit-with-exoplanet">
+<h2>Fitting the astrometric orbit with <em>exoplanet</em><a class="headerlink" href="#fitting-the-astrometric-orbit-with-exoplanet" title="Link to this heading">#</a></h2>
+<p>To get started, let’s import the relative packages from <em>exoplanet</em>, plot up a preliminary orbit from the literature, and then sample.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">pymc3_ext</span> <span class="k">as</span> <span class="nn">pmx</span>
+
+<span class="kn">from</span> <span class="nn">aesara_theano_fallback</span> <span class="kn">import</span> <span class="n">aesara</span> <span class="k">as</span> <span class="n">theano</span>
+<span class="kn">import</span> <span class="nn">aesara_theano_fallback.tensor</span> <span class="k">as</span> <span class="nn">tt</span>
+
+<span class="kn">import</span> <span class="nn">exoplanet</span> <span class="k">as</span> <span class="nn">xo</span>
+
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">constants</span>
+
+<span class="c1"># conversion constant from au to R_sun</span>
+<span class="n">au_to_R_sun</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">au</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_sun</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+
+<span class="c1"># Just to get started, let&#39;s take a look at the orbit using the parameter estimates from Pourbaix et al. 1998</span>
+
+<span class="c1"># Orbital elements from Pourbaix et al. 1998</span>
+<span class="c1"># For the relative astrometric fit, we only need the following parameters</span>
+<span class="n">a_ang</span> <span class="o">=</span> <span class="mf">0.324</span>  <span class="c1"># arcsec</span>
+<span class="n">parallax</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># arcsec (meaningless choice for now)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">a_ang</span> <span class="o">*</span> <span class="n">au_to_R_sun</span> <span class="o">/</span> <span class="n">parallax</span>
+<span class="n">e</span> <span class="o">=</span> <span class="mf">0.798</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mf">96.0</span> <span class="o">*</span> <span class="n">deg</span>  <span class="c1"># [rad]</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="mf">251.6</span> <span class="o">*</span> <span class="n">deg</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>  <span class="c1"># Pourbaix reports omega_2, but we want omega_1</span>
+<span class="n">Omega</span> <span class="o">=</span> <span class="mf">159.6</span> <span class="o">*</span> <span class="n">deg</span>
+<span class="n">P</span> <span class="o">=</span> <span class="mf">28.8</span> <span class="o">*</span> <span class="mf">365.25</span>  <span class="c1"># days</span>
+
+<span class="n">T0</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="mf">1989.92</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;decimalyear&quot;</span><span class="p">)</span>
+<span class="n">T0</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s2">&quot;jd&quot;</span>
+<span class="n">T0</span> <span class="o">=</span> <span class="n">T0</span><span class="o">.</span><span class="n">value</span>  <span class="c1"># [Julian Date]</span>
+
+<span class="c1"># instantiate the orbit</span>
+<span class="n">orbit</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">orbits</span><span class="o">.</span><span class="n">KeplerianOrbit</span><span class="p">(</span>
+    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">t_periastron</span><span class="o">=</span><span class="n">T0</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">incl</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">ecc</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">Omega</span><span class="o">=</span><span class="n">Omega</span>
+<span class="p">)</span>
+
+<span class="c1"># The position functions take an optional argument parallax to convert from</span>
+<span class="c1"># physical units back to arcseconds</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">T0</span> <span class="o">-</span> <span class="n">P</span><span class="p">,</span> <span class="n">T0</span> <span class="o">+</span> <span class="n">P</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>  <span class="c1"># days</span>
+<span class="n">rho</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">([],</span> <span class="n">orbit</span><span class="o">.</span><span class="n">get_relative_angles</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">parallax</span><span class="p">))()</span>
+
+<span class="c1"># Plot the orbit</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>  <span class="c1"># X is north</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>  <span class="c1"># Y is east</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># plot the data</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">rho_data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_data</span><span class="p">)</span>  <span class="c1"># X is north</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">rho_data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_data</span><span class="p">)</span>  <span class="c1"># Y is east</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="s2">&quot;.k&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\Delta \delta$ [&#39;&#39;]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\Delta \alpha \cos \delta$ [&#39;&#39;]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;k*&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="s2">&quot;datalim&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;initial orbit&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_jds</span><span class="p">,</span> <span class="n">rho_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">rho_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\rho\,$ [&quot;]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;initial orbit&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_jds</span><span class="p">,</span> <span class="n">theta_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">theta_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;P.A. [radians]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;time [JD]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/bcda51b5d582209dda81fd5e4114aa99806ce1f8e87b6d672965a896b416813f.png" src="../../_images/bcda51b5d582209dda81fd5e4114aa99806ce1f8e87b6d672965a896b416813f.png" />
+<img alt="../../_images/84d853341a60a7c82a6d0494e87272b755faced8be0100c4fa041ec2ee16d48e.png" src="../../_images/84d853341a60a7c82a6d0494e87272b755faced8be0100c4fa041ec2ee16d48e.png" />
+</div>
+</div>
+<p>Now that we have an initial orbit, we can set the model up using PyMC3 to do inference.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">yr</span> <span class="o">=</span> <span class="mf">365.25</span>
+
+<span class="c1"># for predicted orbits</span>
+<span class="n">t_fine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">astro_jds</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">500</span><span class="p">,</span> <span class="n">astro_jds</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">500</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="n">parallax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">parallax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Without an actual parallax measurement, we can model the orbit in units of arcseconds</span>
+            <span class="c1"># by providing a fake_parallax and conversion constant</span>
+            <span class="n">plx</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># arcsec</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Below we will run a version of this model where a measurement of parallax is provided</span>
+            <span class="c1"># The measurement is in milliarcsec</span>
+            <span class="n">m_plx</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Bound</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">100</span><span class="p">)(</span>
+                <span class="s2">&quot;m_plx&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">parallax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sd</span><span class="o">=</span><span class="n">parallax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">testval</span><span class="o">=</span><span class="n">parallax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">plx</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;plx&quot;</span><span class="p">,</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">m_plx</span><span class="p">)</span>
+
+        <span class="n">a_ang</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="s2">&quot;a_ang&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="mf">0.324</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">a_ang</span> <span class="o">/</span> <span class="n">plx</span><span class="p">)</span>
+
+        <span class="c1"># We expect the period to be somewhere in the range of 25 years,</span>
+        <span class="c1"># so we&#39;ll set a broad prior on logP</span>
+        <span class="n">logP</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+            <span class="s2">&quot;logP&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">25</span> <span class="o">*</span> <span class="n">yr</span><span class="p">),</span> <span class="n">sd</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">28.8</span> <span class="o">*</span> <span class="n">yr</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logP</span><span class="p">))</span>
+
+        <span class="c1"># For astrometric-only fits, it&#39;s generally better to fit in</span>
+        <span class="c1"># p = (Omega + omega)/2 and m = (Omega - omega)/2 instead of omega and Omega</span>
+        <span class="c1"># directly</span>
+        <span class="n">omega0</span> <span class="o">=</span> <span class="mf">251.6</span> <span class="o">*</span> <span class="n">deg</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">Omega0</span> <span class="o">=</span> <span class="mf">159.6</span> <span class="o">*</span> <span class="n">deg</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">Angle</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">Omega0</span> <span class="o">+</span> <span class="n">omega0</span><span class="p">))</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">Angle</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">Omega0</span> <span class="o">-</span> <span class="n">omega0</span><span class="p">))</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="n">p</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span>
+        <span class="n">Omega</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;Omega&quot;</span><span class="p">,</span> <span class="n">p</span> <span class="o">+</span> <span class="n">m</span><span class="p">)</span>
+
+        <span class="c1"># For these orbits, it can also be better to fit for a phase angle</span>
+        <span class="c1"># (relative to a reference time) instead of the time of periastron</span>
+        <span class="c1"># passage directly</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">Angle</span><span class="p">(</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">tperi</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;tperi&quot;</span><span class="p">,</span> <span class="n">T0</span> <span class="o">+</span> <span class="n">P</span> <span class="o">*</span> <span class="n">phase</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+
+        <span class="c1"># Geometric uniform prior on cos(incl)</span>
+        <span class="n">cos_incl</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span>
+            <span class="s2">&quot;cos_incl&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">96.0</span> <span class="o">*</span> <span class="n">deg</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">incl</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;incl&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">cos_incl</span><span class="p">))</span>
+        <span class="n">ecc</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="mf">0.798</span><span class="p">)</span>
+
+        <span class="c1"># Set up the orbit</span>
+        <span class="n">orbit</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">orbits</span><span class="o">.</span><span class="n">KeplerianOrbit</span><span class="p">(</span>
+            <span class="n">a</span><span class="o">=</span><span class="n">a</span> <span class="o">*</span> <span class="n">au_to_R_sun</span><span class="p">,</span>
+            <span class="n">t_periastron</span><span class="o">=</span><span class="n">tperi</span><span class="p">,</span>
+            <span class="n">period</span><span class="o">=</span><span class="n">P</span><span class="p">,</span>
+            <span class="n">incl</span><span class="o">=</span><span class="n">incl</span><span class="p">,</span>
+            <span class="n">ecc</span><span class="o">=</span><span class="n">ecc</span><span class="p">,</span>
+            <span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span>
+            <span class="n">Omega</span><span class="o">=</span><span class="n">Omega</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">parallax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;M_tot&quot;</span><span class="p">,</span> <span class="n">orbit</span><span class="o">.</span><span class="n">m_total</span><span class="p">)</span>
+
+        <span class="c1"># Compute the model in rho and theta</span>
+        <span class="n">rho_model</span><span class="p">,</span> <span class="n">theta_model</span> <span class="o">=</span> <span class="n">orbit</span><span class="o">.</span><span class="n">get_relative_angles</span><span class="p">(</span><span class="n">astro_jds</span><span class="p">,</span> <span class="n">plx</span><span class="p">)</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;rho_model&quot;</span><span class="p">,</span> <span class="n">rho_model</span><span class="p">)</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;theta_model&quot;</span><span class="p">,</span> <span class="n">theta_model</span><span class="p">)</span>
+
+        <span class="c1"># Add jitter terms to both separation and position angle</span>
+        <span class="n">log_rho_s</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+            <span class="s2">&quot;log_rho_s&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">rho_err</span><span class="p">)),</span> <span class="n">sd</span><span class="o">=</span><span class="mf">2.0</span>
+        <span class="p">)</span>
+        <span class="n">log_theta_s</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+            <span class="s2">&quot;log_theta_s&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">theta_err</span><span class="p">)),</span> <span class="n">sd</span><span class="o">=</span><span class="mf">2.0</span>
+        <span class="p">)</span>
+        <span class="n">rho_tot_err</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho_err</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">log_rho_s</span><span class="p">))</span>
+        <span class="n">theta_tot_err</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">theta_err</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">log_theta_s</span><span class="p">))</span>
+
+        <span class="c1"># define the likelihood function, e.g., a Gaussian on both rho and theta</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;rho_obs&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">rho_model</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="n">rho_tot_err</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">rho_data</span><span class="p">)</span>
+
+        <span class="c1"># We want to be cognizant of the fact that theta wraps so the following is equivalent to</span>
+        <span class="c1"># pm.Normal(&quot;obs_theta&quot;, mu=theta_model, observed=theta_data, sd=theta_tot_err)</span>
+        <span class="c1"># but takes into account the wrapping. Thanks to Rob de Rosa for the tip.</span>
+        <span class="n">theta_diff</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span>
+            <span class="n">tt</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_model</span> <span class="o">-</span> <span class="n">theta_data</span><span class="p">),</span> <span class="n">tt</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_model</span> <span class="o">-</span> <span class="n">theta_data</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;theta_obs&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">theta_diff</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="n">theta_tot_err</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># Set up predicted orbits for later plotting</span>
+        <span class="n">rho_dense</span><span class="p">,</span> <span class="n">theta_dense</span> <span class="o">=</span> <span class="n">orbit</span><span class="o">.</span><span class="n">get_relative_angles</span><span class="p">(</span><span class="n">t_fine</span><span class="p">,</span> <span class="n">plx</span><span class="p">)</span>
+        <span class="n">rho_save</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;rho_save&quot;</span><span class="p">,</span> <span class="n">rho_dense</span><span class="p">)</span>
+        <span class="n">theta_save</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;theta_save&quot;</span><span class="p">,</span> <span class="n">theta_dense</span><span class="p">)</span>
+
+        <span class="c1"># Optimize to find the initial parameters</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">test_point</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">log_rho_s</span><span class="p">,</span> <span class="n">log_theta_s</span><span class="p">])</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">phase</span><span class="p">])</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">ecc</span><span class="p">])</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">logP</span><span class="p">,</span> <span class="n">a_ang</span><span class="p">,</span> <span class="n">phase</span><span class="p">])</span>
+        <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">map_soln</span>
+
+
+<span class="n">model</span><span class="p">,</span> <span class="n">map_soln</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [log_theta_s, log_rho_s]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='10' class='' max='10' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [10/10 00:00&lt;00:00 logp = 1.488e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 106.68812255679316 -&gt; 148.79415533252728
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [phase]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='23' class='' max='23' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [23/23 00:00&lt;00:00 logp = 1.693e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 148.79415533252728 -&gt; 169.28685198830703
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [ecc, m, p]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='36' class='' max='36' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [36/36 00:00&lt;00:00 logp = 2.117e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 169.28685198830703 -&gt; 211.68042944376782
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [phase, a_ang, logP]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='11' class='' max='11' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [11/11 00:00&lt;00:00 logp = 2.121e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 211.68042944376782 -&gt; 212.13338440910587
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [log_theta_s, log_rho_s, ecc, cos_incl, phase, m, p, logP, a_ang]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='31' class='' max='31' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [31/31 00:00&lt;00:00 logp = 2.164e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 212.1333844091059 -&gt; 216.37339100753132
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we have a maximum a posteriori estimate of the parameters, let’s take a look at the results to make sure that they seem reasonable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ekw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\rho\,$ [&quot;]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\rho$ residuals&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;P.A. [radians]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;P.A. residuals&quot;</span><span class="p">)</span>
+
+<span class="n">tot_rho_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho_err</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;log_rho_s&quot;</span><span class="p">]))</span>
+<span class="n">tot_theta_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">theta_err</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;log_theta_s&quot;</span><span class="p">]))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_jds</span><span class="p">,</span> <span class="n">rho_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">tot_rho_err</span><span class="p">,</span> <span class="o">**</span><span class="n">ekw</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_fine</span><span class="p">,</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;rho_save&quot;</span><span class="p">],</span> <span class="s2">&quot;C1&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+    <span class="n">astro_jds</span><span class="p">,</span> <span class="n">rho_data</span> <span class="o">-</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;rho_model&quot;</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">tot_rho_err</span><span class="p">,</span> <span class="o">**</span><span class="n">ekw</span>
+<span class="p">)</span>
+
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_fine</span><span class="p">,</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;theta_save&quot;</span><span class="p">],</span> <span class="s2">&quot;C1&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_jds</span><span class="p">,</span> <span class="n">theta_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">tot_theta_err</span><span class="p">,</span> <span class="o">**</span><span class="n">ekw</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+    <span class="n">astro_jds</span><span class="p">,</span> <span class="n">theta_data</span> <span class="o">-</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;theta_model&quot;</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">tot_theta_err</span><span class="p">,</span> <span class="o">**</span><span class="n">ekw</span>
+<span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_fine</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t_fine</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;map orbit&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/6a961f899c61c3f774c83b3be859e1256cc83d1f6b497a352a1e7cdb5ba09306.png" src="../../_images/6a961f899c61c3f774c83b3be859e1256cc83d1f6b497a352a1e7cdb5ba09306.png" />
+</div>
+</div>
+<p>Now let’s sample the posterior.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">map_soln</span><span class="p">,</span>
+        <span class="n">cores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [log_theta_s, log_rho_s, ecc, cos_incl, phase, m, p, logP, a_ang]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:12&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 13 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<p>First we can check the convergence for some of the key parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">trace</span><span class="p">,</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;tperi&quot;</span><span class="p">,</span> <span class="s2">&quot;a_ang&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;Omega&quot;</span><span class="p">,</span> <span class="s2">&quot;incl&quot;</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>P</th>
+      <td>10435.546</td>
+      <td>141.255</td>
+      <td>10192.254</td>
+      <td>10708.620</td>
+      <td>3.941</td>
+      <td>2.791</td>
+      <td>1348.0</td>
+      <td>1273.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>tperi</th>
+      <td>2447859.362</td>
+      <td>20.368</td>
+      <td>2447820.223</td>
+      <td>2447896.278</td>
+      <td>0.427</td>
+      <td>0.302</td>
+      <td>2255.0</td>
+      <td>1904.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>a_ang</th>
+      <td>0.318</td>
+      <td>0.008</td>
+      <td>0.303</td>
+      <td>0.332</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2054.0</td>
+      <td>1333.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>omega</th>
+      <td>1.234</td>
+      <td>0.014</td>
+      <td>1.209</td>
+      <td>1.260</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1998.0</td>
+      <td>1668.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>Omega</th>
+      <td>2.787</td>
+      <td>0.012</td>
+      <td>2.765</td>
+      <td>2.809</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2480.0</td>
+      <td>1343.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>incl</th>
+      <td>1.691</td>
+      <td>0.006</td>
+      <td>1.679</td>
+      <td>1.703</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1697.0</td>
+      <td>1509.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>ecc</th>
+      <td>0.777</td>
+      <td>0.012</td>
+      <td>0.755</td>
+      <td>0.801</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1832.0</td>
+      <td>1473.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>That looks pretty good.
+Now here’s a corner plot showing the covariances between parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">corner</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span>
+    <span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;tperi&quot;</span><span class="p">,</span> <span class="s2">&quot;a_ang&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;Omega&quot;</span><span class="p">,</span> <span class="s2">&quot;incl&quot;</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/8d70eb115ce387726b3bf9aa3015a2a62754394d4b689e74d017e642cf4ee37a.png" src="../../_images/8d70eb115ce387726b3bf9aa3015a2a62754394d4b689e74d017e642cf4ee37a.png" />
+</div>
+</div>
+<p>Finally, we can plot the posterior constraints on <span class="math notranslate nohighlight">\(\rho\)</span> and <span class="math notranslate nohighlight">\(\theta\)</span>.
+This figure is much like the one for the MAP solution above, but this time the orange is a contour (not a line) showing the 68% credible region for the model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ekw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\rho\,$ [&quot;]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;P.A. [radians]&quot;</span><span class="p">)</span>
+
+<span class="n">tot_rho_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+    <span class="n">rho_err</span><span class="o">**</span><span class="mi">2</span>
+    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;log_rho_s&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="p">)</span>
+<span class="n">tot_theta_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+    <span class="n">theta_err</span><span class="o">**</span><span class="mi">2</span>
+    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;log_theta_s&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_jds</span><span class="p">,</span> <span class="n">rho_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">tot_rho_err</span><span class="p">,</span> <span class="o">**</span><span class="n">ekw</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;rho_save&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">84</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_fine</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">astro_jds</span><span class="p">,</span> <span class="n">theta_data</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">tot_theta_err</span><span class="p">,</span> <span class="o">**</span><span class="n">ekw</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;theta_save&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">84</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_fine</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_fine</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t_fine</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;posterior inferences&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/272f0df5896dac72bf974d00395ab0f5b6c90f7610180854f91cc2f20fc53c82.png" src="../../_images/272f0df5896dac72bf974d00395ab0f5b6c90f7610180854f91cc2f20fc53c82.png" />
+</div>
+</div>
+<p>As we can see from the narrow range of orbits (the orange swath appears like a thin line), the orbit is actually highly constrained by the astrometry.
+We also see two outlier epochs in the vicinity of 2445000 - 2447000, since adjacent epochs seem to be right on the orbit.
+It’s likely the uncertainties were not estimated correctly for these, and the simplistic jitter model we implemented isn’t sophisticated enough to apply more weight to only these discrepant points.</p>
+</section>
+<section id="including-parallax">
+<h2>Including parallax<a class="headerlink" href="#including-parallax" title="Link to this heading">#</a></h2>
+<p>While this is encouraging that we fit an astrometric orbit, a simple astrometric fit to just <span class="math notranslate nohighlight">\(\rho\)</span> and <span class="math notranslate nohighlight">\(\theta\)</span> isn’t actually that physically satisfying, since many of the orbital parameters simply have to do with the orientation relative to us (<span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(\omega\)</span>, and <span class="math notranslate nohighlight">\(\Omega\)</span>). The only truly intrinsic parameters are <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(e\)</span>. To learn more about some of the physical parameters, such as the total mass of the system, we’d like to incorporate distance information to put a physical scale to the problem.</p>
+<p>The <em>Gaia</em> DR2 parallax is <span class="math notranslate nohighlight">\(\varpi = 24.05 \pm 0.45\)</span> mas.</p>
+<p>We can use exactly the same model as above with only an added parallax constraint:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plx_model</span><span class="p">,</span> <span class="n">plx_map_soln</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">parallax</span><span class="o">=</span><span class="p">[</span><span class="mf">24.05</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [log_theta_s, log_rho_s]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='10' class='' max='10' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [10/10 00:00&lt;00:00 logp = 1.516e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 109.47273175941172 -&gt; 151.57876453514584
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [phase]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='23' class='' max='23' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [23/23 00:00&lt;00:00 logp = 1.721e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 151.57876453514584 -&gt; 172.07146119092562
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [ecc, m, p]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='36' class='' max='36' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [36/36 00:00&lt;00:00 logp = 2.145e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 172.0714611909256 -&gt; 214.46503864638638
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [phase, a_ang, logP]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='11' class='' max='11' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [11/11 00:00&lt;00:00 logp = 2.149e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: 214.46503864638635 -&gt; 214.917993611728
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [log_theta_s, log_rho_s, ecc, cos_incl, phase, m, p, logP, a_ang, m_plx]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='61' class='' max='61' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [61/61 00:00&lt;00:00 logp = 2.192e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: 214.917993611728 -&gt; 219.15808192044832
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">5432</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">plx_model</span><span class="p">:</span>
+    <span class="n">plx_trace</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">plx_map_soln</span><span class="p">,</span>
+        <span class="n">cores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [log_theta_s, log_rho_s, ecc, cos_incl, phase, m, p, logP, a_ang, m_plx]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:12&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 14 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Check the convergence diagnostics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">plx_trace</span><span class="p">,</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;P&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tperi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a_ang&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;omega&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Omega&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;incl&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ecc&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;M_tot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;plx&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>P</th>
+      <td>10430.978</td>
+      <td>138.232</td>
+      <td>10206.804</td>
+      <td>10717.815</td>
+      <td>4.302</td>
+      <td>3.051</td>
+      <td>1128.0</td>
+      <td>1011.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>tperi</th>
+      <td>2447861.063</td>
+      <td>20.081</td>
+      <td>2447820.377</td>
+      <td>2447896.021</td>
+      <td>0.511</td>
+      <td>0.362</td>
+      <td>1544.0</td>
+      <td>1372.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>a_ang</th>
+      <td>0.318</td>
+      <td>0.008</td>
+      <td>0.304</td>
+      <td>0.332</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1531.0</td>
+      <td>1256.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>omega</th>
+      <td>1.235</td>
+      <td>0.014</td>
+      <td>1.209</td>
+      <td>1.262</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1441.0</td>
+      <td>1181.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>Omega</th>
+      <td>2.787</td>
+      <td>0.011</td>
+      <td>2.767</td>
+      <td>2.809</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1910.0</td>
+      <td>1465.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>incl</th>
+      <td>1.690</td>
+      <td>0.006</td>
+      <td>1.680</td>
+      <td>1.703</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1591.0</td>
+      <td>1251.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>ecc</th>
+      <td>0.778</td>
+      <td>0.012</td>
+      <td>0.754</td>
+      <td>0.800</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1302.0</td>
+      <td>999.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>M_tot</th>
+      <td>2.854</td>
+      <td>0.272</td>
+      <td>2.342</td>
+      <td>3.359</td>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>1840.0</td>
+      <td>1253.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>plx</th>
+      <td>0.024</td>
+      <td>0.000</td>
+      <td>0.023</td>
+      <td>0.025</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2143.0</td>
+      <td>1506.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>And make the corner plot for the physical parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">plx_trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;tperi&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="s2">&quot;M_tot&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ea048c48b602d47cf3aa1b069fb5a61a5deb81325fa403b19d308131816e6139.png" src="../../_images/ea048c48b602d47cf3aa1b069fb5a61a5deb81325fa403b19d308131816e6139.png" />
+</div>
+</div>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>As described in the <a class="reference external" href="https://docs.exoplanet.codes/en/stable/tutorials/citation/">citation tutorial</a>, we can use <a class="reference external" href="https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model">citations.get_citations_for_model</a> to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">txt</span><span class="p">,</span> <span class="n">bib</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">citations</span><span class="o">.</span><span class="n">get_citations_for_model</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This research made use of \textsf{exoplanet} \citep{exoplanet:joss,
+exoplanet:zenodo} and its dependencies \citep{exoplanet:arviz,
+exoplanet:astropy13, exoplanet:astropy18, exoplanet:pymc3, exoplanet:theano}.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bib</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>@article{exoplanet:joss,
+       author = {{Foreman-Mackey}, Daniel and {Luger}, Rodrigo and {Agol}, Eric
+                and {Barclay}, Thomas and {Bouma}, Luke G. and {Brandt},
+                Timothy D. and {Czekala}, Ian and {David}, Trevor J. and
+                {Dong}, Jiayin and {Gilbert}, Emily A. and {Gordon}, Tyler A.
+                and {Hedges}, Christina and {Hey}, Daniel R. and {Morris},
+                Brett M. and {Price-Whelan}, Adrian M. and {Savel}, Arjun B.},
+        title = &quot;{exoplanet: Gradient-based probabilistic inference for
+                  exoplanet data \&amp; other astronomical time series}&quot;,
+      journal = {arXiv e-prints},
+         year = 2021,
+        month = may,
+          eid = {arXiv:2105.01994},
+        pages = {arXiv:2105.01994},
+archivePrefix = {arXiv},
+       eprint = {2105.01994},
+ primaryClass = {astro-ph.IM},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210501994F},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+...
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../transit/"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Transit fitting</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../stellar-variability/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gaussian process models for stellar variability</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astrometric-conventions">Astrometric conventions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-astrometric-orbit-with-exoplanet">Fitting the astrometric orbit with <em>exoplanet</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#including-parallax">Including parallax</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dan Foreman-Mackey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018, 2019, 2020, 2021, Dan Foreman-Mackey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

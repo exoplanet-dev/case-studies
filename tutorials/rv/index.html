@@ -1,0 +1,1300 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Radial velocity fitting &#8212; exoplanet</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/exoplanet.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=37838749"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/rv';</script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Transit fitting" href="../transit/" />
+    <link rel="prev" title="exoplanet: Case Studies" href="../../" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="exoplanet - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="exoplanet - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Radial velocity fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transit/">Transit fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../astrometric/">Astrometric fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stellar-variability/">Gaussian process models for stellar variability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joint/">Joint RV &amp; transit fits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tess/">Fitting TESS data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick-tess/">Quick fits for TESS light curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-gp-transit/">Simultaneous Fitting of a Transit with Stellar Variability</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../ttv/">Fitting transit times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eb/">Fitting a detached eclipsing binary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rv-multi/">RVs with multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-multi/">Light curves from multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.exoplanet.codes">Main exoplanet docs</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/exoplanet-dev/case-studies/main?urlpath=lab/tree/docs/tutorials/rv.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/edit/main/docs/tutorials/rv.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/issues/new?title=Issue%20on%20page%20%2Ftutorials/rv.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/tutorials/rv.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Radial velocity fitting</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-radial-velocity-model-in-pymc3">The radial velocity model in PyMC3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling">Sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-plots">Phase plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="radial-velocity-fitting">
+<span id="rv"></span><h1>Radial velocity fitting<a class="headerlink" href="#radial-velocity-fitting" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exoplanet</span>
+
+<span class="n">exoplanet</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">docs_setup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;exoplanet.__version__ = &#39;</span><span class="si">{</span><span class="n">exoplanet</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exoplanet.__version__ = &#39;0.5.4.dev27+g75d7fcc&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this case study, we will demonstrate how to fit radial velocity observations of an exoplanetary system using <em>exoplanet</em>.
+We will follow <a class="reference external" href="https://radvel.readthedocs.io/en/latest/tutorials/K2-24_Fitting+MCMC.html">the getting started tutorial</a> from <a class="reference external" href="https://radvel.readthedocs.io">the excellent RadVel package</a> where they fit for the parameters of the two planets in <a class="reference external" href="https://arxiv.org/abs/1511.04497">the K2-24 system</a>.</p>
+<p>First, let’s download the data from RadVel:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/California-Planet-Search/radvel/master/example_data/epic203771098.csv&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">vel</span><span class="p">)</span>
+<span class="n">yerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">errvel</span><span class="p">)</span>
+
+<span class="c1"># Compute a reference time that will be used to normalize the trends model</span>
+<span class="n">x_ref</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+<span class="c1"># Also make a fine grid that spans the observation window for plotting purposes</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time [days]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2360c4af238ba61adc898485dcbd75c89f132df922ebaf0672048a94c9a485d8.png" src="../../_images/2360c4af238ba61adc898485dcbd75c89f132df922ebaf0672048a94c9a485d8.png" />
+</div>
+</div>
+<p>Now, we know the periods and transit times for the planets <a class="reference external" href="https://arxiv.org/abs/1511.04497">from the K2 light curve</a>, so let’s start by using the :func:<code class="docutils literal notranslate"><span class="pre">exoplanet.estimate_semi_amplitude</span></code> function to estimate the expected RV semi-amplitudes for the planets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exoplanet</span> <span class="k">as</span> <span class="nn">xo</span>
+
+<span class="n">periods</span> <span class="o">=</span> <span class="p">[</span><span class="mf">20.8851</span><span class="p">,</span> <span class="mf">42.3633</span><span class="p">]</span>
+<span class="n">period_errs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0003</span><span class="p">,</span> <span class="mf">0.0006</span><span class="p">]</span>
+<span class="n">t0s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2072.7948</span><span class="p">,</span> <span class="mf">2082.6251</span><span class="p">]</span>
+<span class="n">t0_errs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0007</span><span class="p">,</span> <span class="mf">0.0004</span><span class="p">]</span>
+<span class="n">Ks</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">estimate_semi_amplitude</span><span class="p">(</span><span class="n">periods</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">t0s</span><span class="o">=</span><span class="n">t0s</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Ks</span><span class="p">,</span> <span class="s2">&quot;m/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[5.05069163 5.50983542] m/s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">period_errs</span><span class="p">))</span>
+    <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">period_errs</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.43643076e-05, 1.41632026e-05])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">period_errs</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.43643076e-05, 1.41632026e-05])
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-radial-velocity-model-in-pymc3">
+<h2>The radial velocity model in PyMC3<a class="headerlink" href="#the-radial-velocity-model-in-pymc3" title="Link to this heading">#</a></h2>
+<p>Now that we have the data and an estimate of the initial values for the parameters, let’s start defining the probabilistic model in PyMC3.
+First, we’ll define our priors on the parameters:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">pymc3_ext</span> <span class="k">as</span> <span class="nn">pmx</span>
+<span class="kn">import</span> <span class="nn">aesara_theano_fallback.tensor</span> <span class="k">as</span> <span class="nn">tt</span>
+
+<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="c1"># Gaussian priors based on transit data (from Petigura et al.)</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;t0&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t0s</span><span class="p">),</span> <span class="n">sd</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t0_errs</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">logP</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+        <span class="s2">&quot;logP&quot;</span><span class="p">,</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">periods</span><span class="p">),</span>
+        <span class="n">sd</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">period_errs</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">periods</span><span class="p">),</span>
+        <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">testval</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">periods</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logP</span><span class="p">))</span>
+
+    <span class="c1"># Wide log-normal prior for semi-amplitude</span>
+    <span class="n">logK</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+        <span class="s2">&quot;logK&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Ks</span><span class="p">),</span> <span class="n">sd</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Ks</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Eccentricity &amp; argument of periasteron</span>
+    <span class="n">ecs</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">UnitDisk</span><span class="p">(</span><span class="s2">&quot;ecs&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">testval</span><span class="o">=</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="n">ecc</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ecs</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">ecs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ecs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">xo</span><span class="o">.</span><span class="n">eccentricity</span><span class="o">.</span><span class="n">vaneylen19</span><span class="p">(</span>
+        <span class="s2">&quot;ecc_prior&quot;</span><span class="p">,</span> <span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">ecc</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Jitter &amp; a quadratic RV trend</span>
+    <span class="n">logs</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">yerr</span><span class="p">)),</span> <span class="n">sd</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+    <span class="n">trend</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;trend&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="mf">10.0</span> <span class="o">**</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># Then we define the orbit</span>
+    <span class="n">orbit</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">orbits</span><span class="o">.</span><span class="n">KeplerianOrbit</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">t0</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">ecc</span><span class="o">=</span><span class="n">ecc</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">)</span>
+
+    <span class="c1"># And a function for computing the full RV model</span>
+    <span class="k">def</span> <span class="nf">get_rv_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="c1"># First the RVs induced by the planets</span>
+        <span class="n">vrad</span> <span class="o">=</span> <span class="n">orbit</span><span class="o">.</span><span class="n">get_radial_velocity</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logK</span><span class="p">))</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;vrad&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">vrad</span><span class="p">)</span>
+
+        <span class="c1"># Define the background model</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vander</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">x_ref</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">bkg</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;bkg&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">trend</span><span class="p">))</span>
+
+        <span class="c1"># Sum over planets and add the background to get the full model</span>
+        <span class="k">return</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;rv_model&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vrad</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">bkg</span><span class="p">)</span>
+
+    <span class="c1"># Define the RVs at the observed times</span>
+    <span class="n">rv_model</span> <span class="o">=</span> <span class="n">get_rv_model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># Also define the model on a fine grid as computed above (for plotting)</span>
+    <span class="n">rv_model_pred</span> <span class="o">=</span> <span class="n">get_rv_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;_pred&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Finally add in the observation model. This next line adds a new contribution</span>
+    <span class="c1"># to the log probability of the PyMC3 model</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">yerr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">logs</span><span class="p">))</span>
+    <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;obs&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">rv_model</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="n">err</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we can plot the initial model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pmx</span><span class="o">.</span><span class="n">eval_in_model</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">vrad_pred</span><span class="p">),</span> <span class="s2">&quot;--k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pmx</span><span class="o">.</span><span class="n">eval_in_model</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">bkg_pred</span><span class="p">),</span> <span class="s2">&quot;:k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pmx</span><span class="o">.</span><span class="n">eval_in_model</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">rv_model_pred</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">t</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time [days]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;initial model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/226345c9d6e45eaa21c66fe17f777c9be31826b6f17663761496fb03652c0202.png" src="../../_images/226345c9d6e45eaa21c66fe17f777c9be31826b6f17663761496fb03652c0202.png" />
+</div>
+</div>
+<p>In this plot, the background is the dotted line, the individual planets are the dashed lines, and the full model is the blue line.</p>
+<p>It doesn’t look amazing so let’s fit for the maximum a posterior parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">test_point</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">trend</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">map_soln</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">t0</span><span class="p">,</span> <span class="n">trend</span><span class="p">,</span> <span class="n">logK</span><span class="p">,</span> <span class="n">logP</span><span class="p">,</span> <span class="n">logs</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">map_soln</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">ecs</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">map_soln</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [trend]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='13' class='' max='13' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [13/13 00:00&lt;00:00 logp = -5.742e+01]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -68.03907701822229 -&gt; -57.4213493739168
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [logs, logP, logK, trend, t0]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='40' class='' max='40' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [40/40 00:00&lt;00:00 logp = -5.182e+01]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -57.4213493739168 -&gt; -51.81968815504227
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [ecs]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='19' class='' max='19' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [19/19 00:00&lt;00:00 logp = -5.094e+01]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -51.81968815504227 -&gt; -50.93559539327148
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [trend, logs, ecs, logK, logP, t0]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='91' class='' max='91' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [91/91 00:00&lt;00:00 logp = -5.077e+01]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -50.93559539327148 -&gt; -50.76564803059732
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;vrad_pred&quot;</span><span class="p">],</span> <span class="s2">&quot;--k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;bkg_pred&quot;</span><span class="p">],</span> <span class="s2">&quot;:k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;rv_model_pred&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">t</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time [days]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;MAP model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ea0adf80fec2f5c9ee24822beb9ea540358fbeffce25b368f74fc5778764097a.png" src="../../_images/ea0adf80fec2f5c9ee24822beb9ea540358fbeffce25b368f74fc5778764097a.png" />
+</div>
+</div>
+<p>That looks better.</p>
+</section>
+<section id="sampling">
+<h2>Sampling<a class="headerlink" href="#sampling" title="Link to this heading">#</a></h2>
+<p>Now that we have our model set up and a good estimate of the initial parameters, let’s start sampling.
+There are substantial covariances between some of the parameters so we’ll use the <code class="docutils literal notranslate"><span class="pre">pmx.sample</span></code> function from <a class="reference external" href="https://github.com/exoplanet-dev/pymc3-ext">pymc3-ext</a> which wraps <code class="docutils literal notranslate"><span class="pre">pm.sample</span></code> function with some better defaults and tuning strategies.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">cores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [trend, logs, ecs, logK, logP, t0]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:10&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 11 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<p>After sampling, it’s always a good idea to do some convergence checks.
+First, let’s check the number of effective samples and the Gelman-Rubin statistic for our parameters of interest:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;trend&quot;</span><span class="p">,</span> <span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="s2">&quot;t0&quot;</span><span class="p">,</span> <span class="s2">&quot;logK&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>trend[0]</th>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td>-0.001</td>
+      <td>0.002</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2242.0</td>
+      <td>1661.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trend[1]</th>
+      <td>-0.042</td>
+      <td>0.025</td>
+      <td>-0.089</td>
+      <td>0.002</td>
+      <td>0.001</td>
+      <td>0.000</td>
+      <td>2249.0</td>
+      <td>1551.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trend[2]</th>
+      <td>-1.848</td>
+      <td>0.814</td>
+      <td>-3.360</td>
+      <td>-0.364</td>
+      <td>0.017</td>
+      <td>0.013</td>
+      <td>2174.0</td>
+      <td>1534.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>logs</th>
+      <td>1.124</td>
+      <td>0.204</td>
+      <td>0.746</td>
+      <td>1.509</td>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>1246.0</td>
+      <td>1252.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>omega[0]</th>
+      <td>0.007</td>
+      <td>1.204</td>
+      <td>-2.237</td>
+      <td>2.766</td>
+      <td>0.028</td>
+      <td>0.020</td>
+      <td>1829.0</td>
+      <td>1911.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>omega[1]</th>
+      <td>-0.256</td>
+      <td>2.034</td>
+      <td>-2.863</td>
+      <td>3.132</td>
+      <td>0.047</td>
+      <td>0.033</td>
+      <td>1866.0</td>
+      <td>1751.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>ecc[0]</th>
+      <td>0.080</td>
+      <td>0.083</td>
+      <td>0.000</td>
+      <td>0.261</td>
+      <td>0.003</td>
+      <td>0.002</td>
+      <td>931.0</td>
+      <td>1097.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>ecc[1]</th>
+      <td>0.050</td>
+      <td>0.055</td>
+      <td>0.000</td>
+      <td>0.118</td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td>1083.0</td>
+      <td>554.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>t0[0]</th>
+      <td>2072.795</td>
+      <td>0.001</td>
+      <td>2072.794</td>
+      <td>2072.796</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2252.0</td>
+      <td>1528.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>t0[1]</th>
+      <td>2082.625</td>
+      <td>0.000</td>
+      <td>2082.624</td>
+      <td>2082.626</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1894.0</td>
+      <td>1508.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>logK[0]</th>
+      <td>1.520</td>
+      <td>0.224</td>
+      <td>1.128</td>
+      <td>1.910</td>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>1677.0</td>
+      <td>1188.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>logK[1]</th>
+      <td>1.473</td>
+      <td>0.269</td>
+      <td>1.002</td>
+      <td>1.920</td>
+      <td>0.008</td>
+      <td>0.006</td>
+      <td>1582.0</td>
+      <td>655.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>P[0]</th>
+      <td>20.885</td>
+      <td>0.000</td>
+      <td>20.885</td>
+      <td>20.886</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2321.0</td>
+      <td>1628.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>P[1]</th>
+      <td>42.363</td>
+      <td>0.001</td>
+      <td>42.362</td>
+      <td>42.364</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1935.0</td>
+      <td>1417.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>It looks like everything is pretty much converged here. Not bad for 14 parameters and about a minute of runtime…</p>
+<p>Then we can make a <a class="reference external" href="https://corner.readthedocs.io">corner plot</a> of any combination of the parameters.
+For example, let’s look at period, semi-amplitude, and eccentricity:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">corner</span>
+
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;logK&quot;</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/9cc8c2b0b6740c12a5764065155d4e7d4c05494f3af156b0fee046df5c532a41.png" src="../../_images/9cc8c2b0b6740c12a5764065155d4e7d4c05494f3af156b0fee046df5c532a41.png" />
+</div>
+</div>
+<p>Finally, let’s plot the plosterior constraints on the RV model and compare those to the data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compute the posterior predictions for the RV model</span>
+<span class="n">rv_pred</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;rv_model_pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">rv_pred</span><span class="p">,</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">84</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pred</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+<span class="n">art</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pred</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">art</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">t</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time [days]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;posterior constraints&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/455ee26b5c1a2dc80552924f35722e32b850b4852108d27857e70435c0441dd6.png" src="../../_images/455ee26b5c1a2dc80552924f35722e32b850b4852108d27857e70435c0441dd6.png" />
+</div>
+</div>
+</section>
+<section id="phase-plots">
+<h2>Phase plots<a class="headerlink" href="#phase-plots" title="Link to this heading">#</a></h2>
+<p>It might be also be interesting to look at the phased plots for this system.
+Here we’ll fold the dataset on the median of posterior period and then overplot the posterior constraint on the folded model orbits.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">letter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="s2">&quot;bc&quot;</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+    <span class="c1"># Get the posterior median orbital parameters</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">n</span><span class="p">])</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;t0&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">n</span><span class="p">])</span>
+
+    <span class="c1"># Compute the median of posterior estimate of the background RV</span>
+    <span class="c1"># and the contribution from the other planet. Then we can remove</span>
+    <span class="c1"># this from the data to plot just the planet we care about.</span>
+    <span class="n">other</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span>
+        <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;vrad&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">other</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;bkg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Plot the folded data</span>
+    <span class="n">x_fold</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">t0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x_fold</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">other</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.k&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute the posterior prediction for the folded RV model for this</span>
+    <span class="c1"># planet</span>
+    <span class="n">t_fold</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">t0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span>
+    <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">t_fold</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span>
+        <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;vrad_pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">inds</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">84</span><span class="p">],</span>
+        <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_fold</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="n">pred</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+    <span class="n">art</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+        <span class="n">t_fold</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pred</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span>
+    <span class="p">)</span>
+    <span class="n">art</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;phase [days]&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K2-24</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">letter</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/144cb65a4c0de8b0ef3d6097145249a44da59e15694462843fcacdf912edc973.png" src="../../_images/144cb65a4c0de8b0ef3d6097145249a44da59e15694462843fcacdf912edc973.png" />
+<img alt="../../_images/be9b24bdd24251204ff3164bee5c476a7363cc25c9eade055d3d36500a0f0d57.png" src="../../_images/be9b24bdd24251204ff3164bee5c476a7363cc25c9eade055d3d36500a0f0d57.png" />
+</div>
+</div>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>As described in the <a class="reference external" href="https://docs.exoplanet.codes/en/stable/tutorials/citation/">citation tutorial</a>, we can use <a class="reference external" href="https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model">citations.get_citations_for_model</a> to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">txt</span><span class="p">,</span> <span class="n">bib</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">citations</span><span class="o">.</span><span class="n">get_citations_for_model</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This research made use of \textsf{exoplanet} \citep{exoplanet:joss,
+exoplanet:zenodo} and its dependencies \citep{exoplanet:arviz,
+exoplanet:astropy13, exoplanet:astropy18, exoplanet:pymc3, exoplanet:theano,
+exoplanet:vaneylen19}.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bib</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>@article{exoplanet:joss,
+       author = {{Foreman-Mackey}, Daniel and {Luger}, Rodrigo and {Agol}, Eric
+                and {Barclay}, Thomas and {Bouma}, Luke G. and {Brandt},
+                Timothy D. and {Czekala}, Ian and {David}, Trevor J. and
+                {Dong}, Jiayin and {Gilbert}, Emily A. and {Gordon}, Tyler A.
+                and {Hedges}, Christina and {Hey}, Daniel R. and {Morris},
+                Brett M. and {Price-Whelan}, Adrian M. and {Savel}, Arjun B.},
+        title = &quot;{exoplanet: Gradient-based probabilistic inference for
+                  exoplanet data \&amp; other astronomical time series}&quot;,
+      journal = {arXiv e-prints},
+         year = 2021,
+        month = may,
+          eid = {arXiv:2105.01994},
+        pages = {arXiv:2105.01994},
+archivePrefix = {arXiv},
+       eprint = {2105.01994},
+ primaryClass = {astro-ph.IM},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210501994F},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+...
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../../"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">exoplanet: Case Studies</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../transit/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Transit fitting</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-radial-velocity-model-in-pymc3">The radial velocity model in PyMC3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling">Sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-plots">Phase plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dan Foreman-Mackey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018, 2019, 2020, 2021, Dan Foreman-Mackey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1017 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gaussian process models for stellar variability &#8212; exoplanet</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/exoplanet.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=37838749"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/stellar-variability';</script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Joint RV &amp; transit fits" href="../joint/" />
+    <link rel="prev" title="Astrometric fitting" href="../astrometric/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="exoplanet - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="exoplanet - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../rv/">Radial velocity fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transit/">Transit fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../astrometric/">Astrometric fitting</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Gaussian process models for stellar variability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joint/">Joint RV &amp; transit fits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tess/">Fitting TESS data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick-tess/">Quick fits for TESS light curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-gp-transit/">Simultaneous Fitting of a Transit with Stellar Variability</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../ttv/">Fitting transit times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eb/">Fitting a detached eclipsing binary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rv-multi/">RVs with multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-multi/">Light curves from multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.exoplanet.codes">Main exoplanet docs</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/exoplanet-dev/case-studies/main?urlpath=lab/tree/docs/tutorials/stellar-variability.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/edit/main/docs/tutorials/stellar-variability.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/issues/new?title=Issue%20on%20page%20%2Ftutorials/stellar-variability.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/tutorials/stellar-variability.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gaussian process models for stellar variability</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-gaussian-process-model-for-stellar-variability">A Gaussian process model for stellar variability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussian-process-models-for-stellar-variability">
+<span id="stellar-variability"></span><h1>Gaussian process models for stellar variability<a class="headerlink" href="#gaussian-process-models-for-stellar-variability" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exoplanet</span>
+
+<span class="n">exoplanet</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">docs_setup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;exoplanet.__version__ = &#39;</span><span class="si">{</span><span class="n">exoplanet</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exoplanet.__version__ = &#39;0.5.4.dev27+g75d7fcc&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>When fitting exoplanets, we also need to fit for the stellar variability and Gaussian Processes (GPs) are often a good descriptive model for this variation.
+<a class="reference external" href="https://docs.pymc.io/gp.html">PyMC3 has support for all sorts of general GP models</a>, but <em>exoplanet</em> interfaces with the <a class="reference external" href="https://celerite2.readthedocs.io/">celerite2</a> library to provide support for scalable 1D GPs (take a look at the <a class="reference external" href="https://celerite2.readthedocs.io/en/latest/tutorials/first/">Getting started</a> tutorial on the <em>celerite2</em> docs for a crash course) that can work with large datasets.
+In this tutorial, we go through the process of modeling the light curve of a rotating star observed by Kepler using <em>exoplanet</em> and <em>celerite2</em>.</p>
+<p>First, let’s download and plot the data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">lightkurve</span> <span class="k">as</span> <span class="nn">lk</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">lcf</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_lightcurve</span><span class="p">(</span>
+    <span class="s2">&quot;TIC 10863087&quot;</span><span class="p">,</span> <span class="n">mission</span><span class="o">=</span><span class="s2">&quot;TESS&quot;</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s2">&quot;SPOC&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">(</span><span class="n">quality_bitmask</span><span class="o">=</span><span class="s2">&quot;hardest&quot;</span><span class="p">,</span> <span class="n">flux_column</span><span class="o">=</span><span class="s2">&quot;pdcsap_flux&quot;</span><span class="p">)</span>
+<span class="n">lc</span> <span class="o">=</span> <span class="n">lcf</span><span class="o">.</span><span class="n">stitch</span><span class="p">()</span><span class="o">.</span><span class="n">remove_nans</span><span class="p">()</span><span class="o">.</span><span class="n">remove_outliers</span><span class="p">()</span>
+<span class="n">lc</span> <span class="o">=</span> <span class="n">lc</span><span class="p">[:</span><span class="mi">5000</span><span class="p">]</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">remove_outliers</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">return_mask</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">lc</span> <span class="o">=</span> <span class="n">lc</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">lc</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">lc</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">yerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">lc</span><span class="o">.</span><span class="n">flux_err</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">/</span> <span class="n">mu</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e3</span>
+<span class="n">yerr</span> <span class="o">=</span> <span class="n">yerr</span> <span class="o">*</span> <span class="mf">1e3</span> <span class="o">/</span> <span class="n">mu</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time [days]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;relative flux [ppt]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;TIC 10863087&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning: 33% (6455/19412) of the cadences will be ignored due to the quality mask (quality_bitmask=8191).
+</pre></div>
+</div>
+<img alt="../../_images/bc4f96ea9f99750f852f8821b984d248bdb93a1f196793126b4427778cd86217.png" src="../../_images/bc4f96ea9f99750f852f8821b984d248bdb93a1f196793126b4427778cd86217.png" />
+</div>
+</div>
+<section id="a-gaussian-process-model-for-stellar-variability">
+<h2>A Gaussian process model for stellar variability<a class="headerlink" href="#a-gaussian-process-model-for-stellar-variability" title="Link to this heading">#</a></h2>
+<p>This looks like the light curve of a rotating star, and <a class="reference external" href="https://arxiv.org/abs/1706.05459">it has been shown</a> that it is possible to model this variability by using a quasiperiodic Gaussian process.
+To start with, let’s get an estimate of the rotation period using the Lomb-Scargle periodogram:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exoplanet</span> <span class="k">as</span> <span class="nn">xo</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">estimators</span><span class="o">.</span><span class="n">lomb_scargle_estimator</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_peaks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_period</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_period</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">samples_per_peak</span><span class="o">=</span><span class="mi">50</span>
+<span class="p">)</span>
+
+<span class="n">peak</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;peaks&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">freq</span><span class="p">,</span> <span class="n">power</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;periodogram&quot;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">freq</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">peak</span><span class="p">[</span><span class="s2">&quot;period&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;period [days]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;power&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/e061771f429821a683e139e6d44e262537b987378f74d215df8b78b60bcc8e49.png" src="../../_images/e061771f429821a683e139e6d44e262537b987378f74d215df8b78b60bcc8e49.png" />
+</div>
+</div>
+<p>Now, using this initialization, we can set up the GP model in <em>exoplanet</em> and <em>celerite2</em>.
+We’ll use the <a class="reference external" href="https://celerite2.readthedocs.io/en/latest/api/python/#celerite2.terms.RotationTerm">RotationTerm</a> kernel that is a mixture of two simple harmonic oscillators with periods separated by a factor of two.
+As you can see from the periodogram above, this might be a good model for this light curve and I’ve found that it works well in many cases.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">pymc3_ext</span> <span class="k">as</span> <span class="nn">pmx</span>
+<span class="kn">import</span> <span class="nn">aesara_theano_fallback.tensor</span> <span class="k">as</span> <span class="nn">tt</span>
+<span class="kn">from</span> <span class="nn">celerite2.theano</span> <span class="kn">import</span> <span class="n">terms</span><span class="p">,</span> <span class="n">GaussianProcess</span>
+
+<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="c1"># The mean flux of the time series</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+
+    <span class="c1"># A jitter term describing excess white noise</span>
+    <span class="n">log_jitter</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_jitter&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">yerr</span><span class="p">)),</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+
+    <span class="c1"># A term to describe the non-periodic variability</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span>
+        <span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">pmx</span><span class="o">.</span><span class="n">estimate_inverse_gamma_parameters</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span>
+        <span class="s2">&quot;rho&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">pmx</span><span class="o">.</span><span class="n">estimate_inverse_gamma_parameters</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># The parameters of the RotationTerm kernel</span>
+    <span class="n">sigma_rot</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span>
+        <span class="s2">&quot;sigma_rot&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">pmx</span><span class="o">.</span><span class="n">estimate_inverse_gamma_parameters</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">log_period</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_period&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">peak</span><span class="p">[</span><span class="s2">&quot;period&quot;</span><span class="p">]),</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">period</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;period&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_period</span><span class="p">))</span>
+    <span class="n">log_Q0</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">&quot;log_Q0&quot;</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">log_dQ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_dQ&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="c1"># Set up the Gaussian Process model</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">terms</span><span class="o">.</span><span class="n">SHOTerm</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">Q</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span>
+    <span class="n">kernel</span> <span class="o">+=</span> <span class="n">terms</span><span class="o">.</span><span class="n">RotationTerm</span><span class="p">(</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="n">sigma_rot</span><span class="p">,</span>
+        <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span>
+        <span class="n">Q0</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_Q0</span><span class="p">),</span>
+        <span class="n">dQ</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_dQ</span><span class="p">),</span>
+        <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">gp</span> <span class="o">=</span> <span class="n">GaussianProcess</span><span class="p">(</span>
+        <span class="n">kernel</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+        <span class="n">diag</span><span class="o">=</span><span class="n">yerr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">log_jitter</span><span class="p">),</span>
+        <span class="n">mean</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
+        <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Compute the Gaussian Process likelihood and add it into the</span>
+    <span class="c1"># the PyMC3 model as a &quot;potential&quot;</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">marginal</span><span class="p">(</span><span class="s2">&quot;gp&quot;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># Compute the mean model prediction for plotting purposes</span>
+    <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;pred&quot;</span><span class="p">,</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="c1"># Optimize to find the maximum a posteriori parameters</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [f, log_dQ, log_Q0, log_period, sigma_rot, rho, sigma, log_jitter, mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='70' class='' max='70' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [70/70 00:00&lt;00:00 logp = -8.861e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -9263.87083670822 -&gt; -8861.082439762553
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we have the model set up, let’s plot the maximum a posteriori model prediction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;pred&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time [days]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;relative flux [ppt]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;TIC 10863087; map model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/6deca6dd29ce9dd258cb9077efa32ebbcc467d97d510b08afae4d6b1da52504b.png" src="../../_images/6deca6dd29ce9dd258cb9077efa32ebbcc467d97d510b08afae4d6b1da52504b.png" />
+</div>
+</div>
+<p>That looks pretty good!
+Now let’s sample from the posterior using <a class="reference external" href="https://github.com/exoplanet-dev/pymc3-ext">the PyMC3 Extras (pymc3-ext) library</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">map_soln</span><span class="p">,</span>
+        <span class="n">cores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">10863087</span><span class="p">,</span> <span class="mi">10863088</span><span class="p">],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [f, log_dQ, log_Q0, log_period, sigma_rot, rho, sigma, log_jitter, mean]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 02:12&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 134 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can do the usual convergence checks:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">trace</span><span class="p">,</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;log_dQ&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;log_Q0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;log_period&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sigma_rot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rho&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sigma&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;log_jitter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>f</th>
+      <td>0.292</td>
+      <td>0.184</td>
+      <td>0.100</td>
+      <td>0.662</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>1684.0</td>
+      <td>1082.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>log_dQ</th>
+      <td>0.783</td>
+      <td>2.255</td>
+      <td>-3.353</td>
+      <td>4.663</td>
+      <td>0.064</td>
+      <td>0.047</td>
+      <td>1259.0</td>
+      <td>1401.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>log_Q0</th>
+      <td>3.733</td>
+      <td>0.740</td>
+      <td>2.273</td>
+      <td>5.128</td>
+      <td>0.022</td>
+      <td>0.015</td>
+      <td>1223.0</td>
+      <td>809.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>log_period</th>
+      <td>-0.133</td>
+      <td>0.008</td>
+      <td>-0.148</td>
+      <td>-0.117</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1771.0</td>
+      <td>1299.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma_rot</th>
+      <td>3.131</td>
+      <td>0.609</td>
+      <td>2.101</td>
+      <td>4.255</td>
+      <td>0.014</td>
+      <td>0.011</td>
+      <td>1938.0</td>
+      <td>1523.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rho</th>
+      <td>0.264</td>
+      <td>0.036</td>
+      <td>0.204</td>
+      <td>0.333</td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td>1863.0</td>
+      <td>1374.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma</th>
+      <td>1.592</td>
+      <td>0.181</td>
+      <td>1.266</td>
+      <td>1.920</td>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>2014.0</td>
+      <td>1657.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>log_jitter</th>
+      <td>-1.286</td>
+      <td>0.416</td>
+      <td>-1.911</td>
+      <td>-0.794</td>
+      <td>0.027</td>
+      <td>0.020</td>
+      <td>576.0</td>
+      <td>233.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>-0.039</td>
+      <td>0.318</td>
+      <td>-0.597</td>
+      <td>0.591</td>
+      <td>0.008</td>
+      <td>0.008</td>
+      <td>1486.0</td>
+      <td>1150.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>And plot the posterior distribution over rotation period:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">period_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;period&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">period_samples</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;rotation period [days]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;posterior density&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/9047defb1747e13e61d866bd1d0326d272d184e5c567c7dc24b2901ca2954525.png" src="../../_images/9047defb1747e13e61d866bd1d0326d272d184e5c567c7dc24b2901ca2954525.png" />
+</div>
+</div>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>As described in the <a class="reference external" href="https://docs.exoplanet.codes/en/stable/tutorials/citation/">citation tutorial</a>, we can use <a class="reference external" href="https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model">citations.get_citations_for_model</a> to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">txt</span><span class="p">,</span> <span class="n">bib</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">citations</span><span class="o">.</span><span class="n">get_citations_for_model</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This research made use of \textsf{exoplanet} \citep{exoplanet:joss,
+exoplanet:zenodo} and its dependencies \citep{celerite2:foremanmackey17,
+celerite2:foremanmackey18, exoplanet:arviz, exoplanet:pymc3, exoplanet:theano}.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bib</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>@article{exoplanet:joss,
+       author = {{Foreman-Mackey}, Daniel and {Luger}, Rodrigo and {Agol}, Eric
+                and {Barclay}, Thomas and {Bouma}, Luke G. and {Brandt},
+                Timothy D. and {Czekala}, Ian and {David}, Trevor J. and
+                {Dong}, Jiayin and {Gilbert}, Emily A. and {Gordon}, Tyler A.
+                and {Hedges}, Christina and {Hey}, Daniel R. and {Morris},
+                Brett M. and {Price-Whelan}, Adrian M. and {Savel}, Arjun B.},
+        title = &quot;{exoplanet: Gradient-based probabilistic inference for
+                  exoplanet data \&amp; other astronomical time series}&quot;,
+      journal = {arXiv e-prints},
+         year = 2021,
+        month = may,
+          eid = {arXiv:2105.01994},
+        pages = {arXiv:2105.01994},
+archivePrefix = {arXiv},
+       eprint = {2105.01994},
+ primaryClass = {astro-ph.IM},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210501994F},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+...
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../astrometric/"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Astrometric fitting</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../joint/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Joint RV &amp; transit fits</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-gaussian-process-model-for-stellar-variability">A Gaussian process model for stellar variability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dan Foreman-Mackey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018, 2019, 2020, 2021, Dan Foreman-Mackey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

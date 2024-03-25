@@ -1,0 +1,1241 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>RVs with multiple instruments &#8212; exoplanet</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/exoplanet.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=37838749"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/rv-multi';</script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Light curves from multiple instruments" href="../lc-multi/" />
+    <link rel="prev" title="Fitting a detached eclipsing binary" href="../eb/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="exoplanet - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="exoplanet - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../rv/">Radial velocity fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transit/">Transit fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../astrometric/">Astrometric fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stellar-variability/">Gaussian process models for stellar variability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joint/">Joint RV &amp; transit fits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tess/">Fitting TESS data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick-tess/">Quick fits for TESS light curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-gp-transit/">Simultaneous Fitting of a Transit with Stellar Variability</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../ttv/">Fitting transit times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eb/">Fitting a detached eclipsing binary</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">RVs with multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lc-multi/">Light curves from multiple instruments</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.exoplanet.codes">Main exoplanet docs</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/exoplanet-dev/case-studies/main?urlpath=lab/tree/docs/tutorials/rv-multi.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/edit/main/docs/tutorials/rv-multi.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exoplanet-dev/case-studies/issues/new?title=Issue%20on%20page%20%2Ftutorials/rv-multi.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/tutorials/rv-multi.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>RVs with multiple instruments</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="rvs-with-multiple-instruments">
+<span id="rv-multi"></span><h1>RVs with multiple instruments<a class="headerlink" href="#rvs-with-multiple-instruments" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exoplanet</span>
+
+<span class="n">exoplanet</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">docs_setup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;exoplanet.__version__ = &#39;</span><span class="si">{</span><span class="n">exoplanet</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matplotlib is building the font cache; this may take a moment.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exoplanet.__version__ = &#39;0.5.4.dev27+g75d7fcc&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this case study, we will look at how we can use exoplanet and PyMC3 to combine datasets from different RV instruments to fit the orbit of an exoplanet system.
+Before getting started, I want to emphasize that the exoplanet code doesn’t have strong opinions about how your data are collected, it only provides extensions that allow PyMC3 to evaluate some astronomy-specific functions.
+This means that you can build any kind of observation model that PyMC3 supports, and support for multiple instruments isn’t really a <em>feature</em> of exoplanet, even though it is easy to implement.</p>
+<p>For the example, we’ll use public observations of Pi Mensae which hosts two planets, but we’ll ignore the inner planet because the significance of the RV signal is small enough that it won’t affect our results.
+The datasets that we’ll use are from the Anglo-Australian Planet Search (AAT) and the HARPS archive.
+As is commonly done, we will treat the HARPS observations as two independent datasets split in June 2015 when the HARPS hardware was upgraded.
+Therefore, we’ll consider three datasets that we will allow to have different instrumental parameters (RV offset and jitter), but shared orbital parameters and stellar variability.
+In some cases you might also want to have a different astrophyscial variability model for each instrument (if, for example, the observations are made in very different bands), but we’ll keep things simple for this example.</p>
+<p>The AAT data are available from <a class="reference external" href="https://exoplanetarchive.ipac.caltech.edu/">The Exoplanet Archive</a> and the HARPS observations can be downloaded from the <a class="reference external" href="http://archive.eso.org/wdb/wdb/adp/phase3_spectral/form">ESO Archive</a>.
+For the sake of simplicity, we have extracted the HARPS RVs from the archive in advance using <a class="reference external" href="https://github.com/megbedell/harps_tools">Megan Bedell’s harps_tools library</a>.</p>
+<p>To start, download the data and plot them with a (very!) rough zero point correction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">aat</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;https://exoplanetarchive.ipac.caltech.edu/data/ExoData/0026/0026394/data/UID_0026394_RVC_001.tbl&quot;</span>
+<span class="p">)</span>
+<span class="n">harps</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s2">&quot;https://raw.githubusercontent.com/exoplanet-dev/case-studies/main/data/pi_men_harps_rvs.csv&quot;</span><span class="p">,</span>
+    <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">harps</span> <span class="o">=</span> <span class="n">harps</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">harps_post</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">harps</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;</span> <span class="s2">&quot;2015-07-01&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">aat</span><span class="p">[</span><span class="s2">&quot;JD&quot;</span><span class="p">],</span> <span class="n">harps</span><span class="p">[</span><span class="s2">&quot;bjd&quot;</span><span class="p">]))</span>
+<span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">aat</span><span class="p">[</span><span class="s2">&quot;Radial_Velocity&quot;</span><span class="p">],</span> <span class="n">harps</span><span class="p">[</span><span class="s2">&quot;rv&quot;</span><span class="p">]))</span>
+<span class="n">rv_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">aat</span><span class="p">[</span><span class="s2">&quot;Radial_Velocity_Uncertainty&quot;</span><span class="p">],</span> <span class="n">harps</span><span class="p">[</span><span class="s2">&quot;e_rv&quot;</span><span class="p">]))</span>
+<span class="n">inst_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aat</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span> <span class="n">harps_post</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">rv</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">rv_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">rv_err</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">inst_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">inst_id</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">inst_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;aat&quot;</span><span class="p">,</span> <span class="s2">&quot;harps_pre&quot;</span><span class="p">,</span> <span class="s2">&quot;harps_post&quot;</span><span class="p">]</span>
+<span class="n">num_inst</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inst_names</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inst_names</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">inst_id</span> <span class="o">==</span> <span class="n">i</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+        <span class="n">t</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">rv</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">rv</span><span class="p">[</span><span class="n">m</span><span class="p">]),</span> <span class="n">yerr</span><span class="o">=</span><span class="n">rv_err</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span>
+    <span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;BJD&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/7473f9553474104205cb20349ef83fd0b4457f8392ea4752c38d3a2c28255034.png" src="../../_images/7473f9553474104205cb20349ef83fd0b4457f8392ea4752c38d3a2c28255034.png" />
+</div>
+</div>
+<p>Then set up the probabilistic model.
+Most of this is similar to the model in the <a class="reference external" href="https://gallery.exoplanet.codes/tutorials/rv/">Radial velocity fitting</a> tutorial, but there are a few changes to highlight:</p>
+<ol class="arabic simple">
+<li><p>Instead of a polynomial model for trends, stellar variability, and inner planets, we’re using a Gaussian process here. This won’t have a big effect here, but more careful consideration should be performed when studying lower signal-to-noise systems.</p></li>
+<li><p>There are three radial velocity offsets and three jitter parameters (one for each instrument) that will be treated independently. This is the key addition made by this case study.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">exoplanet</span> <span class="k">as</span> <span class="nn">xo</span>
+<span class="kn">import</span> <span class="nn">aesara_theano_fallback.tensor</span> <span class="k">as</span> <span class="nn">tt</span>
+
+<span class="kn">import</span> <span class="nn">pymc3_ext</span> <span class="k">as</span> <span class="nn">pmx</span>
+<span class="kn">from</span> <span class="nn">celerite2.theano</span> <span class="kn">import</span> <span class="n">terms</span><span class="p">,</span> <span class="n">GaussianProcess</span>
+
+<span class="n">t_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="c1"># Parameters describing the orbit</span>
+    <span class="n">log_K</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_K&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">300</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">log_P</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_P&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2093.07</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_K</span><span class="p">))</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_P</span><span class="p">))</span>
+
+    <span class="n">ecs</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">UnitDisk</span><span class="p">(</span><span class="s2">&quot;ecs&quot;</span><span class="p">,</span> <span class="n">testval</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">]))</span>
+    <span class="n">ecc</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ecs</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">ecs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ecs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">UnitUniform</span><span class="p">(</span><span class="s2">&quot;phase&quot;</span><span class="p">)</span>
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;tp&quot;</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="n">phase</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span>
+
+    <span class="n">orbit</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">orbits</span><span class="o">.</span><span class="n">KeplerianOrbit</span><span class="p">(</span>
+        <span class="n">period</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">t_periastron</span><span class="o">=</span><span class="n">tp</span><span class="p">,</span> <span class="n">ecc</span><span class="o">=</span><span class="n">ecc</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="n">omega</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Noise model parameters</span>
+    <span class="n">log_sigma_gp</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_sigma_gp&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">log_rho_gp</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;log_rho_gp&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+    <span class="c1"># Per instrument parameters</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+        <span class="s2">&quot;means&quot;</span><span class="p">,</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">rv</span><span class="p">[</span><span class="n">inst_id</span> <span class="o">==</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_inst</span><span class="p">)]),</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="n">num_inst</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sigmas</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">&quot;sigmas&quot;</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">num_inst</span><span class="p">)</span>
+
+    <span class="c1"># Compute the RV offset and jitter for each data point depending on its instrument</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+    <span class="n">diag</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inst_names</span><span class="p">)):</span>
+        <span class="n">mean</span> <span class="o">+=</span> <span class="n">means</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">inst_id</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">diag</span> <span class="o">+=</span> <span class="p">(</span><span class="n">rv_err</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">sigmas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">inst_id</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+    <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;diag&quot;</span><span class="p">,</span> <span class="n">diag</span><span class="p">)</span>
+    <span class="n">resid</span> <span class="o">=</span> <span class="n">rv</span> <span class="o">-</span> <span class="n">mean</span>
+
+    <span class="k">def</span> <span class="nf">rv_model</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">orbit</span><span class="o">.</span><span class="n">get_radial_velocity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">terms</span><span class="o">.</span><span class="n">SHOTerm</span><span class="p">(</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_sigma_gp</span><span class="p">),</span> <span class="n">rho</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_rho_gp</span><span class="p">),</span> <span class="n">Q</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="n">gp</span> <span class="o">=</span> <span class="n">GaussianProcess</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">diag</span><span class="o">=</span><span class="n">diag</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">rv_model</span><span class="p">)</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">marginal</span><span class="p">(</span><span class="s2">&quot;obs&quot;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">resid</span><span class="p">)</span>
+    <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;gp_pred&quot;</span><span class="p">,</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">include_mean</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;rv_phase&quot;</span><span class="p">,</span> <span class="n">rv_model</span><span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">t_phase</span> <span class="o">+</span> <span class="n">tp</span><span class="p">))</span>
+
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">test_point</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="p">[</span><span class="n">means</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="p">[</span><span class="n">means</span><span class="p">,</span> <span class="n">phase</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="p">[</span><span class="n">means</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">log_K</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="p">[</span><span class="n">means</span><span class="p">,</span> <span class="n">tp</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">log_P</span><span class="p">,</span> <span class="n">ecs</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">,</span> <span class="p">[</span><span class="n">sigmas</span><span class="p">,</span> <span class="n">log_sigma_gp</span><span class="p">,</span> <span class="n">log_rho_gp</span><span class="p">])</span>
+    <span class="n">map_soln</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">map_soln</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [means]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='14' class='' max='14' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [14/14 00:00&lt;00:00 logp = -4.454e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -5704.454860439323 -&gt; -4454.328548558956
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [phase, means]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='22' class='' max='22' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [22/22 00:00&lt;00:00 logp = -4.366e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -4454.328548558956 -&gt; -4365.658178331195
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [log_K, phase, means]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='29' class='' max='29' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [29/29 00:00&lt;00:00 logp = -1.406e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -4365.658178331195 -&gt; -1405.917582078266
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [ecs, log_P, log_K, phase, means]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='71' class='' max='71' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [71/71 00:00&lt;00:00 logp = -1.368e+03]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -1405.917582078266 -&gt; -1367.8658913401723
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [log_rho_gp, log_sigma_gp, sigmas]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='21' class='' max='21' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [21/21 00:00&lt;00:00 logp = -8.517e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Optimization terminated successfully.
+logp: -1367.8658913401723 -&gt; -851.677026518513
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>optimizing logp for variables: [sigmas, means, log_rho_gp, log_sigma_gp, phase, ecs, log_P, log_K]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='95' class='' max='95' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [95/95 00:00&lt;00:00 logp = -8.428e+02]
+    </div>
+    </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>message: Desired error not necessarily achieved due to precision loss.
+logp: -851.677026518513 -&gt; -842.8016650352178
+</pre></div>
+</div>
+</div>
+</div>
+<p>After fitting for the parameters that maximize the posterior probability, we can plot this model to make sure that things are looking reasonable:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">400</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">t_pred</span><span class="p">,</span> <span class="n">pmx</span><span class="o">.</span><span class="n">eval_in_model</span><span class="p">(</span><span class="n">rv_model</span><span class="p">(</span><span class="n">t_pred</span><span class="p">),</span> <span class="n">map_soln</span><span class="p">),</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span>
+    <span class="p">)</span>
+
+<span class="n">detrended</span> <span class="o">=</span> <span class="n">rv</span> <span class="o">-</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">map_soln</span><span class="p">[</span><span class="s2">&quot;gp_pred&quot;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">detrended</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">rv_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;,k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">detrended</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">inst_id</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab10&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">t_pred</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">t_pred</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;BJD&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;map model&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/809b22d822ad543e61f29b0956aeb0feeccc13233a0631df42f5ff715a58600f.png" src="../../_images/809b22d822ad543e61f29b0956aeb0feeccc13233a0631df42f5ff715a58600f.png" />
+</div>
+</div>
+<p>That looks fine, so now we can run the MCMC sampler:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">pmx</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">map_soln</span><span class="p">,</span>
+        <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">cores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">39091</span><span class="p">,</span> <span class="mi">39095</span><span class="p">],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigmas, means, log_rho_gp, log_sigma_gp, phase, ecs, log_P, log_K]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:23&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 25 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we can look at some summaries of the trace and the constraints on some of the key parameters:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">corner</span>
+<span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+
+<span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;tp&quot;</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">])</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;tp&quot;</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;means&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmas&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>P</th>
+      <td>2089.112</td>
+      <td>0.461</td>
+      <td>2088.284</td>
+      <td>2089.961</td>
+      <td>0.010</td>
+      <td>0.007</td>
+      <td>1970.0</td>
+      <td>1328.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>K</th>
+      <td>195.681</td>
+      <td>0.631</td>
+      <td>194.444</td>
+      <td>196.791</td>
+      <td>0.012</td>
+      <td>0.009</td>
+      <td>2677.0</td>
+      <td>1666.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>2456300.666</td>
+      <td>0.792</td>
+      <td>2456299.270</td>
+      <td>2456302.159</td>
+      <td>0.018</td>
+      <td>0.013</td>
+      <td>1926.0</td>
+      <td>1479.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>ecc</th>
+      <td>0.644</td>
+      <td>0.002</td>
+      <td>0.641</td>
+      <td>0.648</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2320.0</td>
+      <td>1391.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>omega</th>
+      <td>-0.519</td>
+      <td>0.006</td>
+      <td>-0.530</td>
+      <td>-0.509</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>2144.0</td>
+      <td>1460.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>means[0]</th>
+      <td>1.754</td>
+      <td>0.977</td>
+      <td>0.025</td>
+      <td>3.701</td>
+      <td>0.022</td>
+      <td>0.016</td>
+      <td>2086.0</td>
+      <td>1568.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>means[1]</th>
+      <td>10709.392</td>
+      <td>0.531</td>
+      <td>10708.419</td>
+      <td>10710.386</td>
+      <td>0.012</td>
+      <td>0.009</td>
+      <td>1795.0</td>
+      <td>1596.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>means[2]</th>
+      <td>10729.169</td>
+      <td>0.658</td>
+      <td>10728.003</td>
+      <td>10730.450</td>
+      <td>0.012</td>
+      <td>0.009</td>
+      <td>2784.0</td>
+      <td>1406.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>sigmas[0]</th>
+      <td>3.006</td>
+      <td>1.416</td>
+      <td>0.319</td>
+      <td>5.550</td>
+      <td>0.043</td>
+      <td>0.030</td>
+      <td>982.0</td>
+      <td>455.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>sigmas[1]</th>
+      <td>0.876</td>
+      <td>0.111</td>
+      <td>0.662</td>
+      <td>1.070</td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td>2049.0</td>
+      <td>1339.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>sigmas[2]</th>
+      <td>0.509</td>
+      <td>0.046</td>
+      <td>0.424</td>
+      <td>0.594</td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td>2245.0</td>
+      <td>1128.0</td>
+      <td>1.00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../../_images/d0ad38f899a167f408448f788f3876e5a1f8029ca6c7904cb14e1bf77b24b235.png" src="../../_images/d0ad38f899a167f408448f788f3876e5a1f8029ca6c7904cb14e1bf77b24b235.png" />
+</div>
+</div>
+<p>And finally we can plot the phased RV curve and overplot our posterior inference:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flat_samps</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;chain&quot;</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">))</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">flat_samps</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">flat_samps</span><span class="p">[</span><span class="s2">&quot;gp_pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mu_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">flat_samps</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">jitter_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">flat_samps</span><span class="p">[</span><span class="s2">&quot;diag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">period</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">flat_samps</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">])</span>
+<span class="n">tp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">flat_samps</span><span class="p">[</span><span class="s2">&quot;tp&quot;</span><span class="p">])</span>
+
+<span class="n">detrended</span> <span class="o">=</span> <span class="n">rv</span> <span class="o">-</span> <span class="n">mu</span>
+<span class="n">folded</span> <span class="o">=</span> <span class="p">((</span><span class="n">t</span> <span class="o">-</span> <span class="n">tp</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">period</span><span class="p">)</span> <span class="o">%</span> <span class="n">period</span><span class="p">)</span> <span class="o">/</span> <span class="n">period</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">detrended</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu_var</span> <span class="o">+</span> <span class="n">jitter_var</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;,k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">folded</span><span class="p">,</span>
+    <span class="n">detrended</span><span class="p">,</span>
+    <span class="n">c</span><span class="o">=</span><span class="n">inst_id</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+    <span class="n">folded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">detrended</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu_var</span> <span class="o">+</span> <span class="n">jitter_var</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;,k&quot;</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">folded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">detrended</span><span class="p">,</span>
+    <span class="n">c</span><span class="o">=</span><span class="n">inst_id</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">t_phase</span> <span class="o">+</span> <span class="mf">0.5</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">flat_samps</span><span class="p">[</span><span class="s2">&quot;rv_phase&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;phase&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;radial velocity [m/s]&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;posterior inference&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/fad59cccabe44b973ebbbea656109fe680f5021832bec1e9ad91a1fac497f4e0.png" src="../../_images/fad59cccabe44b973ebbbea656109fe680f5021832bec1e9ad91a1fac497f4e0.png" />
+</div>
+</div>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>As described in the <a class="reference external" href="https://docs.exoplanet.codes/en/stable/tutorials/citation/">citation tutorial</a>, we can use <a class="reference external" href="https://docs.exoplanet.codes/en/stable/user/api/#exoplanet.citations.get_citations_for_model">citations.get_citations_for_model</a> to construct an acknowledgement and BibTeX listing that includes the relevant citations for this model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">txt</span><span class="p">,</span> <span class="n">bib</span> <span class="o">=</span> <span class="n">xo</span><span class="o">.</span><span class="n">citations</span><span class="o">.</span><span class="n">get_citations_for_model</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This research made use of \textsf{exoplanet} \citep{exoplanet:joss,
+exoplanet:zenodo} and its dependencies \citep{celerite2:foremanmackey17,
+celerite2:foremanmackey18, exoplanet:arviz, exoplanet:astropy13,
+exoplanet:astropy18, exoplanet:pymc3, exoplanet:theano}.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bib</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>@article{exoplanet:joss,
+       author = {{Foreman-Mackey}, Daniel and {Luger}, Rodrigo and {Agol}, Eric
+                and {Barclay}, Thomas and {Bouma}, Luke G. and {Brandt},
+                Timothy D. and {Czekala}, Ian and {David}, Trevor J. and
+                {Dong}, Jiayin and {Gilbert}, Emily A. and {Gordon}, Tyler A.
+                and {Hedges}, Christina and {Hey}, Daniel R. and {Morris},
+                Brett M. and {Price-Whelan}, Adrian M. and {Savel}, Arjun B.},
+        title = &quot;{exoplanet: Gradient-based probabilistic inference for
+                  exoplanet data \&amp; other astronomical time series}&quot;,
+      journal = {arXiv e-prints},
+         year = 2021,
+        month = may,
+          eid = {arXiv:2105.01994},
+        pages = {arXiv:2105.01994},
+archivePrefix = {arXiv},
+       eprint = {2105.01994},
+ primaryClass = {astro-ph.IM},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210501994F},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+...
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../eb/"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Fitting a detached eclipsing binary</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../lc-multi/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Light curves from multiple instruments</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dan Foreman-Mackey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018, 2019, 2020, 2021, Dan Foreman-Mackey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
