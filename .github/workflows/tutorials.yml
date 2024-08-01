@@ -95,7 +95,7 @@ jobs:
           path: docs/_build/dirhtml
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        uses: JamesIves/github-pages-deploy-action@v4.6.3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           branch: gh-pages
