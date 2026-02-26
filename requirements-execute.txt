@@ -1,12 +1,13 @@
 exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@main
-numpy<1.22
-astropy<5
-xarray<=2023.9.0
+pymc-ext @ git+https://github.com/exoplanet-dev/pymc-ext.git@main
+numpy
+astropy
+xarray
 celerite2
-pymc3-ext>=0.1.0
 corner
 lightkurve
 nbconvert
 ipykernel
 jupyter
 jupytext
+setuptools<82
