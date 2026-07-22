@@ -1,5 +1,4 @@
-exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@main
-pymc-ext @ git+https://github.com/exoplanet-dev/pymc-ext.git@main
+exoplanet[pymc,extras]
 numpy
 astropy
 xarray

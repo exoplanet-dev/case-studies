@@ -1,4 +1,4 @@
-exoplanet @ git+https://github.com/exoplanet-dev/exoplanet.git@main
+exoplanet[pymc]
 sphinx-book-theme
 myst-nb
 ipython
